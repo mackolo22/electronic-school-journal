@@ -19,7 +19,6 @@ namespace Infrastructure.Data.AzureStorage
             { typeof(Teacher),          "PeopleTable" },
             { typeof(Parent),           "PeopleTable" },
             { typeof(StudentsClass),    "ClassesTable" },
-            { typeof(DynamicTableEntity), "ClassesTable" }
         };
 
         // TODO: poprawić tę metodę gdy zostanie dodany DI container.

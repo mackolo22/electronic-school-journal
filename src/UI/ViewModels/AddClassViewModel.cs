@@ -1,7 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
-using Microsoft.WindowsAzure.Storage.Table;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UI.Dialogs;
@@ -11,15 +9,17 @@ namespace UI.ViewModels
     public class AddClassViewModel : ViewModelBase
     {
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
-        private readonly ITableStorageRepository _repository;
-        private byte _classNumber = 1;
-        private char _classLetter = 'A';
+        private readonly IClassService _classService;
+        private int _classNumber = 1;
+        private string _classLetter = "A";
         private Teacher _educator;
 
-        public AddClassViewModel(IUniqueIDGenerator uniqueIDGenerator, ITableStorageRepository repository)
+        public AddClassViewModel(
+            IUniqueIDGenerator uniqueIDGenerator,
+            IClassService classService)
         {
             _uniqueIDGenerator = uniqueIDGenerator;
-            _repository = repository;
+            _classService = classService;
 
             Students = new ObservableCollection<Student>();
             Teachers = new ObservableCollection<Teacher>();
@@ -27,10 +27,10 @@ namespace UI.ViewModels
         }
 
         // TODO: trzeba będzie pobrać z bazy wszystkie dodane klasy i wrzucić do tych list te które pozostały niestworzone.
-        public List<byte> AvailableClassNumbers => new List<byte> { 1, 2, 3, 4, 5, 6, 7, 8 };
-        public List<char> AvailableClassLetters => new List<char> { 'A', 'B', 'C', 'D' };
+        public List<int> AvailableClassNumbers => new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+        public List<string> AvailableClassLetters => new List<string> { "A", "B", "C", "D" };
 
-        public byte ClassNumber
+        public int ClassNumber
         {
             get => _classNumber;
             set
@@ -40,7 +40,7 @@ namespace UI.ViewModels
             }
         }
 
-        public char ClassLetter
+        public string ClassLetter
         {
             get => _classLetter;
             set
@@ -103,11 +103,12 @@ namespace UI.ViewModels
 
             if (viewModel.ChangesSaved)
             {
-                long id = _uniqueIDGenerator.GetNextId();
-                Student student = new Student(id)
+                long studentId = _uniqueIDGenerator.GetNextId();
+                Student student = new Student(studentId)
                 {
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
+                    ParentId = viewModel.Parent?.Id,
                     Parent = viewModel.Parent,
                     User = new User
                     {
@@ -116,7 +117,11 @@ namespace UI.ViewModels
                     }
                 };
 
-                student.Parent.Child = student;
+                if (student.Parent != null)
+                {
+                    student.Parent.ChildId = student.Id;
+                }
+
                 Students.Add(student);
             }
         }
@@ -132,34 +137,8 @@ namespace UI.ViewModels
         public RelayCommand SaveChangesCommand => new RelayCommand(ExecuteSaveChanges, () => true);
         private async void ExecuteSaveChanges(object parameter)
         {
-            var studentsClass = new StudentsClass(ClassNumber, ClassLetter)
-            {
-                Educator = Educator,
-                Students = Students
-            };
-
-            studentsClass.Educator.Class = studentsClass;
-            foreach (var student in studentsClass.Students)
-            {
-                student.Class = studentsClass;
-            }
-
-            Dictionary<string, EntityProperty> flattenedProperties = EntityPropertyConverter.Flatten(studentsClass, null, null);
-            var dynamicTableEntity = new DynamicTableEntity(studentsClass.PartitionKey, studentsClass.RowKey)
-            {
-                Properties = flattenedProperties
-            };
-
-            await _repository.InsertAsync(dynamicTableEntity);
-            await _repository.InsertAsync(studentsClass.Educator);
-            await _repository.InsertBatchAsync(studentsClass.Students);
-            foreach (var student in studentsClass.Students)
-            {
-                if (student.Parent != null)
-                {
-                    await _repository.InsertAsync(student.Parent);
-                }
-            }
+            // TODO: sprawdzenie czy pola są podane
+            bool success = await _classService.AddNewClassAsync(ClassNumber, ClassLetter, Educator, Students, Lessons);
         }
     }
 }

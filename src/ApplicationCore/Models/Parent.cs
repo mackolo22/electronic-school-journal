@@ -1,4 +1,6 @@
-﻿namespace ApplicationCore.Models
+﻿using Microsoft.WindowsAzure.Storage.Table;
+
+namespace ApplicationCore.Models
 {
     public class Parent : Person
     {
@@ -7,6 +9,8 @@
             PartitionKey = nameof(Parent);
         }
 
+        public long? ChildId { get; set; }
+        [IgnoreProperty]
         public Student Child { get; set; }
     }
 }

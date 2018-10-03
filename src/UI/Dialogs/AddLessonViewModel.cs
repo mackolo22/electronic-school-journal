@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Enums;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
-using System;
 using System.Collections.ObjectModel;
 using UI.ViewModels;
 

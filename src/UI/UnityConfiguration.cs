@@ -22,6 +22,7 @@ namespace UI
             #region Services
             _unityContainer.RegisterType<ILoginService, LoginService>();
             _unityContainer.RegisterType<IUniqueIDGenerator, UniqueIDGenerator>();
+            _unityContainer.RegisterType<IClassService, ClassService>();
             #endregion Services
 
             #region ViewModels

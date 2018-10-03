@@ -5,20 +5,30 @@ namespace ApplicationCore.Models
 {
     public class StudentsClass : TableEntity
     {
-        public StudentsClass(byte number, char letter)
+        public StudentsClass(int number, string letter)
         {
             Number = number;
             PartitionKey = number.ToString();
             Letter = letter;
             RowKey = letter.ToString();
-            FullName = $"{number}{letter}";
+            Id = $"{number}{letter}";
+            FullName = Id;
         }
 
-        public byte Number { get; set; }
-        public char Letter { get; set; }
+        public string Id { get; set; }
+        [IgnoreProperty]
+        public int Number { get; set; }
+        [IgnoreProperty]
+        public string Letter { get; set; }
         public string FullName { get; set; }
+        public long? EducatorId { get; set; }
+        [IgnoreProperty]
         public Teacher Educator { get; set; }
+        public IEnumerable<long> StudentsIds { get; set; }
+        [IgnoreProperty]
         public IEnumerable<Student> Students { get; set; }
+        [IgnoreProperty]
         public IEnumerable<Lesson> Lessons { get; set; }
+        public string SerializedLessons { get; set; }
     }
 }

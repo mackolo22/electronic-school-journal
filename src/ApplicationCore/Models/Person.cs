@@ -4,6 +4,7 @@ namespace ApplicationCore.Models
 {
     public class Person : TableEntity
     {
+        public Person() { }
 
         public Person(long id)
         {
