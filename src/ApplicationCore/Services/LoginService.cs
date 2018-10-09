@@ -18,7 +18,7 @@ namespace ApplicationCore.Services
             {
                 // TODO: Sprawdzenie w bazie czy nie ma już takiego nicku.
                 string login = String.Empty;
-                login += firstName.ToLower().RemoveDiacritics()[0];
+                login += firstName.ToLower().RemoveDiacritics();
                 login += lastName.ToLower().RemoveDiacritics();
                 return login;
             }

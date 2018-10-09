@@ -19,6 +19,8 @@ namespace UI.Dialogs
             _loginService = loginService;
         }
 
+        public bool ChangesSaved { get; set; }
+
         public string FirstName
         {
             get => _firstName;
@@ -61,8 +63,6 @@ namespace UI.Dialogs
 
         public string Password { get; set; }
 
-        public bool ChangesSaved { get; set; }
-
         public RelayCommand GenerateLoginCommand => new RelayCommand(ExecuteGenerateLogin, () => true);
         protected void ExecuteGenerateLogin(object parameter)
         {
@@ -87,11 +87,9 @@ namespace UI.Dialogs
         }
 
         public RelayCommand SaveChangesCommand => new RelayCommand(ExecuteSaveChanges, () => true);
-        protected void ExecuteSaveChanges(object parameter)
+        protected virtual void ExecuteSaveChanges(object parameter)
         {
-            Password = _loginService.GeneratePassword();
             ChangesSaved = true;
-
             if (parameter is Window window)
             {
                 window.Close();

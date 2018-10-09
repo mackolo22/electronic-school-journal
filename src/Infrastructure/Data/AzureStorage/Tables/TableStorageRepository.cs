@@ -66,10 +66,10 @@ namespace Infrastructure.Data.AzureStorage.Tables
         {
             var typeOfEntity = typeof(T);
             var table = await _azureStorageHelper.EnsureTableExistenceAndGetReferenceAsync(typeOfEntity);
-            var insertOperation = TableOperation.Insert(entity);
+            var insertOrReplaceOperation = TableOperation.InsertOrReplace(entity);
             try
             {
-                var tableResult = await table.ExecuteAsync(insertOperation);
+                var tableResult = await table.ExecuteAsync(insertOrReplaceOperation);
             }
             catch (Exception ex)
             {

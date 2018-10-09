@@ -1,52 +1,50 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace ApplicationCore.Enums
 {
+    [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum Subject
     {
-        [Display(Name = "brak")]
-        None = 0,
-
-        [Display(Name = "Edukacja wczesnoszkolna")]
+        [Description("Edukacja wczesnoszkolna")]
         EarlySchoolEducation = 1,
 
-        [Display(Name = "Wychowanie fizyczne")]
+        [Description("Wychowanie fizyczne")]
         PhysicalEducation = 2,
 
-        [Display(Name = "Religia")]
+        [Description("Religia")]
         Religion = 3,
 
-        [Display(Name = "Informatyka")]
+        [Description("Informatyka")]
         ComputerScience = 4,
 
-        [Display(Name = "Muzyka")]
+        [Description("Muzyka")]
         Music = 5,
 
-        [Display(Name = "Plastyka")]
+        [Description("Plastyka")]
         ArtClasses = 6,
 
-        [Display(Name = "J. angielski")]
+        [Description("J. angielski")]
         English = 7,
 
-        [Display(Name = "Zajęcia taneczne")]
+        [Description("Zajęcia taneczne")]
         DancingClasses = 8,
 
-        [Display(Name = "Matematyka")]
+        [Description("Matematyka")]
         Maths = 9,
 
-        [Display(Name = "J. polski")]
+        [Description("J. polski")]
         Polish = 10,
 
-        [Display(Name = "Przyroda")]
+        [Description("Przyroda")]
         NaturalScience = 11,
 
-        [Display(Name = "Fizyka")]
+        [Description("Fizyka")]
         Physics = 12,
 
-        [Display(Name = "Geografia")]
+        [Description("Geografia")]
         Geography = 13,
 
-        [Display(Name = "Biologia")]
+        [Description("Biologia")]
         Biology = 14
     }
 }

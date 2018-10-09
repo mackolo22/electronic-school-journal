@@ -29,13 +29,16 @@ namespace UI.Dialogs
                 {
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
-                    User = new User
-                    {
-                        Login = viewModel.Login,
-                        Password = viewModel.Password
-                    }
+                    Login = viewModel.Login,
+                    Password = viewModel.Password
                 };
             }
+        }
+
+        protected override void ExecuteSaveChanges(object parameter)
+        {
+            Password = _loginService.GeneratePassword();
+            base.ExecuteSaveChanges(parameter);
         }
     }
 }

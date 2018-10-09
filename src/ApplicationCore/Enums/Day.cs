@@ -1,22 +1,23 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
 
 namespace ApplicationCore.Enums
 {
+    [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum Day
     {
-        [Display(Name = "Poniedziałek")]
+        [Description("Poniedziałek")]
         Monday = 0,
 
-        [Display(Name = "Wtorek")]
+        [Description("Wtorek")]
         Tuesday = 1,
 
-        [Display(Name = "Środa")]
+        [Description("Środa")]
         Wednesday = 2,
 
-        [Display(Name = "Czwartek")]
+        [Description("Czwartek")]
         Thursday = 3,
 
-        [Display(Name = "Piątek")]
+        [Description("Piątek")]
         Friday = 4
     }
 }

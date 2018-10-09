@@ -2,6 +2,7 @@
 using ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using UI.Dialogs;
 
 namespace UI.ViewModels
@@ -10,16 +11,19 @@ namespace UI.ViewModels
     {
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
         private readonly IClassService _classService;
+        private readonly IPersonService _personService;
         private int _classNumber = 1;
         private string _classLetter = "A";
         private Teacher _educator;
 
         public AddClassViewModel(
             IUniqueIDGenerator uniqueIDGenerator,
-            IClassService classService)
+            IClassService classService,
+            IPersonService personService)
         {
             _uniqueIDGenerator = uniqueIDGenerator;
             _classService = classService;
+            _personService = personService;
 
             Students = new ObservableCollection<Student>();
             Teachers = new ObservableCollection<Teacher>();
@@ -66,6 +70,16 @@ namespace UI.ViewModels
 
         public ObservableCollection<Lesson> Lessons { get; set; }
 
+        public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
+        private async Task ExecuteLoadedAsync(object parameter)
+        {
+            var teachers = await _personService.GetAllTeachersAsync();
+            foreach (var teacher in teachers)
+            {
+                Teachers.Add(teacher);
+            }
+        }
+
         public RelayCommand AddTeacherCommand => new RelayCommand(ExecuteAddTeacher, () => true);
         private void ExecuteAddTeacher(object parameter)
         {
@@ -73,22 +87,9 @@ namespace UI.ViewModels
             var dialog = new AddTeacherDialog(viewModel);
             dialog.ShowDialog();
 
-            if (viewModel.ChangesSaved)
-            {
-                long id = _uniqueIDGenerator.GetNextId();
-                Teacher teacher = new Teacher(id)
-                {
-                    FirstName = viewModel.FirstName,
-                    LastName = viewModel.LastName,
-                    User = new User
-                    {
-                        Login = viewModel.Login,
-                        Password = viewModel.Password
-                    }
-                };
-
-                Teachers.Add(teacher);
-            }
+            Teacher teacher = viewModel.Teacher;
+            Teachers.Add(teacher);
+            Educator = teacher;
         }
 
         public RelayCommand AddStudentCommand => new RelayCommand(ExecuteAddStudent, () => true);
@@ -110,11 +111,8 @@ namespace UI.ViewModels
                     LastName = viewModel.LastName,
                     ParentId = viewModel.Parent?.Id,
                     Parent = viewModel.Parent,
-                    User = new User
-                    {
-                        Login = viewModel.Login,
-                        Password = viewModel.Password
-                    }
+                    Login = viewModel.Login,
+                    Password = viewModel.Password
                 };
 
                 if (student.Parent != null)
@@ -130,8 +128,23 @@ namespace UI.ViewModels
         private void ExecuteAddLesson(object parameter)
         {
             var viewModel = UnityConfiguration.Resolve<AddLessonViewModel>();
+            viewModel.Teachers = Teachers;
             var dialog = new AddLessonDialog(viewModel);
             dialog.ShowDialog();
+
+            if (viewModel.ChangesSaved)
+            {
+                Lesson lesson = new Lesson
+                {
+                    Subject = viewModel.Subject,
+                    Teacher = viewModel.Teacher,
+                    TeacherId = viewModel.Teacher?.Id,
+                    Classroom = viewModel.Classroom,
+                    Terms = viewModel.Terms
+                };
+
+                Lessons.Add(lesson);
+            }
         }
 
         public RelayCommand SaveChangesCommand => new RelayCommand(ExecuteSaveChanges, () => true);

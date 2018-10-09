@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ApplicationCore.Exceptions.AzureStorage;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Newtonsoft.Json;
 
 namespace ApplicationCore.Services
 {
@@ -16,18 +17,25 @@ namespace ApplicationCore.Services
         }
 
         public async Task<bool> AddNewClassAsync(
-            int classNumber, 
-            string classLetter, 
-            Teacher educator, 
-            IEnumerable<Student> students, 
+            int classNumber,
+            string classLetter,
+            Teacher educator,
+            IEnumerable<Student> students,
             IEnumerable<Lesson> lessons)
         {
+            string serializedLessons = string.Empty;
+            if (lessons != null)
+            {
+                serializedLessons = JsonConvert.SerializeObject(lessons);
+            }
+
             var studentsClass = new StudentsClass(classNumber, classLetter)
             {
                 EducatorId = educator?.Id,
                 Educator = educator,
                 Students = students,
-                Lessons = lessons
+                Lessons = lessons,
+                SerializedLessons = serializedLessons
             };
 
             if (studentsClass.Educator != null)

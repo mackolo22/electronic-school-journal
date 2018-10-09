@@ -1,32 +1,34 @@
 ﻿using ApplicationCore.Enums;
-using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using UI.ViewModels;
 
 namespace UI.Dialogs
 {
     public class AddLessonViewModel : ViewModelBase
     {
-        private readonly IUniqueIDGenerator _uniqueIDGenerator;
         private Subject _subject;
         private Teacher _teacher;
+        private string _classroom;
 
-        public AddLessonViewModel(IUniqueIDGenerator uniqueIDGenerator)
+        public AddLessonViewModel()
         {
-            _uniqueIDGenerator = uniqueIDGenerator;
-
-            Subjects = new ObservableCollection<Subject>
-            {
-                Subject.Maths,
-                Subject.Polish
-            };
-
-            Teachers = new ObservableCollection<Teacher>();
+            Terms = new ObservableCollection<LessonTerm>();
         }
 
-        // TODO: wygooglać jak zrobić listę ze wszystkich dostępnych pól w enumie.
-        public ObservableCollection<Subject> Subjects { get; set; }
+        public bool ChangesSaved { get; set; }
+
+        public IEnumerable<Subject> Subjects
+        {
+            get
+            {
+                return Enum.GetValues(typeof(Subject)).Cast<Subject>();
+            }
+        }
 
         public Subject Subject
         {
@@ -50,6 +52,18 @@ namespace UI.Dialogs
             }
         }
 
+        public string Classroom
+        {
+            get => _classroom;
+            set
+            {
+                _classroom = value;
+                OnPropertyChanged(nameof(Classroom));
+            }
+        }
+
+        public ObservableCollection<LessonTerm> Terms { get; set; }
+
         public RelayCommand AddTeacherCommand => new RelayCommand(ExecuteAddTeacher, () => true);
         private void ExecuteAddTeacher(object parameter)
         {
@@ -57,28 +71,48 @@ namespace UI.Dialogs
             var dialog = new AddTeacherDialog(viewModel);
             dialog.ShowDialog();
 
-            if (viewModel.ChangesSaved)
-            {
-                long id = _uniqueIDGenerator.GetNextId();
-                Teacher teacher = new Teacher(id)
-                {
-                    FirstName = viewModel.FirstName,
-                    LastName = viewModel.LastName,
-                    User = new User
-                    {
-                        Login = viewModel.Login,
-                        Password = viewModel.Password
-                    }
-                };
-
-                Teachers.Add(teacher);
-            }
+            Teacher teacher = viewModel.Teacher;
+            Teachers.Add(teacher);
+            Teacher = teacher;
         }
 
         public RelayCommand AddTermCommand => new RelayCommand(ExecuteAddTerm, () => true);
         private void ExecuteAddTerm(object parameter)
         {
-            // TODO: dodać AddLessonTermDialog
+            var viewModel = UnityConfiguration.Resolve<AddTermViewModel>();
+            var dialog = new AddTermDialog(viewModel);
+            dialog.ShowDialog();
+
+            string hour = viewModel.Hour;
+            string minutes = viewModel.Minutes;
+            string time = $"{hour}:{minutes}";
+            LessonTerm term = new LessonTerm
+            {
+                Day = viewModel.Day,
+                Time = time
+            };
+
+            Terms.Add(term);
+        }
+
+        public RelayCommand CancelCommand => new RelayCommand(ExecuteCancel, () => true);
+        protected void ExecuteCancel(object parameter)
+        {
+            if (parameter is Window window)
+            {
+                window.Close();
+            }
+        }
+
+        public RelayCommand SaveChangesCommand => new RelayCommand(ExecuteSaveChanges, () => true);
+        protected virtual void ExecuteSaveChanges(object parameter)
+        {
+            ChangesSaved = true;
+
+            if (parameter is Window window)
+            {
+                window.Close();
+            }
         }
     }
 }
