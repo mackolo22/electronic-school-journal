@@ -6,10 +6,18 @@
         xmlns:local="clr-namespace:UI"
         xmlns:views="clr-namespace:UI.Views"
         xmlns:viewModels="clr-namespace:UI.ViewModels"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         Title="Elektroniczy dziennik szkolny" Height="450" Width="800"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
             <views:HomeView/>
@@ -20,24 +28,27 @@
     </Window.Resources>
 
     <Grid>
-        
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="70"/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
 
-        <Button Grid.Column="0" Grid.Row="0" Content="HOME" Command="{Binding ChangeViewCommand}" CommandParameter="HomeView"/>
-        <Button Grid.Column="0" Grid.Row="1" Content="Dodaj klasę" Command="{Binding ChangeViewCommand}" CommandParameter="AddClassView"/>
-        <ContentControl Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="4" Content="{Binding ViewModel}"/>
-    
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <StackPanel Grid.Column="0" Grid.Row="1" Background="Bisque">
+            <Button Margin="10,15" Content="HOME" Command="{Binding ChangeViewCommand}" CommandParameter="HomeView"/>
+            <Button Margin="10,15" Content="Dodaj klasę" Command="{Binding ChangeViewCommand}" CommandParameter="AddClassView"/>
+            <Button Margin="10,15" Content="Coś tam" Command="{Binding ChangeViewCommand}" CommandParameter=""/>
+        </StackPanel>
+
+        <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="Aquamarine">
+            <Label Margin="10" Content="Elektroniczny dziennik szkolny" FontWeight="DemiBold" FontSize="30" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+            <Label Margin="10" Content="{Binding LoggedAs}" FontSize="20" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
+        </DockPanel>
+        
+        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding ViewModel}"/>
     </Grid>
 </Window>

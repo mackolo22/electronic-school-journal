@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Windows.Input;
+using UI.Dialogs;
 
 namespace UI.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
         private ViewModelBase _viewModel;
+        private string _loggedAs;
 
         public MainViewModel()
         {
@@ -22,7 +23,25 @@ namespace UI.ViewModels
             }
         }
 
-        public ICommand ChangeViewCommand
+        public string LoggedAs
+        {
+            get => _loggedAs;
+            set
+            {
+                _loggedAs = value;
+                OnPropertyChanged(nameof(LoggedAs));
+            }
+        }
+
+        public RelayCommand LoadedCommand => new RelayCommand(ExecuteLoaded, () => true);
+        private void ExecuteLoaded(object parameter)
+        {
+            var viewModel = UnityConfiguration.Resolve<LoginViewModel>();
+            var dialog = new LoginDialog(viewModel);
+            dialog.ShowDialog();
+        }
+
+        public RelayCommand ChangeViewCommand
         {
             get => new RelayCommand(ExecuteChangeView, () => true);
         }
@@ -35,11 +54,17 @@ namespace UI.ViewModels
                 switch (viewName)
                 {
                     case "HomeView":
-                        ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+                        if (!(ViewModel is HomeViewModel))
+                        {
+                            ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+                        }
                         break;
 
                     case "AddClassView":
-                        ViewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                        if (!(ViewModel is AddClassViewModel))
+                        {
+                            ViewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                        }
                         break;
                 }
             }

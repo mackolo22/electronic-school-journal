@@ -1,0 +1,48 @@
+﻿<Window x:Class="UI.Dialogs.LoginDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UI.Dialogs"
+        mc:Ignorable="d"
+        Title="LoginDialog" Height="450" Width="800"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.ColumnSpan="3" Margin="15" Content="Logowanie do systemu" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="30"/>
+
+        <Grid Grid.Row="1" Grid.Column="0" Background="Azure">
+            <RadioButton Content="Uczeń" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </Grid>
+
+        <DockPanel Grid.Row="1" Grid.Column="1" Background="BlanchedAlmond">
+            <RadioButton Content="Nauczyciel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </DockPanel>
+
+        <DockPanel Grid.Row="1" Grid.Column="2" Background="CadetBlue">
+            <RadioButton Content="Rodzic" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        </DockPanel>
+
+        <Label Grid.Row="2" Grid.Column="0" Margin="15" Content="Login:"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="15" Text="{Binding Login}"/>
+
+        <Label Grid.Row="3" Grid.Column="0" Margin="15" Content="Hasło:"/>
+        <PasswordBox Grid.Row="3" Grid.Column="1" Margin="15" Name="PasswordBox"/>
+
+        <Button Grid.Row="4" Grid.Column="1" Margin="15" Content="Zaloguj się" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>
+    </Grid>
+</Window>

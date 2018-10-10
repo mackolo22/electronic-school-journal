@@ -28,6 +28,7 @@ namespace UI
 
             #region ViewModels
             _unityContainer.RegisterType<MainViewModel>();
+            _unityContainer.RegisterType<LoginViewModel>();
             _unityContainer.RegisterType<HomeViewModel>();
             _unityContainer.RegisterType<AddClassViewModel>();
             _unityContainer.RegisterType<AddStudentViewModel>();
