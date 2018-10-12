@@ -15,6 +15,7 @@ namespace Infrastructure.Data.AzureStorage
 
         public IDictionary<Type, string> TableNamesByTypeOfEntity { get; set; } = new Dictionary<Type, string>
         {
+            { typeof(Person),           "PeopleTable" },
             { typeof(Student),          "PeopleTable" },
             { typeof(Teacher),          "PeopleTable" },
             { typeof(Parent),           "PeopleTable" },
@@ -38,7 +39,7 @@ namespace Infrastructure.Data.AzureStorage
             {
                 tableName = TableNamesByTypeOfEntity[typeOfEntity];
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
                 throw new TableException($"Nie znaleziono nazwy tabeli dla encji typu: {typeOfEntity.Name}.", ex);
             }

@@ -45,7 +45,7 @@
                 IsEnabled="{Binding LoginGenerated, Converter={StaticResource NegativeBoolConverter}}" 
                 Command="{Binding GenerateLoginCommand}"/>
 
-        <Button Grid.Row="3" Grid.ColumnSpan="2" Content="Dodaj rodzica" Margin="15" Command="{Binding AddParentCommand}"/>
+        <Button Grid.Row="3" Grid.ColumnSpan="2" Content="Dodaj rodzica" Margin="15" IsEnabled="{Binding ParentAdded, Converter={StaticResource NegativeBoolConverter}}" Command="{Binding AddParentCommand}"/>
 
         <Button Grid.Row="4" Grid.Column="4" Margin="10" Content="Anuluj" Command="{Binding CancelCommand}" 
                 CommandParameter="{Binding ElementName=AddStudentWindow}"/>

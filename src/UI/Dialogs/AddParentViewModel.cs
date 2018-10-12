@@ -19,6 +19,7 @@ namespace UI.Dialogs
         protected override void ExecuteSaveChanges(object parameter)
         {
             Password = _loginService.GeneratePassword();
+            HashedPassword = _loginService.HashPassword(Password);
             base.ExecuteSaveChanges(parameter);
         }
     }

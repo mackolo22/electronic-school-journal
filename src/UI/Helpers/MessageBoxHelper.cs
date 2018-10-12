@@ -13,7 +13,7 @@ namespace UI.Helpers
             messageBox.ShowDialog();
         }
 
-        public static void ShowErrorMessageBox(string caption, string content)
+        public static void ShowErrorMessageBox(string content, string caption = "Błąd")
         {
             var viewModel = new ErrorMessageBoxViewModel(caption, content);
             var messageBox = new ErrorMessageBox(viewModel);

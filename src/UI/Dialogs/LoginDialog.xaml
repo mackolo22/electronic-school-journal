@@ -4,10 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI.Dialogs"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
         Title="LoginDialog" Height="450" Width="800"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None">
+        WindowStyle="None"
+        x:Name="Window">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=Window}"/>
+        </i:EventTrigger>
+
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding ClosedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -25,17 +38,31 @@
 
         <Label Grid.Row="0" Grid.ColumnSpan="3" Margin="15" Content="Logowanie do systemu" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="30"/>
 
-        <Grid Grid.Row="1" Grid.Column="0" Background="Azure">
-            <RadioButton Content="Uczeń" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Grid Grid.Row="1" Grid.Column="0" Margin="15">
+            <Grid.Background>
+                <ImageBrush ImageSource="pack://application:,,,/Resources/button_student.png" Stretch="Uniform"/>
+            </Grid.Background>
+            <RadioButton Content="Uczeń" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                         Command="{Binding SelectUserCommand}" CommandParameter="Student">
+            </RadioButton>
         </Grid>
 
-        <DockPanel Grid.Row="1" Grid.Column="1" Background="BlanchedAlmond">
-            <RadioButton Content="Nauczyciel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        </DockPanel>
+        <Grid Grid.Row="1" Grid.Column="1" Margin="15">
+            <Grid.Background>
+                <ImageBrush ImageSource="pack://application:,,,/Resources/button_teacher.png" Stretch="Uniform"/>
+            </Grid.Background>
+            <RadioButton Content="Nauczyciel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                         Command="{Binding SelectUserCommand}" CommandParameter="Teacher">
+            </RadioButton>
+        </Grid>
 
-        <DockPanel Grid.Row="1" Grid.Column="2" Background="CadetBlue">
-            <RadioButton Content="Rodzic" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        </DockPanel>
+        <Grid Grid.Row="1" Grid.Column="2" Margin="15">
+            <Grid.Background>
+                <ImageBrush ImageSource="pack://application:,,,/Resources/button_parent.png" Stretch="Uniform"/>
+            </Grid.Background>
+            <RadioButton Content="Rodzic" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                         Command="{Binding SelectUserCommand}" CommandParameter="Parent"/>
+        </Grid>
 
         <Label Grid.Row="2" Grid.Column="0" Margin="15" Content="Login:"/>
         <TextBox Grid.Row="2" Grid.Column="1" Margin="15" Text="{Binding Login}"/>

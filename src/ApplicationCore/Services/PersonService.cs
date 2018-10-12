@@ -17,7 +17,7 @@ namespace ApplicationCore.Services
         }
 
         // TODO: wykorzystać polimorfizm i złączyć te 2 metody w jedną.
-        public async Task<Teacher> AddTeacherAsync(string firstName, string lastName, string login, string password)
+        public async Task<Teacher> AddTeacherAsync(string firstName, string lastName, string login, string password, string hashedPassword)
         {
             long id = _uniqueIDGenerator.GetNextId();
             var teacher = new Teacher(id)
@@ -25,7 +25,8 @@ namespace ApplicationCore.Services
                 FirstName = firstName,
                 LastName = lastName,
                 Login = login,
-                Password = password
+                Password = password,
+                HashedPassword = hashedPassword
             };
 
             await _repository.InsertAsync(teacher);
@@ -49,7 +50,7 @@ namespace ApplicationCore.Services
 
         public async Task<IEnumerable<Teacher>> GetAllTeachersAsync()
         {
-            var teachers = await _repository.GetAllAsync<Teacher>("Teacher");
+            var teachers = await _repository.GetAllAsync<Teacher>(nameof(Teacher));
             return teachers;
         }
     }

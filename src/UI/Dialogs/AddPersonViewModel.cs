@@ -63,6 +63,8 @@ namespace UI.Dialogs
 
         public string Password { get; set; }
 
+        public string HashedPassword { get; set; }
+
         public RelayCommand GenerateLoginCommand => new RelayCommand(ExecuteGenerateLogin, () => true);
         protected void ExecuteGenerateLogin(object parameter)
         {
@@ -73,7 +75,7 @@ namespace UI.Dialogs
             }
             catch (LoginException ex)
             {
-                MessageBoxHelper.ShowErrorMessageBox("Błąd", ex.Message);
+                MessageBoxHelper.ShowErrorMessageBox(ex.Message);
             }
         }
 

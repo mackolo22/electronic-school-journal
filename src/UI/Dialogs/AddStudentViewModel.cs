@@ -15,6 +15,8 @@ namespace UI.Dialogs
 
         public Parent Parent { get; set; }
 
+        public bool ParentAdded { get; set; }
+
         public RelayCommand AddParentCommand => new RelayCommand(ExecuteAddParent, () => true);
         private void ExecuteAddParent(object parameter)
         {
@@ -30,14 +32,18 @@ namespace UI.Dialogs
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
                     Login = viewModel.Login,
-                    Password = viewModel.Password
+                    Password = viewModel.Password,
+                    HashedPassword = viewModel.HashedPassword
                 };
+
+                ParentAdded = true;
             }
         }
 
         protected override void ExecuteSaveChanges(object parameter)
         {
             Password = _loginService.GeneratePassword();
+            HashedPassword = _loginService.HashPassword(Password);
             base.ExecuteSaveChanges(parameter);
         }
     }

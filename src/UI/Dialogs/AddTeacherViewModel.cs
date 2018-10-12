@@ -20,10 +20,11 @@ namespace UI.Dialogs
         protected override async void ExecuteSaveChanges(object parameter)
         {
             Password = _loginService.GeneratePassword();
+            HashedPassword = _loginService.HashPassword(Password);
 
             try
             {
-                Teacher = await _personService.AddTeacherAsync(FirstName, LastName, Login, Password);
+                Teacher = await _personService.AddTeacherAsync(FirstName, LastName, Login, Password, HashedPassword);
             }
             catch (TableException ex)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApplicationCore.Models;
+using System;
 using UI.Dialogs;
 
 namespace UI.ViewModels
@@ -6,12 +7,18 @@ namespace UI.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private ViewModelBase _viewModel;
-        private string _loggedAs;
 
         public MainViewModel()
         {
             ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
         }
+
+        public string UserType { get; set; }
+        public Person Person { get; set; }
+        public Student Student { get; set; }
+        public Teacher Teacher { get; set; }
+        public Parent Parent { get; set; }
+        public Administrator Administrator { get; set; }
 
         public ViewModelBase ViewModel
         {
@@ -25,11 +32,10 @@ namespace UI.ViewModels
 
         public string LoggedAs
         {
-            get => _loggedAs;
-            set
+            get
             {
-                _loggedAs = value;
-                OnPropertyChanged(nameof(LoggedAs));
+                string loggedAs = Person == null ? "Nie zalogowano." : $"Zalogowany jako: {Person.FullName}";
+                return loggedAs;
             }
         }
 
@@ -39,6 +45,14 @@ namespace UI.ViewModels
             var viewModel = UnityConfiguration.Resolve<LoginViewModel>();
             var dialog = new LoginDialog(viewModel);
             dialog.ShowDialog();
+
+            UserType = viewModel.UserType;
+            Student = viewModel.Student;
+            Teacher = viewModel.Teacher;
+            Parent = viewModel.Parent;
+            Administrator = viewModel.Administrator;
+            Person = viewModel.Person;
+            OnPropertyChanged(nameof(LoggedAs));
         }
 
         public RelayCommand ChangeViewCommand

@@ -1,9 +1,6 @@
-﻿using ApplicationCore.Interfaces;
-using Infrastructure.Data.AzureStorage.Tables;
-using System.Windows;
+﻿using System.Windows;
 using UI.ViewModels;
 using UI.Views;
-using Unity;
 
 namespace UI
 {
@@ -12,17 +9,24 @@ namespace UI
     /// </summary>
     public partial class App : Application
     {
+        private static Window _window;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
             UnityConfiguration.ConfigureUnityContainer();
 
-            var window = new MainWindow()
+            _window = new MainWindow()
             {
                 DataContext = UnityConfiguration.Resolve<MainViewModel>()
             };
 
-            window.Show();
+            _window.Show();
+        }
+
+        public static void ExitApplication()
+        {
+            _window.Close();
         }
     }
 }

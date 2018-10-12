@@ -4,6 +4,8 @@ namespace ApplicationCore.Models
 {
     public class Parent : Person
     {
+        public Parent() { }
+
         public Parent(long id) : base(id)
         {
             PartitionKey = nameof(Parent);

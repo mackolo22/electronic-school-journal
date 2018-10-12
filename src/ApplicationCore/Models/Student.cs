@@ -5,6 +5,8 @@ namespace ApplicationCore.Models
 {
     public class Student : Person
     {
+        public Student() { }
+
         public Student(long id) : base(id)
         {
             PartitionKey = nameof(Student);

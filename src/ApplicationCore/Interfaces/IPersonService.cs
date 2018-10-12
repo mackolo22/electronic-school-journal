@@ -6,7 +6,7 @@ namespace ApplicationCore.Interfaces
 {
     public interface IPersonService
     {
-        Task<Teacher> AddTeacherAsync(string firstName, string lastName, string login, string password);
+        Task<Teacher> AddTeacherAsync(string firstName, string lastName, string login, string password, string hashedPassword);
         Task<Parent> AddParentAsync(string firstName, string lastName, string login, string password);
         Task<IEnumerable<Teacher>> GetAllTeachersAsync();
     }

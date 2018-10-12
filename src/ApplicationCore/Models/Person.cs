@@ -17,6 +17,8 @@ namespace ApplicationCore.Models
         public string LastName { get; set; }
         public string FullName { get => $"{FirstName} {LastName}"; }
         public string Login { get; set; }
+        [IgnoreProperty]
         public string Password { get; set; }
+        public string HashedPassword { get; set; }
     }
 }

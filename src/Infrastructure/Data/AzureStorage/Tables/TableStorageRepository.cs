@@ -45,21 +45,11 @@ namespace Infrastructure.Data.AzureStorage.Tables
             {
                 var tableQuerySegment = await table.ExecuteQuerySegmentedAsync(tableQuery, continuationToken);
                 continuationToken = tableQuerySegment.ContinuationToken;
-                foreach (var result in tableQuerySegment.Results)
-                {
-                    entities.Add(result);
-                }
+                entities.AddRange(tableQuerySegment.Results);
             }
             while (continuationToken != null);
 
             return entities;
-        }
-
-        public async Task<IQueryable<T>> QueryAllAsync<T>() where T : class, ITableEntity
-        {
-            var typeOfEntity = typeof(T);
-            var table = await _azureStorageHelper.EnsureTableExistenceAndGetReferenceAsync(typeOfEntity);
-            throw new NotImplementedException();
         }
 
         public async Task InsertAsync<T>(T entity) where T : class, ITableEntity
@@ -88,6 +78,30 @@ namespace Infrastructure.Data.AzureStorage.Tables
             }
 
             await table.ExecuteBatchAsync(batchOperation);
+        }
+
+        public async Task<IEnumerable<T>> GetAllByPropertyAsync<T>(
+            string partitionKey,
+            string propertyName,
+            string propertyValue) where T : class, ITableEntity, new()
+        {
+            var typeOfEntity = typeof(T);
+            var table = await _azureStorageHelper.EnsureTableExistenceAndGetReferenceAsync(typeOfEntity);
+            string partitionKeyFilter = TableQuery.GenerateFilterCondition("PartitionKey", QueryComparisons.Equal, partitionKey);
+            string propertyFilter = TableQuery.GenerateFilterCondition(propertyName, QueryComparisons.Equal, propertyValue);
+            string finalFilter = TableQuery.CombineFilters(partitionKeyFilter, TableOperators.And, propertyFilter);
+            var tableQuery = new TableQuery<T>().Where(finalFilter);
+            var entities = new List<T>();
+            TableContinuationToken continuationToken = null;
+            do
+            {
+                var tableQuerySegment = await table.ExecuteQuerySegmentedAsync(tableQuery, continuationToken);
+                continuationToken = tableQuerySegment.ContinuationToken;
+                entities.AddRange(tableQuerySegment.Results);
+            }
+            while (continuationToken != null);
+
+            return entities;
         }
     }
 }
