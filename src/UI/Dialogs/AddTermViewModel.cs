@@ -10,9 +10,8 @@ namespace UI.Dialogs
     public class AddTermViewModel : ViewModelBase
     {
         private Day _day;
-        private TimeSpan _time;
-        private string _hour;
-        private string _minutes;
+        private string _hour = "8";
+        private string _minutes = "00";
 
         public IEnumerable<Day> Days
         {

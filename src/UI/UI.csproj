@@ -125,6 +125,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TimeTableView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\HomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -137,6 +141,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\NegativeBoolToVisibilityConverter.cs" />
     <Compile Include="Dialogs\AddLessonDialog.xaml.cs">
       <DependentUpon>AddLessonDialog.xaml</DependentUpon>
     </Compile>
@@ -179,9 +184,13 @@
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="Dialogs\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\TimeTableViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AddClassView.xaml.cs">
       <DependentUpon>AddClassView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TimeTableView.xaml.cs">
+      <DependentUpon>TimeTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
       <DependentUpon>HomeView.xaml</DependentUpon>

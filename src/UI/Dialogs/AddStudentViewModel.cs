@@ -14,7 +14,6 @@ namespace UI.Dialogs
         }
 
         public Parent Parent { get; set; }
-
         public bool ParentAdded { get; set; }
 
         public RelayCommand AddParentCommand => new RelayCommand(ExecuteAddParent, () => true);
@@ -37,6 +36,7 @@ namespace UI.Dialogs
                 };
 
                 ParentAdded = true;
+                OnPropertyChanged(nameof(ParentAdded));
             }
         }
 

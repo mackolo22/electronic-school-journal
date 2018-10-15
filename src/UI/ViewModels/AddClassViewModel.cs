@@ -112,7 +112,8 @@ namespace UI.ViewModels
                     ParentId = viewModel.Parent?.Id,
                     Parent = viewModel.Parent,
                     Login = viewModel.Login,
-                    Password = viewModel.Password
+                    Password = viewModel.Password,
+                    HashedPassword = viewModel.HashedPassword
                 };
 
                 if (student.Parent != null)

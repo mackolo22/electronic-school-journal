@@ -34,6 +34,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.ColumnSpan="3" Margin="15" Content="Logowanie do systemu" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="30"/>
@@ -43,7 +44,7 @@
                 <ImageBrush ImageSource="pack://application:,,,/Resources/button_student.png" Stretch="Uniform"/>
             </Grid.Background>
             <RadioButton Content="Uczeń" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                         Command="{Binding SelectUserCommand}" CommandParameter="Student">
+                         IsChecked="{Binding StudentChecked}">
             </RadioButton>
         </Grid>
 
@@ -52,7 +53,7 @@
                 <ImageBrush ImageSource="pack://application:,,,/Resources/button_teacher.png" Stretch="Uniform"/>
             </Grid.Background>
             <RadioButton Content="Nauczyciel" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                         Command="{Binding SelectUserCommand}" CommandParameter="Teacher">
+                         IsChecked="{Binding TeacherChecked}">
             </RadioButton>
         </Grid>
 
@@ -61,15 +62,18 @@
                 <ImageBrush ImageSource="pack://application:,,,/Resources/button_parent.png" Stretch="Uniform"/>
             </Grid.Background>
             <RadioButton Content="Rodzic" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                         Command="{Binding SelectUserCommand}" CommandParameter="Parent"/>
+                         IsChecked="{Binding ParentChecked}"/>
         </Grid>
 
-        <Label Grid.Row="2" Grid.Column="0" Margin="15" Content="Login:"/>
-        <TextBox Grid.Row="2" Grid.Column="1" Margin="15" Text="{Binding Login}"/>
+        <RadioButton Grid.Row="2" Grid.Column="1" Margin="15" Content="Administrator" HorizontalAlignment="Center"
+                     IsChecked="{Binding AdministratorChecked}"/>
 
-        <Label Grid.Row="3" Grid.Column="0" Margin="15" Content="Hasło:"/>
-        <PasswordBox Grid.Row="3" Grid.Column="1" Margin="15" Name="PasswordBox"/>
+        <Label Grid.Row="3" Grid.Column="0" Margin="15" Content="Login:"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Margin="15" Text="{Binding Login}"/>
 
-        <Button Grid.Row="4" Grid.Column="1" Margin="15" Content="Zaloguj się" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>
+        <Label Grid.Row="4" Grid.Column="0" Margin="15" Content="Hasło:"/>
+        <PasswordBox Grid.Row="4" Grid.Column="1" Margin="15" Name="PasswordBox"/>
+
+        <Button Grid.Row="5" Grid.Column="1" Margin="15" Content="Zaloguj się" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>
     </Grid>
 </Window>

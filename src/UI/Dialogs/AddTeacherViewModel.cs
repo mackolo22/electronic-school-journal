@@ -26,7 +26,7 @@ namespace UI.Dialogs
             {
                 Teacher = await _personService.AddTeacherAsync(FirstName, LastName, Login, Password, HashedPassword);
             }
-            catch (TableException ex)
+            catch (TableException)
             {
                 // TODO: dodać w MessageBoxHelper boxa do wyjątków i odpalać go.
             }

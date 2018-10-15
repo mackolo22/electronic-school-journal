@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Models;
+﻿using ApplicationCore.Enums;
+using ApplicationCore.Models;
 using System;
 using UI.Dialogs;
 
@@ -13,7 +14,7 @@ namespace UI.ViewModels
             ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
         }
 
-        public string UserType { get; set; }
+        public UserType UserType { get; set; }
         public Person Person { get; set; }
         public Student Student { get; set; }
         public Teacher Teacher { get; set; }
@@ -39,6 +40,11 @@ namespace UI.ViewModels
             }
         }
 
+        public bool LoggedAsAdministrator { get; set; }
+        public bool LoggedAsStudent { get; set; }
+        public bool LoggedAsTeacher { get; set; }
+        public bool LoggedAsParent { get; set; }
+
         public RelayCommand LoadedCommand => new RelayCommand(ExecuteLoaded, () => true);
         private void ExecuteLoaded(object parameter)
         {
@@ -47,6 +53,29 @@ namespace UI.ViewModels
             dialog.ShowDialog();
 
             UserType = viewModel.UserType;
+            switch (UserType)
+            {
+                case UserType.Administrator:
+                    LoggedAsAdministrator = true;
+                    OnPropertyChanged(nameof(LoggedAsAdministrator));
+                    break;
+
+                case UserType.Student:
+                    LoggedAsStudent = true;
+                    OnPropertyChanged(nameof(LoggedAsStudent));
+                    break;
+
+                case UserType.Teacher:
+                    LoggedAsTeacher = true;
+                    OnPropertyChanged(nameof(LoggedAsTeacher));
+                    break;
+
+                case UserType.Parent:
+                    LoggedAsParent = true;
+                    OnPropertyChanged(nameof(LoggedAsParent));
+                    break;
+            }
+
             Student = viewModel.Student;
             Teacher = viewModel.Teacher;
             Parent = viewModel.Parent;
@@ -78,6 +107,13 @@ namespace UI.ViewModels
                         if (!(ViewModel is AddClassViewModel))
                         {
                             ViewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                        }
+                        break;
+
+                    case "TimeTableView":
+                        if (!(ViewModel is TimeTableViewModel))
+                        {
+                            ViewModel = UnityConfiguration.Resolve<TimeTableViewModel>();
                         }
                         break;
                 }

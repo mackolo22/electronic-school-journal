@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Enums;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using System;
 using System.Threading.Tasks;
@@ -13,6 +14,10 @@ namespace UI.Dialogs
     {
         private Window _window;
         private bool _closeApplicationOnWindowClosed = true;
+        private bool _administratorChecked;
+        private bool _studentChecked;
+        private bool _teacherChecked;
+        private bool _parentChecked;
         private readonly ILoginService _loginService;
 
         public LoginViewModel(ILoginService loginService)
@@ -25,9 +30,65 @@ namespace UI.Dialogs
         public Teacher Teacher { get; set; }
         public Parent Parent { get; set; }
         public Administrator Administrator { get; set; }
-        public string UserType { get; set; }
+        public UserType UserType { get; set; }
         public string Login { get; set; }
         public bool LoggedIn { get; set; }
+
+        public bool AdministratorChecked
+        {
+            get => _administratorChecked;
+            set
+            {
+                UserType = UserType.Administrator;
+                _administratorChecked = value;
+                _studentChecked = _teacherChecked = _parentChecked = false;
+                OnPropertyChanged(nameof(StudentChecked));
+                OnPropertyChanged(nameof(TeacherChecked));
+                OnPropertyChanged(nameof(ParentChecked));
+            }
+        }
+
+        public bool StudentChecked
+        {
+            get => _studentChecked;
+            set
+            {
+                UserType = UserType.Student;
+                _studentChecked = value;
+                _administratorChecked = _teacherChecked = _parentChecked = false;
+                OnPropertyChanged(nameof(AdministratorChecked));
+                OnPropertyChanged(nameof(TeacherChecked));
+                OnPropertyChanged(nameof(ParentChecked));
+            }
+        }
+
+        public bool TeacherChecked
+        {
+            get => _teacherChecked;
+            set
+            {
+                UserType = UserType.Teacher;
+                _teacherChecked = value;
+                _administratorChecked = _studentChecked = _parentChecked = false;
+                OnPropertyChanged(nameof(AdministratorChecked));
+                OnPropertyChanged(nameof(StudentChecked));
+                OnPropertyChanged(nameof(ParentChecked));
+            }
+        }
+
+        public bool ParentChecked
+        {
+            get => _parentChecked;
+            set
+            {
+                UserType = UserType.Parent;
+                _parentChecked = value;
+                _administratorChecked = _studentChecked = _teacherChecked = false;
+                OnPropertyChanged(nameof(AdministratorChecked));
+                OnPropertyChanged(nameof(StudentChecked));
+                OnPropertyChanged(nameof(TeacherChecked));
+            }
+        }
 
         public RelayCommand LoadedCommand => new RelayCommand(ExecuteLoaded, () => true);
         private void ExecuteLoaded(object parameter)
@@ -47,16 +108,10 @@ namespace UI.Dialogs
             }
         }
 
-        public RelayCommand SelectUserCommand => new RelayCommand(ExecuteSelectUser, () => true);
-        private void ExecuteSelectUser(object parameter)
-        {
-            UserType = parameter as string;
-        }
-
         public RelayCommand LoginCommand => new RelayCommand(async (parameter) => await ExecuteLoginAsync(parameter), () => true);
         private async Task ExecuteLoginAsync(object parameter)
         {
-            if (String.IsNullOrWhiteSpace(UserType))
+            if (UserType == UserType.None)
             {
                 MessageBoxHelper.ShowErrorMessageBox("Wybierz typ użytkownika");
                 return;
@@ -80,22 +135,22 @@ namespace UI.Dialogs
                 // TODO: zablokować jakoś UI na czas logowania
                 switch (UserType)
                 {
-                    case "Student":
+                    case UserType.Student:
                         Student = await _loginService.LoginStudentAsync(Login, hashedPassword);
                         Person = Student;
                         break;
 
-                    case "Teacher":
+                    case UserType.Teacher:
                         Teacher = await _loginService.LoginTeacherAsync(Login, hashedPassword);
                         Person = Teacher;
                         break;
 
-                    case "Parent":
+                    case UserType.Parent:
                         Parent = await _loginService.LoginParentAsync(Login, hashedPassword);
                         Person = Parent;
                         break;
 
-                    case "Administrator":
+                    case UserType.Administrator:
                         Administrator = await _loginService.LoginAdministratorAsync(Login, hashedPassword);
                         Person = Administrator;
                         break;

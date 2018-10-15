@@ -7,6 +7,7 @@
         xmlns:views="clr-namespace:UI.Views"
         xmlns:viewModels="clr-namespace:UI.ViewModels"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:converters="clr-namespace:UI.Converters"
         mc:Ignorable="d"
         Title="Elektroniczy dziennik szkolny" Height="450" Width="800"
         WindowState="Maximized"
@@ -25,6 +26,12 @@
         <DataTemplate DataType="{x:Type viewModels:AddClassViewModel}">
             <views:AddClassView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:TimeTableViewModel}">
+            <views:TimeTableView/>
+        </DataTemplate>
+
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:NegativeBoolToVisibilityConverter x:Key="NegativeBoolToVisibilityConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -37,18 +44,27 @@
             <RowDefinition Height="100"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
+
         <StackPanel Grid.Column="0" Grid.Row="1" Background="Bisque">
-            <Button Margin="10,15" Content="HOME" Command="{Binding ChangeViewCommand}" CommandParameter="HomeView"/>
-            <Button Margin="10,15" Content="Dodaj klasę" Command="{Binding ChangeViewCommand}" CommandParameter="AddClassView"/>
-            <Button Margin="10,15" Content="Coś tam" Command="{Binding ChangeViewCommand}" CommandParameter=""/>
+            <Button Margin="10,15" Content="Strona główna" Command="{Binding ChangeViewCommand}" CommandParameter="HomeView"/>
+
+            <Button Margin="10,15" Content="Dodaj klasę" Command="{Binding ChangeViewCommand}" CommandParameter="AddClassView"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+            <Button Margin="10,15" Content="Plan lekcji" Command="{Binding ChangeViewCommand}" CommandParameter="TimeTableView"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"/>
+
+            <Button Margin="10,15" Content="Oceny" Command="{Binding ChangeViewCommand}" CommandParameter=""/>
+
+            <Button Margin="10, 15" Content="Wiadomości" Command="{Binding ChangeViewCommand}" CommandParameter=""/>
+
         </StackPanel>
 
         <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="Aquamarine">
             <Label Margin="10" Content="Elektroniczny dziennik szkolny" FontWeight="DemiBold" FontSize="30" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
             <Label Margin="10" Content="{Binding LoggedAs}" FontSize="20" VerticalContentAlignment="Center" HorizontalAlignment="Right"/>
         </DockPanel>
-        
+
         <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding ViewModel}"/>
     </Grid>
 </Window>

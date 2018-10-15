@@ -7,7 +7,8 @@
              xmlns:customControls="clr-namespace:UI.CustomControls"
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Grid.IsSharedSizeScope="True">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -36,11 +37,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="Nazwa klasy:"/>
+        <Label Grid.Column="0" Grid.Row="0" Margin="10" Content="Nazwa klasy:"/>
         <ComboBox Grid.Column="1" Grid.Row="0" Margin="10" ItemsSource="{Binding AvailableClassNumbers}" SelectedValue="{Binding ClassNumber}"/>
         <ComboBox Grid.Column="2" Grid.Row="0" Margin="0 10 10 10" ItemsSource="{Binding AvailableClassLetters}" SelectedValue="{Binding ClassLetter}"/>
 
-        <Label Grid.Column="0" Grid.Row="1" Content="Wychowawca:"/>
+        <Label Grid.Column="0" Grid.Row="1" Margin="10" Content="Wychowawca:"/>
         <ComboBox Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="3" Margin="10" ItemsSource="{Binding Teachers}" SelectedValue="{Binding Educator}"
                   DisplayMemberPath="FullName">
             <ComboBox.ContextMenu>
@@ -50,17 +51,17 @@
             </ComboBox.ContextMenu>
         </ComboBox>
 
-        <Label Grid.Column="0" Grid.Row="2" Content="Uczniowie:"/>
+        <Label Grid.Column="0" Grid.Row="2" Margin="10" Content="Uczniowie:"/>
         <Button Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Content="Dodaj ucznia" Command="{Binding AddStudentCommand}"/>
 
         <Grid Grid.Row="3" Margin="0 10 0 0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentFirstName"/>
+                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentLastName"/>
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Column="0" Content="Imię"/>
-            <Label Grid.Column="1" Content="Nazwisko"/>
+            <Label Grid.Column="0" Margin="10" Content="Imię"/>
+            <Label Grid.Column="1" Margin="10" Content="Nazwisko"/>
         </Grid>
 
         <ItemsControl Grid.Row="4" Margin="0 5 0 0" ItemsSource="{Binding Students}">
@@ -68,19 +69,53 @@
                 <DataTemplate>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentFirstName"/>
+                            <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentLastName"/>
                         </Grid.ColumnDefinitions>
 
-                        <Label Grid.Column="0" Content="{Binding FirstName}"/>
-                        <Label Grid.Column="1" Content="{Binding LastName}"/>
+                        <Label Grid.Column="0" Margin="10" Content="{Binding FirstName}"/>
+                        <Label Grid.Column="1" Margin="10" Content="{Binding LastName}"/>
                     </Grid>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
 
-        <Label Grid.Column="0" Grid.Row="5" Margin="10" Content="Lekcje:"/>
-        <Button Grid.Column="1" Grid.Row="5" Grid.ColumnSpan="2" Margin="10" Content="Dodaj lekcję" Command="{Binding AddLessonCommand}"/>
+        <Label Grid.Column="4" Grid.Row="2" Margin="10" Content="Lekcje:"/>
+        <Button Grid.Column="5" Grid.Row="2" Grid.ColumnSpan="2" Margin="10" Content="Dodaj lekcję" Command="{Binding AddLessonCommand}"/>
+
+        <Grid Grid.Row="3" Grid.Column="4" Margin="0 10 0 0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Subject"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Teacher"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Classroom"/>
+                <ColumnDefinition Width="Auto" SharedSizeGroup="Terms"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" Margin="10" Content="Przedmiot"/>
+            <Label Grid.Column="1" Margin="10" Content="Nauczyciel"/>
+            <Label Grid.Column="2" Margin="10" Content="Sala"/>
+            <Label Grid.Column="3" Margin="10" Content="Terminy"/>
+        </Grid>
+
+        <ItemsControl Grid.Row="4" Grid.Column="4" Margin="0 5 0 0" ItemsSource="{Binding Lessons}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Subject"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Teacher"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Classroom"/>
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Terms"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Column="0" Margin="10" Content="{Binding Subject}"/>
+                        <Label Grid.Column="1" Margin="10" Content="{Binding Teacher.FullName}"/>
+                        <Label Grid.Column="2" Margin="10" Content="{Binding Classroom}"/>
+                        <Label Grid.Column="3" Margin="10" Content="{Binding TermsToString}"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
 
         <Button Grid.Row="6" Grid.ColumnSpan="6" Margin="10" Content="Zapisz" HorizontalAlignment="Right" Command="{Binding SaveChangesCommand}"/>
     </Grid>

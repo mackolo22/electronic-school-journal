@@ -15,7 +15,7 @@ namespace Infrastructure.Data.AzureStorage
 
         public IDictionary<Type, string> TableNamesByTypeOfEntity { get; set; } = new Dictionary<Type, string>
         {
-            { typeof(Person),           "PeopleTable" },
+            { typeof(Administrator),    "PeopleTable" },
             { typeof(Student),          "PeopleTable" },
             { typeof(Teacher),          "PeopleTable" },
             { typeof(Parent),           "PeopleTable" },
