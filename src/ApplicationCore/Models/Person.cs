@@ -15,6 +15,7 @@ namespace ApplicationCore.Models
         public long Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        [IgnoreProperty]
         public string FullName { get => $"{FirstName} {LastName}"; }
         public string Email { get; set; }
         public string Login { get; set; }

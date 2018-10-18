@@ -63,6 +63,7 @@
     <Compile Include="Interfaces\ILoginService.cs" />
     <Compile Include="Interfaces\ITableStorageRepository.cs" />
     <Compile Include="Interfaces\IPersonService.cs" />
+    <Compile Include="Interfaces\ITimeTableService.cs" />
     <Compile Include="Interfaces\IUniqueIDGenerator.cs" />
     <Compile Include="Models\Administrator.cs" />
     <Compile Include="Models\Lesson.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Services\EmailSender.cs" />
     <Compile Include="Services\LoginService.cs" />
     <Compile Include="Services\PersonService.cs" />
+    <Compile Include="Services\TimeTableService.cs" />
     <Compile Include="Services\UniqueIDGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

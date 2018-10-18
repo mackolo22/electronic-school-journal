@@ -5,6 +5,11 @@ namespace ApplicationCore.Models
 {
     public class StudentsClass : TableEntity
     {
+        public StudentsClass()
+        {
+
+        }
+
         public StudentsClass(int number, string letter)
         {
             Number = number;

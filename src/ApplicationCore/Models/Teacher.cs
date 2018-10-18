@@ -16,7 +16,7 @@ namespace ApplicationCore.Models
         [IgnoreProperty]
         public StudentsClass Class { get; set; }
         [IgnoreProperty]
-        public IEnumerable<Lesson> Lessons { get; set; }
+        public List<Lesson> Lessons { get; set; }
         public string SerializedLessons { get; set; }
     }
 }

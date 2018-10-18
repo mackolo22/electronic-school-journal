@@ -16,7 +16,7 @@ namespace ApplicationCore.Models
         [IgnoreProperty]
         public StudentsClass Class { get; set; }
         [IgnoreProperty]
-        public IDictionary<Lesson, double> Grades { get; set; }
+        public IDictionary<string, List<double>> Grades { get; set; }
         public string SerializedGrades { get; set; }
         public long? ParentId { get; set; }
         [IgnoreProperty]

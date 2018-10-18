@@ -10,8 +10,6 @@ namespace UI.Dialogs
     public class AddTermViewModel : ViewModelBase
     {
         private Day _day;
-        private string _hour = "8";
-        private string _minutes = "00";
 
         public IEnumerable<Day> Days
         {
@@ -31,29 +29,10 @@ namespace UI.Dialogs
             }
         }
 
-        public string[] AvailableHours => new string[] { "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17" };
+        public string[] AvailableHours => new string[] { "8:00 - 8:45", "8:55 - 9:40", "9:50 - 10:35", "10:50 - 11:35", "11:45 - 12:30", "12:40 - 13:25", "13:30 - 14:15", "14:20 - 15:05" };
 
-        public string Hour
-        {
-            get => _hour;
-            set
-            {
-                _hour = value;
-                OnPropertyChanged(nameof(Hour));
-            }
-        }
-
-        public string[] AvailableMinutes => new string[] { "00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55" };
-
-        public string Minutes
-        {
-            get => _minutes;
-            set
-            {
-                _minutes = value;
-                OnPropertyChanged(nameof(Minutes));
-            }
-        }
+        public string Time { get; set; }
+        public int TimeId { get; set; }
 
         public RelayCommand SaveChangesCommand => new RelayCommand(ExecuteSaveChanges, () => true);
         protected virtual void ExecuteSaveChanges(object parameter)

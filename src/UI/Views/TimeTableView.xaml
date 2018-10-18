@@ -4,25 +4,85 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:UI.Views"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converters="clr-namespace:UI.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="600">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+             d:DesignHeight="1200" d:DesignWidth="2000">
 
-        <TextBlock Grid.Row="0" Text="Plan lekcji" HorizontalAlignment="Center" FontSize="40" Margin="15"/>
+    <UserControl.Resources>
 
-        <Grid Grid.Row="1">
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <DataTemplate x:Key="DataTemplate_SubjectCell">
+            <Button Content="{Binding Subject}" Height="50" Width="250" HorizontalAlignment="Center" Background="Transparent"
+                    VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Command="{Binding Path=DataContext.ShowLessonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                    CommandParameter="{Binding}"/>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DataTemplate_TimeTable">
+            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_SubjectCell}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+        <Grid Margin="30" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1400" 
+              Visibility="{Binding TimeTableLoaded, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition MinWidth="100" Width="Auto"/>
-                <ColumnDefinition MinWidth="100" Width="Auto"/>
+                <ColumnDefinition Width="150"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Plan lekcji" HorizontalAlignment="Center" FontSize="40" Margin="30, 30, 30, 60"/>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Label Width="250" Content="Poniedziałek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Width="250" Content="Wtorek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Width="250" Content="Środa" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Width="250" Content="Czwartek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    <Label Width="250" Content="Piątek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+
+            <StackPanel Margin="10,0,0,0" Grid.Row="2" Grid.Column="0" Orientation="Vertical">
+                <Label Height="50" Content="8:00 - 8:45" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="8:55 - 9:40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="9:50 - 10:35" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="10:50 - 11:35" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="11:45 - 12:30" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="12:40 - 13:25" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="13:30 - 14:15" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                <Label Height="50" Content="14:20 - 15:05" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+            </StackPanel>
+
+            <Grid Grid.Row="2" Grid.Column="1" >
+                <ItemsControl ItemTemplate="{DynamicResource DataTemplate_TimeTable}" ItemsSource="{Binding Lessons}"/>
+            </Grid>
+
         </Grid>
-    </Grid>
+    </ScrollViewer>
 </UserControl>

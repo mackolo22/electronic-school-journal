@@ -83,13 +83,11 @@ namespace UI.Dialogs
             var dialog = new AddTermDialog(viewModel);
             dialog.ShowDialog();
 
-            string hour = viewModel.Hour;
-            string minutes = viewModel.Minutes;
-            string time = $"{hour}:{minutes}";
             LessonTerm term = new LessonTerm
             {
                 Day = viewModel.Day,
-                Time = time
+                Time = viewModel.Time,
+                TimeId = viewModel.TimeId
             };
 
             Terms.Add(term);

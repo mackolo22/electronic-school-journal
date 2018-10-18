@@ -24,6 +24,7 @@ namespace UI
             _unityContainer.RegisterType<IUniqueIDGenerator, UniqueIDGenerator>();
             _unityContainer.RegisterType<IClassService, ClassService>();
             _unityContainer.RegisterType<IPersonService, PersonService>();
+            _unityContainer.RegisterType<ITimeTableService, TimeTableService>();
             _unityContainer.RegisterType<IEmailSender, EmailSender>();
             #endregion Services
 
@@ -38,6 +39,8 @@ namespace UI
             _unityContainer.RegisterType<AddLessonViewModel>();
             _unityContainer.RegisterType<AddTermViewModel>();
             _unityContainer.RegisterType<TimeTableViewModel>();
+            _unityContainer.RegisterType<ShowLessonViewModel>();
+            _unityContainer.RegisterType<GradesViewModel>();
             #endregion ViewModels
         }
 

@@ -113,6 +113,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\ShowLessonDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Helpers\ErrorMessageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -122,6 +126,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AddClassView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GradesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -158,6 +166,10 @@
     <Compile Include="Dialogs\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ShowLessonDialog.xaml.cs">
+      <DependentUpon>ShowLessonDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ShowLessonViewModel.cs" />
     <Compile Include="UnityConfiguration.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NegativeBoolConverter.cs" />
@@ -181,6 +193,7 @@
     </Compile>
     <Compile Include="Helpers\MessageBoxHelper.cs" />
     <Compile Include="ViewModels\AddClassViewModel.cs" />
+    <Compile Include="ViewModels\GradesViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="Dialogs\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -188,6 +201,9 @@
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <Compile Include="Views\AddClassView.xaml.cs">
       <DependentUpon>AddClassView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\GradesView.xaml.cs">
+      <DependentUpon>GradesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TimeTableView.xaml.cs">
       <DependentUpon>TimeTableView.xaml</DependentUpon>

@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Exceptions.AzureStorage;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using System.Collections.Generic;
 
 namespace UI.Dialogs
 {
@@ -25,6 +26,7 @@ namespace UI.Dialogs
             try
             {
                 Teacher = await _personService.AddTeacherAsync(FirstName, LastName, Login, Password, HashedPassword);
+                Teacher.Lessons = new List<Lesson>();
             }
             catch (TableException)
             {

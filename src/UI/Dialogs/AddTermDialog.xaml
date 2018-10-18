@@ -5,15 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UI.Dialogs"
         mc:Ignorable="d"
-        Title="AddTermDialog" Height="200" Width="300"
+        Title="Termin lekcji" Height="200" Width="300"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None"
         x:Name="AddTermWindow">
     <Grid>
 
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
@@ -28,10 +25,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" ItemsSource="{Binding Days}" SelectedValue="{Binding Day}"/>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="10" Content="Godzina:"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" Margin="10" ItemsSource="{Binding AvailableHours}" SelectedValue="{Binding Hour}"/>
-
-        <Label Grid.Row="1" Grid.Column="2" Margin="0 10 0 10" Content=":"/>
-        <ComboBox Grid.Row="1" Grid.Column="3" Margin="10" ItemsSource="{Binding AvailableMinutes}" SelectedValue="{Binding Minutes}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" ItemsSource="{Binding AvailableHours}" SelectedValue="{Binding Time}" SelectedIndex="{Binding TimeId}"/>
 
         <Button Grid.Row="2" Grid.ColumnSpan="4" Margin="10,42,-69,10" HorizontalAlignment="Center" Content="Zapisz"
                 Command="{Binding SaveChangesCommand}" CommandParameter="{Binding ElementName=AddTermWindow}" Width="270"/>

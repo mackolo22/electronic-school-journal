@@ -29,7 +29,7 @@ namespace ApplicationCore.Services
                 HashedPassword = hashedPassword
             };
 
-            await _repository.InsertAsync(teacher);
+            await _repository.InsertOrReplaceAsync(teacher);
             return teacher;
         }
 
@@ -44,7 +44,7 @@ namespace ApplicationCore.Services
                 Password = password
             };
 
-            await _repository.InsertAsync(parent);
+            await _repository.InsertOrReplaceAsync(parent);
             return parent;
         }
 

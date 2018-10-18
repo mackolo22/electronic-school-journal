@@ -3,7 +3,6 @@ using ApplicationCore.Interfaces;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data.AzureStorage.Tables
@@ -24,8 +23,8 @@ namespace Infrastructure.Data.AzureStorage.Tables
             var retrieveOperation = TableOperation.Retrieve<T>(partitionKey, rowKey);
             try
             {
-                var result = await table.ExecuteAsync(retrieveOperation);
-                return result as T;
+                var tableResult = await table.ExecuteAsync(retrieveOperation);
+                return tableResult.Result as T;
             }
             catch (Exception ex)
             {
@@ -52,7 +51,7 @@ namespace Infrastructure.Data.AzureStorage.Tables
             return entities;
         }
 
-        public async Task InsertAsync<T>(T entity) where T : class, ITableEntity
+        public async Task InsertOrReplaceAsync<T>(T entity) where T : class, ITableEntity
         {
             var typeOfEntity = typeof(T);
             var table = await _azureStorageHelper.EnsureTableExistenceAndGetReferenceAsync(typeOfEntity);

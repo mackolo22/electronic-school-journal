@@ -8,5 +8,21 @@ namespace UI.ViewModels
 {
     public class HomeViewModel : ViewModelBase
     {
+        public HomeViewModel()
+        {
+            List<List<int>> Lessons = new List<List<int>>();
+
+            for (int i = 0; i < 5; i++)
+            {
+                Lessons.Add(new List<int>());
+
+                for (int j = 0; j < 5; j++)
+                {
+                    Lessons[i].Add(i * 10 + j);
+                }
+            }
+
+            OnPropertyChanged(nameof(Lessons));
+        }
     }
 }

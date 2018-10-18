@@ -14,5 +14,6 @@ namespace ApplicationCore.Models
         public long? ChildId { get; set; }
         [IgnoreProperty]
         public Student Child { get; set; }
+        public string ChildClassId { get; set; }
     }
 }

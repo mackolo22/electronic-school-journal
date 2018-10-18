@@ -4,12 +4,13 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+ 
 namespace ApplicationCore.Models
 {
     public class Lesson
     {
         public Subject Subject { get; set; }
+        public string ClassName { get; set; }
         [JsonIgnore]
         public Teacher Teacher { get; set; }
         public long? TeacherId { get; set; }
@@ -43,5 +44,6 @@ namespace ApplicationCore.Models
     {
         public Day Day;
         public string Time;
+        public int TimeId;
     }
 }

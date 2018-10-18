@@ -1,5 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -76,6 +78,15 @@ namespace UI.ViewModels
             var teachers = await _personService.GetAllTeachersAsync();
             foreach (var teacher in teachers)
             {
+                if (!String.IsNullOrEmpty(teacher.SerializedLessons))
+                {
+                    teacher.Lessons = JsonConvert.DeserializeObject<List<Lesson>>(teacher.SerializedLessons);
+                }
+                else
+                {
+                    teacher.Lessons = new List<Lesson>();
+                }
+
                 Teachers.Add(teacher);
             }
         }
@@ -144,6 +155,7 @@ namespace UI.ViewModels
                     Terms = viewModel.Terms
                 };
 
+                lesson.Teacher.Lessons.Add(lesson);
                 Lessons.Add(lesson);
             }
         }

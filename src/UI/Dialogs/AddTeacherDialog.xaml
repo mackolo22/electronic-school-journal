@@ -9,7 +9,7 @@
         x:Name="AddTeacherWindow"
         Height="250" Width="600"
         WindowStartupLocation="CenterScreen"
-        WindowStyle="None">
+        Title="Dodawanie nauczyciela">
     <Window.Resources>
         <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
     </Window.Resources>

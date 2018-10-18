@@ -113,7 +113,21 @@ namespace UI.ViewModels
                     case "TimeTableView":
                         if (!(ViewModel is TimeTableViewModel))
                         {
-                            ViewModel = UnityConfiguration.Resolve<TimeTableViewModel>();
+                            var timeTableViewModel = UnityConfiguration.Resolve<TimeTableViewModel>();
+                            timeTableViewModel.Student = Student;
+                            timeTableViewModel.Teacher = Teacher;
+                            timeTableViewModel.Parent = Parent;
+                            timeTableViewModel.Person = Person;
+                            ViewModel = timeTableViewModel;
+                        }
+                        break;
+
+                    case "GradesView":
+                        if (!(ViewModel is GradesViewModel))
+                        {
+                            var gradesViewModel = UnityConfiguration.Resolve<GradesViewModel>();
+                            gradesViewModel.Teacher = Teacher;
+                            ViewModel = gradesViewModel;
                         }
                         break;
                 }
