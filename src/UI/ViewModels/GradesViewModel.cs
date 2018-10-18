@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using UI.Dialogs;
 
 namespace UI.ViewModels
 {
@@ -36,27 +37,32 @@ namespace UI.ViewModels
                 _subject = value;
                 OnPropertyChanged(nameof(Subject));
 
-                foreach (var student in Students)
+                foreach (var wrappedStudent in Students)
                 {
-                    if (student.AllGrades != null && student.AllGrades.ContainsKey(_subject))
+                    if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_subject))
                     {
-                        var grades = student.AllGrades[_subject];
-                        student.Grades = grades;
-                        if (student.Grades.Count == 0)
+                        var grades = wrappedStudent.AllGrades[_subject];
+                        wrappedStudent.Grades = grades;
+                        if (wrappedStudent.Grades.Count == 0)
                         {
-                            student.Average = string.Empty;
+                            wrappedStudent.Average = string.Empty;
                         }
                         else
                         {
                             double sum = 0;
-                            foreach (var grade in student.Grades)
+                            foreach (var grade in wrappedStudent.Grades)
                             {
-                                sum += grade;
+                                sum += grade.Value;
                             }
 
-                            double average = sum / student.Grades.Count;
-                            student.Average = average.ToString();
+                            double average = sum / wrappedStudent.Grades.Count;
+                            wrappedStudent.Average = String.Format("{0:0.00}", average);
                         }
+                    }
+                    else
+                    {
+                        wrappedStudent.Grades = null;
+                        wrappedStudent.Average = String.Empty;
                     }
                 }
 
@@ -110,10 +116,10 @@ namespace UI.ViewModels
                 int number = 1;
                 foreach (var student in studentsAsList)
                 {
-                    Dictionary<string, List<double>> grades = null;
+                    Dictionary<string, ObservableCollection<WrappedGrade>> grades = null;
                     if (!string.IsNullOrWhiteSpace(student.SerializedGrades))
                     {
-                        grades = JsonConvert.DeserializeObject<Dictionary<string, List<double>>>(student.SerializedGrades);
+                        grades = JsonConvert.DeserializeObject<Dictionary<string, ObservableCollection<WrappedGrade>>>(student.SerializedGrades);
                     }
 
                     var wrappedStudent = new WrappedStudent
@@ -141,53 +147,169 @@ namespace UI.ViewModels
             var wrappedStudent = parameter as WrappedStudent;
             if (wrappedStudent.Grades == null)
             {
-                wrappedStudent.Grades = new List<double>();
+                wrappedStudent.Grades = new ObservableCollection<WrappedGrade>();
             }
 
-            wrappedStudent.Grades.Add(5);
-            if (wrappedStudent.AllGrades == null)
+            var addGradeViewModel = UnityConfiguration.Resolve<AddGradeViewModel>();
+            var dialog = new AddGradeDialog(addGradeViewModel);
+            dialog.ShowDialog();
+
+            if (addGradeViewModel.ChangesSaved)
             {
-                wrappedStudent.AllGrades = new Dictionary<string, List<double>>
+                int id = wrappedStudent.Grades.Count + 1;
+                var newGrade = new WrappedGrade
                 {
-                    { Subject, wrappedStudent.Grades }
+                    Id = id,
+                    StudentId = wrappedStudent.Id,
+                    Value = addGradeViewModel.Grade,
+                    Comment = addGradeViewModel.Comment,
+                    LastModificationDate = DateTime.Now
                 };
-            }
-            else
-            {
-                if (wrappedStudent.AllGrades.ContainsKey(Subject))
+
+                wrappedStudent.Grades.Add(newGrade);
+                if (wrappedStudent.AllGrades == null)
                 {
-                    wrappedStudent.AllGrades[Subject] = wrappedStudent.Grades;
+                    wrappedStudent.AllGrades = new Dictionary<string, ObservableCollection<WrappedGrade>>
+                    {
+                        { Subject, wrappedStudent.Grades }
+                    };
                 }
                 else
                 {
-                    wrappedStudent.AllGrades.Add(Subject, wrappedStudent.Grades);
+                    if (wrappedStudent.AllGrades.ContainsKey(Subject))
+                    {
+                        wrappedStudent.AllGrades[Subject] = wrappedStudent.Grades;
+                    }
+                    else
+                    {
+                        wrappedStudent.AllGrades.Add(Subject, wrappedStudent.Grades);
+                    }
                 }
-            }
 
-            double sum = 0;
-            foreach (var grade in wrappedStudent.Grades)
+                double sum = 0;
+                foreach (var grade in wrappedStudent.Grades)
+                {
+                    sum += grade.Value;
+                }
+
+                double average = sum / wrappedStudent.Grades.Count;
+                wrappedStudent.Average = String.Format("{0:0.00}", average);
+                var student = await _repository.GetAsync<Student>(nameof(Student), wrappedStudent.Id.ToString());
+                student.SerializedGrades = JsonConvert.SerializeObject(wrappedStudent.AllGrades);
+                await _repository.InsertOrReplaceAsync(student);
+                OnPropertyChanged(nameof(Students));
+            }
+        }
+
+        public RelayCommand ShowGradeCommand => new RelayCommand(async (parameter) => await ExecuteShowGradeAsync(parameter), () => true);
+        private async Task ExecuteShowGradeAsync(object parameter)
+        {
+            var wrappedGrade = parameter as WrappedGrade;
+            var addGradeViewModel = UnityConfiguration.Resolve<AddGradeViewModel>();
+            addGradeViewModel.Grade = wrappedGrade.Value;
+            addGradeViewModel.Comment = wrappedGrade.Comment;
+            var dialog = new AddGradeDialog(addGradeViewModel);
+            dialog.ShowDialog();
+
+            if (addGradeViewModel.ChangesSaved)
             {
-                wrappedStudent.AllGradesAsString += $"{grade} ";
-                sum += grade;
-            }
+                wrappedGrade.Value = addGradeViewModel.Grade;
+                wrappedGrade.Comment = addGradeViewModel.Comment;
+                wrappedGrade.LastModificationDate = DateTime.Now;
 
-            double average = sum / wrappedStudent.Grades.Count;
-            wrappedStudent.Average = average.ToString();
-            var student = await _repository.GetAsync<Student>(nameof(Student), wrappedStudent.Id.ToString());
-            student.SerializedGrades = JsonConvert.SerializeObject(wrappedStudent.AllGrades);
-            await _repository.InsertOrReplaceAsync(student);
-            OnPropertyChanged(nameof(Students));
+                long? studentId = wrappedGrade.StudentId;
+                var wrappedStudent = Students.Where(x => x.Id == studentId).FirstOrDefault();
+
+                if (wrappedStudent.AllGrades == null)
+                {
+                    wrappedStudent.AllGrades = new Dictionary<string, ObservableCollection<WrappedGrade>>
+                    {
+                        { Subject, wrappedStudent.Grades }
+                    };
+                }
+                else
+                {
+                    if (wrappedStudent.AllGrades.ContainsKey(Subject))
+                    {
+                        wrappedStudent.AllGrades[Subject] = wrappedStudent.Grades;
+                    }
+                    else
+                    {
+                        wrappedStudent.AllGrades.Add(Subject, wrappedStudent.Grades);
+                    }
+                }
+
+                double sum = 0;
+                foreach (var grade in wrappedStudent.Grades)
+                {
+                    sum += grade.Value;
+                }
+
+                double average = sum / wrappedStudent.Grades.Count;
+                wrappedStudent.Average = String.Format("{0:0.00}", average);
+                var student = await _repository.GetAsync<Student>(nameof(Student), wrappedStudent.Id.ToString());
+                student.SerializedGrades = JsonConvert.SerializeObject(wrappedStudent.AllGrades);
+                await _repository.InsertOrReplaceAsync(student);
+                OnPropertyChanged(nameof(Students));
+            }
         }
     }
 
-    public class WrappedStudent
+    public class WrappedStudent : BindableObject
     {
+        private ObservableCollection<WrappedGrade> _grades;
+        private string _average;
+
         public long? Id { get; set; }
         public int Number { get; set; }
         public string FullName { get; set; }
-        public List<double> Grades { get; set; }
-        public IDictionary<string, List<double>> AllGrades { get; set; }
-        public string AllGradesAsString { get; set; }
-        public string Average { get; set; }
+        public ObservableCollection<WrappedGrade> Grades
+        {
+            get => _grades;
+            set
+            {
+                _grades = value;
+                OnPropertyChanged(nameof(Grades));
+            }
+        }
+        public IDictionary<string, ObservableCollection<WrappedGrade>> AllGrades { get; set; }
+        public string Average
+        {
+            get => _average;
+            set
+            {
+                _average = value;
+                OnPropertyChanged(nameof(Average));
+            }
+        }
+    }
+
+    public class WrappedGrade : BindableObject
+    {
+        private double _value;
+        private string _comment;
+
+        public int Id { get; set; }
+        public long? StudentId { get; set; }
+        public double Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                OnPropertyChanged(nameof(Value));
+            }
+
+        }
+        public string Comment
+        {
+            get => _comment;
+            set
+            {
+                _comment = value;
+                OnPropertyChanged(nameof(Comment));
+            }
+        }
+        public DateTime LastModificationDate { get; set; }
     }
 }

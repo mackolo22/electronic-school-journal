@@ -41,6 +41,7 @@ namespace UI
             _unityContainer.RegisterType<TimeTableViewModel>();
             _unityContainer.RegisterType<ShowLessonViewModel>();
             _unityContainer.RegisterType<GradesViewModel>();
+            _unityContainer.RegisterType<AddGradeViewModel>();
             #endregion ViewModels
         }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
+using System;
 using System.Collections.Generic;
 
 namespace ApplicationCore.Models
@@ -16,10 +17,18 @@ namespace ApplicationCore.Models
         [IgnoreProperty]
         public StudentsClass Class { get; set; }
         [IgnoreProperty]
-        public IDictionary<string, List<double>> Grades { get; set; }
+        public IDictionary<string, List<Grade>> Grades { get; set; }
         public string SerializedGrades { get; set; }
         public long? ParentId { get; set; }
         [IgnoreProperty]
         public Parent Parent { get; set; }
+    }
+
+    public class Grade
+    {
+        int Id { get; set; }
+        public double Value { get; set; }
+        public string Comment { get; set; }
+        public DateTime LastModificationDate { get; set; }
     }
 }

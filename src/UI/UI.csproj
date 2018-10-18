@@ -89,6 +89,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Dialogs\AddGradeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AddLessonDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -149,7 +153,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BindableObject.cs" />
     <Compile Include="Converters\NegativeBoolToVisibilityConverter.cs" />
+    <Compile Include="Dialogs\AddGradeDialog.xaml.cs">
+      <DependentUpon>AddGradeDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddGradeViewModel.cs" />
     <Compile Include="Dialogs\AddLessonDialog.xaml.cs">
       <DependentUpon>AddLessonDialog.xaml</DependentUpon>
     </Compile>
