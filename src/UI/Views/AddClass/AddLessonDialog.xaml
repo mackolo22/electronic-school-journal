@@ -1,0 +1,61 @@
+﻿<Window x:Class="UI.Views.AddLessonDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:UI.Views"
+        xmlns:converters="clr-namespace:UI.Converters"
+        mc:Ignorable="d"
+        x:Name="AddLessonWindow"
+        Height="250" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Title="Dodawanie lekcji">
+    <Window.Resources>
+        <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="0" Margin="10" Content="Przedmiot:"/>
+        <ComboBox Grid.Column="1" Grid.Row="0" Margin="10" ItemsSource="{Binding Subjects}" SelectedValue="{Binding Subject}"/>
+
+        <Label Grid.Column="0" Grid.Row="1" Margin="10" Content="Nauczyciel:"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" Margin="10" ItemsSource="{Binding Teachers}" SelectedValue="{Binding Teacher}"
+                  DisplayMemberPath="FullName">
+            <ComboBox.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Dodaj nauczyciela" Command="{Binding AddTeacherCommand}"/>
+                </ContextMenu>
+            </ComboBox.ContextMenu>
+        </ComboBox>
+
+        <Label Grid.Column="0" Grid.Row="2" Margin="10" Content="Sala:"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="10" Text="{Binding Classroom}"/>
+
+        <Label Grid.Column="0" Grid.Row="3" Margin="10" Content="Terminy:"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="10" Content="Dodaj termin" Command="{Binding AddTermCommand}"/>
+
+        <Button Grid.Row="5" Grid.Column="3" Margin="10" Content="Anuluj" Command="{Binding CancelCommand}" 
+                CommandParameter="{Binding ElementName=AddLessonWindow}"/>
+        
+        <Button Grid.Row="5" Grid.Column="4" HorizontalAlignment="Right" Margin="10" Content="Zapisz" Command="{Binding SaveChangesCommand}" 
+                CommandParameter="{Binding ElementName=AddLessonWindow}"/>
+
+    </Grid>
+</Window>

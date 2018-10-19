@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Enums;
 using ApplicationCore.Models;
 using System;
-using UI.Dialogs;
+using UI.Views;
 
 namespace UI.ViewModels
 {
@@ -14,7 +14,7 @@ namespace UI.ViewModels
             ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
         }
 
-        public UserType UserType { get; set; }
+        public string UserType { get; set; }
         public Person Person { get; set; }
         public Student Student { get; set; }
         public Teacher Teacher { get; set; }
@@ -48,29 +48,29 @@ namespace UI.ViewModels
         public RelayCommand LoadedCommand => new RelayCommand(ExecuteLoaded, () => true);
         private void ExecuteLoaded(object parameter)
         {
-            var viewModel = UnityConfiguration.Resolve<LoginViewModel>();
-            var dialog = new LoginDialog(viewModel);
+            var viewModel = UnityConfiguration.Resolve<LoginFirstStepViewModel>();
+            var dialog = new LoginFirstStepDialog(viewModel);
             dialog.ShowDialog();
 
             UserType = viewModel.UserType;
             switch (UserType)
             {
-                case UserType.Administrator:
+                case "Administrator":
                     LoggedAsAdministrator = true;
                     OnPropertyChanged(nameof(LoggedAsAdministrator));
                     break;
 
-                case UserType.Student:
+                case "Student":
                     LoggedAsStudent = true;
                     OnPropertyChanged(nameof(LoggedAsStudent));
                     break;
 
-                case UserType.Teacher:
+                case "Teacher":
                     LoggedAsTeacher = true;
                     OnPropertyChanged(nameof(LoggedAsTeacher));
                     break;
 
-                case UserType.Parent:
+                case "Parent":
                     LoggedAsParent = true;
                     OnPropertyChanged(nameof(LoggedAsParent));
                     break;
@@ -122,10 +122,10 @@ namespace UI.ViewModels
                         }
                         break;
 
-                    case "GradesView":
-                        if (!(ViewModel is GradesViewModel))
+                    case "TeacherGradesView":
+                        if (!(ViewModel is TeacherGradesViewModel))
                         {
-                            var gradesViewModel = UnityConfiguration.Resolve<GradesViewModel>();
+                            var gradesViewModel = UnityConfiguration.Resolve<TeacherGradesViewModel>();
                             gradesViewModel.Teacher = Teacher;
                             ViewModel = gradesViewModel;
                         }

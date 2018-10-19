@@ -1,7 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
 using Infrastructure.Data.AzureStorage.Tables;
-using UI.Dialogs;
+using UI.Views;
 using UI.ViewModels;
 using Unity;
 
@@ -30,7 +30,8 @@ namespace UI
 
             #region ViewModels
             _unityContainer.RegisterType<MainViewModel>();
-            _unityContainer.RegisterType<LoginViewModel>();
+            _unityContainer.RegisterType<LoginFirstStepViewModel>();
+            _unityContainer.RegisterType<LoginSecondStepViewModel>();
             _unityContainer.RegisterType<HomeViewModel>();
             _unityContainer.RegisterType<AddClassViewModel>();
             _unityContainer.RegisterType<AddStudentViewModel>();
@@ -40,7 +41,7 @@ namespace UI
             _unityContainer.RegisterType<AddTermViewModel>();
             _unityContainer.RegisterType<TimeTableViewModel>();
             _unityContainer.RegisterType<ShowLessonViewModel>();
-            _unityContainer.RegisterType<GradesViewModel>();
+            _unityContainer.RegisterType<TeacherGradesViewModel>();
             _unityContainer.RegisterType<AddGradeViewModel>();
             #endregion ViewModels
         }

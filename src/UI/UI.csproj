@@ -89,35 +89,39 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\AddGradeDialog.xaml">
+    <Page Include="Views\Grades\AddGradeDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\AddLessonDialog.xaml">
+    <Page Include="Views\AddClass\AddLessonDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\AddParentDialog.xaml">
+    <Page Include="Views\AddClass\AddParentDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\AddTeacherDialog.xaml">
+    <Page Include="Views\AddClass\AddTeacherDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Dialogs\AddStudentDialog.xaml">
+    <Page Include="Views\AddClass\AddStudentDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\AddTermDialog.xaml">
+    <Page Include="Views\AddClass\AddTermDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\LoginDialog.xaml">
+    <Page Include="Views\Login\LoginFirstStepDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\ShowLessonDialog.xaml">
+    <Page Include="Views\Login\LoginSecondStepDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TimeTable\ShowLessonDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -129,15 +133,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\AddClassView.xaml">
+    <Page Include="Views\AddClass\AddClassView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\GradesView.xaml">
+    <Page Include="Views\Grades\TeacherGradesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\TimeTableView.xaml">
+    <Page Include="Views\TimeTable\TimeTableView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -155,44 +159,48 @@
     </Compile>
     <Compile Include="BindableObject.cs" />
     <Compile Include="Converters\NegativeBoolToVisibilityConverter.cs" />
-    <Compile Include="Dialogs\AddGradeDialog.xaml.cs">
+    <Compile Include="ViewModels\Login\LoginSecondStepViewModel.cs" />
+    <Compile Include="Views\Grades\AddGradeDialog.xaml.cs">
       <DependentUpon>AddGradeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddGradeViewModel.cs" />
-    <Compile Include="Dialogs\AddLessonDialog.xaml.cs">
+    <Compile Include="ViewModels\Grades\AddGradeViewModel.cs" />
+    <Compile Include="Views\AddClass\AddLessonDialog.xaml.cs">
       <DependentUpon>AddLessonDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddLessonViewModel.cs" />
-    <Compile Include="Dialogs\AddParentDialog.xaml.cs">
+    <Compile Include="ViewModels\AddClass\AddLessonViewModel.cs" />
+    <Compile Include="Views\AddClass\AddParentDialog.xaml.cs">
       <DependentUpon>AddParentDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddParentViewModel.cs" />
-    <Compile Include="Dialogs\AddPersonViewModel.cs" />
-    <Compile Include="Dialogs\AddTermDialog.xaml.cs">
+    <Compile Include="ViewModels\AddClass\AddParentViewModel.cs" />
+    <Compile Include="ViewModels\AddClass\AddPersonViewModel.cs" />
+    <Compile Include="Views\AddClass\AddTermDialog.xaml.cs">
       <DependentUpon>AddTermDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddTermViewModel.cs" />
-    <Compile Include="Dialogs\LoginDialog.xaml.cs">
-      <DependentUpon>LoginDialog.xaml</DependentUpon>
+    <Compile Include="ViewModels\AddClass\AddTermViewModel.cs" />
+    <Compile Include="Views\Login\LoginFirstStepDialog.xaml.cs">
+      <DependentUpon>LoginFirstStepDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ShowLessonDialog.xaml.cs">
+    <Compile Include="Views\Login\LoginSecondStepDialog.xaml.cs">
+      <DependentUpon>LoginSecondStepDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TimeTable\ShowLessonDialog.xaml.cs">
       <DependentUpon>ShowLessonDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ShowLessonViewModel.cs" />
+    <Compile Include="ViewModels\TimeTable\ShowLessonViewModel.cs" />
     <Compile Include="UnityConfiguration.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NegativeBoolConverter.cs" />
     <Compile Include="CustomControls\NumericUpDown.xaml.cs">
       <DependentUpon>NumericUpDown.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddTeacherDialog.xaml.cs">
+    <Compile Include="Views\AddClass\AddTeacherDialog.xaml.cs">
       <DependentUpon>AddTeacherDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddStudentDialog.xaml.cs">
+    <Compile Include="Views\AddClass\AddStudentDialog.xaml.cs">
       <DependentUpon>AddStudentDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\AddTeacherViewModel.cs" />
-    <Compile Include="Dialogs\AddStudentViewModel.cs" />
+    <Compile Include="ViewModels\AddClass\AddTeacherViewModel.cs" />
+    <Compile Include="ViewModels\AddClass\AddStudentViewModel.cs" />
     <Compile Include="Helpers\DialogRequest.cs" />
     <Compile Include="Helpers\ErrorMessageBox.xaml.cs">
       <DependentUpon>ErrorMessageBox.xaml</DependentUpon>
@@ -201,20 +209,20 @@
       <DependentUpon>MessageBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MessageBoxHelper.cs" />
-    <Compile Include="ViewModels\AddClassViewModel.cs" />
-    <Compile Include="ViewModels\GradesViewModel.cs" />
+    <Compile Include="ViewModels\AddClass\AddClassViewModel.cs" />
+    <Compile Include="ViewModels\Grades\TeacherGradesViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
-    <Compile Include="Dialogs\LoginViewModel.cs" />
+    <Compile Include="ViewModels\Login\LoginFirstStepViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
-    <Compile Include="ViewModels\TimeTableViewModel.cs" />
+    <Compile Include="ViewModels\TimeTable\TimeTableViewModel.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
-    <Compile Include="Views\AddClassView.xaml.cs">
+    <Compile Include="Views\AddClass\AddClassView.xaml.cs">
       <DependentUpon>AddClassView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\GradesView.xaml.cs">
-      <DependentUpon>GradesView.xaml</DependentUpon>
+    <Compile Include="Views\Grades\TeacherGradesView.xaml.cs">
+      <DependentUpon>TeacherGradesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\TimeTableView.xaml.cs">
+    <Compile Include="Views\TimeTable\TimeTableView.xaml.cs">
       <DependentUpon>TimeTableView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HomeView.xaml.cs">
@@ -280,5 +288,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

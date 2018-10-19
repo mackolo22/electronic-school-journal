@@ -29,8 +29,8 @@
         <DataTemplate DataType="{x:Type viewModels:TimeTableViewModel}">
             <views:TimeTableView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:GradesViewModel}">
-            <views:GradesView/>
+        <DataTemplate DataType="{x:Type viewModels:TeacherGradesViewModel}">
+            <views:TeacherGradesView/>
         </DataTemplate>
 
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -57,7 +57,7 @@
             <Button Margin="10,15" Content="Plan lekcji" Command="{Binding ChangeViewCommand}" CommandParameter="TimeTableView"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"/>
 
-            <Button Margin="10,15" Content="Oceny" Command="{Binding ChangeViewCommand}" CommandParameter="GradesView"
+            <Button Margin="10,15" Content="Oceny" Command="{Binding ChangeViewCommand}" CommandParameter="TeacherGradesView"
                     Visibility="{Binding LoggedAsTeacher, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
             <Button Margin="10, 15" Content="Wiadomości" Command="{Binding ChangeViewCommand}" CommandParameter=""/>
