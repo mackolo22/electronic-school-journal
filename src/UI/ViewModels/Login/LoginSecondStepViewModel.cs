@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using UI.Helpers;
+using UI.Views;
 
 namespace UI.ViewModels
 {
@@ -67,8 +68,9 @@ namespace UI.ViewModels
                     return;
                 }
 
+                var dialog = new OperationInProgressDialog();
+                dialog.Show();
                 string hashedPassword = _loginService.HashPassword(passwordBox.Password);
-                // TODO: zablokować jakoś UI na czas logowania
                 switch (RootViewModel.UserType)
                 {
                     case "Student":
@@ -96,6 +98,7 @@ namespace UI.ViewModels
                         break;
                 }
 
+                dialog.Close();
                 bool loggedIn = (RootViewModel.Person != null);
                 RootViewModel.LoggedIn = loggedIn;
                 if (loggedIn)

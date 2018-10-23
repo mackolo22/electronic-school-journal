@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace UI
+namespace UI.ViewModels.WrappedModels
 {
     public class BindableObject : INotifyPropertyChanged
     {

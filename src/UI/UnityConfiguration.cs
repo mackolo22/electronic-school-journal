@@ -43,6 +43,8 @@ namespace UI
             _unityContainer.RegisterType<ShowLessonViewModel>();
             _unityContainer.RegisterType<TeacherGradesViewModel>();
             _unityContainer.RegisterType<AddGradeViewModel>();
+            _unityContainer.RegisterType<StudentGradesViewModel>();
+            _unityContainer.RegisterType<ShowGradeViewModel>();
             #endregion ViewModels
         }
 

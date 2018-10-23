@@ -27,7 +27,7 @@ namespace ApplicationCore.Services
             }
             else
             {
-                return null;
+                return new List<Lesson>();
             }
         }
 

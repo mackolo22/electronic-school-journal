@@ -4,6 +4,7 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data.AzureStorage
@@ -22,11 +23,12 @@ namespace Infrastructure.Data.AzureStorage
             { typeof(StudentsClass),    "ClassesTable" },
         };
 
-        // TODO: poprawić tę metodę gdy zostanie dodany DI container.
-        public AzureStorageHelper(/*IConfiguration configuration*/)
+        public AzureStorageHelper()
         {
-            string connectionString = "UseDevelopmentStorage=true";
-            //string connectionString = configuration["StorageConfiguration:ConnectionString"];
+            // TODO: zapisywać connnection string w pliku konfiguracyjnym.
+            string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string filePath = Path.Combine(appDataPath, "Electronic school journal", "connectionString.txt");
+            string connectionString = File.ReadAllText(filePath);
             var storageAccount = CloudStorageAccount.Parse(connectionString);
             _tableClient = storageAccount.CreateCloudTableClient();
             _tables = new Dictionary<string, CloudTable>();
