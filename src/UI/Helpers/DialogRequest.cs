@@ -9,7 +9,7 @@ namespace UI.Helpers
 {
     public class DialogRequest
     {
-        public DialogRequest(ViewModelBase viewModel)
+        public DialogRequest(BaseViewModel viewModel)
         {
 
         }

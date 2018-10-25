@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Extensions;
-using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Newtonsoft.Json;
 using System;
@@ -12,143 +11,11 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class TeacherGradesViewModel : ViewModelBase
+    public class ClassGradesViewModel : TeacherManagingClassesBaseViewModel
     {
-        private readonly ITableStorageRepository _repository;
-        private Dictionary<string, ObservableCollection<WrappedStudent>> _studentsFromAllClasses;
-        private string _selectedClass;
-        private bool _classSelected;
-        private string _selectedSubject;
-        private bool _subjectSelected;
+        public ClassGradesViewModel(ITableStorageRepository repository) : base(repository) { }
 
-        public TeacherGradesViewModel(ITableStorageRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public Teacher Teacher { get; internal set; }
-        public List<string> TeacherClasses { get; set; }
-        public List<string> Subjects { get; set; }
-        public ObservableCollection<WrappedStudent> Students { get; set; }
-
-        public string SelectedClass
-        {
-            get => _selectedClass;
-            set
-            {
-                _selectedClass = value;
-                UpdateListOfSubjectsForGivenClass();
-                OnPropertyChanged(nameof(SelectedClass));
-                ClassSelected = true;
-            }
-        }
-
-        private void UpdateListOfSubjectsForGivenClass()
-        {
-            Subjects = new List<string>();
-            foreach (var lesson in Teacher.Lessons)
-            {
-                if (lesson.ClassName == _selectedClass)
-                {
-                    Subjects.Add(lesson.Subject.GetDisplayName());
-                }
-            }
-
-            OnPropertyChanged(nameof(Subjects));
-        }
-
-        public bool ClassSelected
-        {
-            get => _classSelected;
-            set
-            {
-                _classSelected = value;
-                OnPropertyChanged(nameof(ClassSelected));
-            }
-        }
-
-        public string SelectedSubject
-        {
-            get => _selectedSubject;
-            set
-            {
-                _selectedSubject = value;
-                if (_selectedSubject == null)
-                {
-                    Students = null;
-                    SubjectSelected = false;
-                }
-                else
-                {
-                    UpdateListOfStudentsFromSelectedClass();
-                    SubjectSelected = true;
-                }
-
-                OnPropertyChanged(nameof(SelectedSubject));
-                OnPropertyChanged(nameof(Students));
-            }
-        }
-
-        private void UpdateListOfStudentsFromSelectedClass()
-        {
-            Students = _studentsFromAllClasses[_selectedClass];
-            foreach (var wrappedStudent in Students)
-            {
-                if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_selectedSubject))
-                {
-                    var grades = wrappedStudent.AllGrades[_selectedSubject];
-                    wrappedStudent.Grades = grades;
-                    if (wrappedStudent.Grades.Count == 0)
-                    {
-                        wrappedStudent.Average = String.Empty;
-                    }
-                    else
-                    {
-                        CountAverageForSelectedSubjectForGivenStudent(wrappedStudent);
-                    }
-                }
-                else
-                {
-                    wrappedStudent.Grades = null;
-                    wrappedStudent.Average = String.Empty;
-                }
-            }
-        }
-
-        public bool SubjectSelected
-        {
-            get => _subjectSelected;
-            set
-            {
-                _subjectSelected = value;
-                OnPropertyChanged(nameof(SubjectSelected));
-            }
-        }
-
-        public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
-        private async Task ExecuteLoadedAsync(object parameter)
-        {
-            GetClassesForGivenTeacher();
-            await GetAllStudentsFromAllTeacherClassesAsync();
-            OnPropertyChanged(nameof(TeacherClasses));
-        }
-
-        private void GetClassesForGivenTeacher()
-        {
-            var teacherClasses = new List<string>();
-            if (!String.IsNullOrWhiteSpace(Teacher.SerializedLessons))
-            {
-                Teacher.Lessons = JsonConvert.DeserializeObject<List<Lesson>>(Teacher.SerializedLessons);
-                foreach (var lesson in Teacher.Lessons)
-                {
-                    teacherClasses.Add(lesson.ClassName);
-                }
-            }
-
-            TeacherClasses = teacherClasses.Distinct().ToList();
-        }
-
-        private async Task GetAllStudentsFromAllTeacherClassesAsync()
+        protected override async Task GetAllStudentsFromAllTeacherClassesAsync()
         {
             _studentsFromAllClasses = new Dictionary<string, ObservableCollection<WrappedStudent>>();
             foreach (var teacherClass in TeacherClasses)
@@ -185,6 +52,54 @@ namespace UI.ViewModels
                 }
 
                 _studentsFromAllClasses.Add(teacherClass, wrappedStudents);
+            }
+        }
+
+        public override string SelectedSubject
+        {
+            get => _selectedSubject;
+            set
+            {
+                _selectedSubject = value;
+                if (_selectedSubject == null)
+                {
+                    Students = null;
+                    SubjectSelected = false;
+                }
+                else
+                {
+                    UpdateListOfStudentsFromSelectedClass();
+                    SubjectSelected = true;
+                }
+
+                OnPropertyChanged(nameof(SelectedSubject));
+                OnPropertyChanged(nameof(Students));
+            }
+        }
+
+        protected override void UpdateListOfStudentsFromSelectedClass()
+        {
+            Students = _studentsFromAllClasses[_selectedClass];
+            foreach (var wrappedStudent in Students)
+            {
+                if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_selectedSubject))
+                {
+                    var grades = wrappedStudent.AllGrades[_selectedSubject];
+                    wrappedStudent.Grades = grades;
+                    if (wrappedStudent.Grades.Count == 0)
+                    {
+                        wrappedStudent.Average = String.Empty;
+                    }
+                    else
+                    {
+                        CountAverageForSelectedSubjectForGivenStudent(wrappedStudent);
+                    }
+                }
+                else
+                {
+                    wrappedStudent.Grades = null;
+                    wrappedStudent.Average = String.Empty;
+                }
             }
         }
 
@@ -285,19 +200,7 @@ namespace UI.ViewModels
             await UpdateGradesForGivenStudentAsync(wrappedStudent);
         }
 
-        public void CountAverageForSelectedSubjectForGivenStudent(WrappedStudent wrappedStudent)
-        {
-            double sum = 0;
-            foreach (var grade in wrappedStudent.Grades)
-            {
-                sum += grade.Value;
-            }
-
-            double average = sum / wrappedStudent.Grades.Count;
-            wrappedStudent.Average = String.Format("{0:0.00}", average);
-        }
-
-        public async Task UpdateGradesForGivenStudentAsync(WrappedStudent wrappedStudent)
+        private async Task UpdateGradesForGivenStudentAsync(WrappedStudent wrappedStudent)
         {
             string studentId = wrappedStudent.Id.ToString();
             var student = await _repository.GetAsync<Student>(nameof(Student), studentId);
@@ -334,6 +237,18 @@ namespace UI.ViewModels
 
             await _repository.InsertOrReplaceAsync(student);
             OnPropertyChanged(nameof(Students));
+        }
+
+        private void CountAverageForSelectedSubjectForGivenStudent(WrappedStudent wrappedStudent)
+        {
+            double sum = 0;
+            foreach (var grade in wrappedStudent.Grades)
+            {
+                sum += grade.Value;
+            }
+
+            double average = sum / wrappedStudent.Grades.Count;
+            wrappedStudent.Average = String.Format("{0:0.00}", average);
         }
     }
 }

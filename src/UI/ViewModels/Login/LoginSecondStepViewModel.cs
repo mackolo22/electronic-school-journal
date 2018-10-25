@@ -9,7 +9,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class LoginSecondStepViewModel : ViewModelBase
+    public class LoginSecondStepViewModel : BaseViewModel
     {
         private Window _window;
         private LoginFirstStepViewModel _rootViewModel;

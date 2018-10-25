@@ -1,7 +1,6 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
 using Infrastructure.Data.AzureStorage.Tables;
-using UI.Views;
 using UI.ViewModels;
 using Unity;
 
@@ -41,10 +40,13 @@ namespace UI
             _unityContainer.RegisterType<AddTermViewModel>();
             _unityContainer.RegisterType<TimeTableViewModel>();
             _unityContainer.RegisterType<ShowLessonViewModel>();
-            _unityContainer.RegisterType<TeacherGradesViewModel>();
+            _unityContainer.RegisterType<ClassGradesViewModel>();
             _unityContainer.RegisterType<AddGradeViewModel>();
             _unityContainer.RegisterType<StudentGradesViewModel>();
             _unityContainer.RegisterType<ShowGradeViewModel>();
+            _unityContainer.RegisterType<ClassFrequencyViewModel>();
+            _unityContainer.RegisterType<StudentFrequencyViewModel>();
+            _unityContainer.RegisterType<CommunicationViewModel>();
             #endregion ViewModels
         }
 

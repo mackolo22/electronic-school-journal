@@ -9,7 +9,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class AddLessonViewModel : ViewModelBase
+    public class AddLessonViewModel : BaseViewModel
     {
         private Subject _subject;
         private Teacher _teacher;

@@ -3,11 +3,11 @@
 namespace UI.Views
 {
     /// <summary>
-    /// Interaction logic for HomeView.xaml
+    /// Interaction logic for StudentFrequencyView.xaml
     /// </summary>
-    public partial class HomeView : UserControl
+    public partial class StudentFrequencyView : UserControl
     {
-        public HomeView()
+        public StudentFrequencyView()
         {
             InitializeComponent();
         }

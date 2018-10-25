@@ -2,7 +2,7 @@
 
 namespace UI.ViewModels
 {
-    public class ShowGradeViewModel : ViewModelBase
+    public class ShowGradeViewModel : BaseViewModel
     {
         public WrappedGrade Grade { get; set; }
         public string Value => $"Ocena: {Grade.Value}";

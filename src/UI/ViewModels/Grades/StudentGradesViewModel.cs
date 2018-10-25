@@ -10,7 +10,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class StudentGradesViewModel : ViewModelBase
+    public class StudentGradesViewModel : BaseViewModel
     {
         private readonly ITableStorageRepository _repository;
 

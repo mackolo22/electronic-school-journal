@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
- 
+
 namespace ApplicationCore.Models
 {
     public class Lesson
@@ -42,8 +42,8 @@ namespace ApplicationCore.Models
 
     public class LessonTerm
     {
-        public Day Day;
-        public string Time;
-        public int TimeId;
+        public Day Day { get; set; }
+        public string Time { get; set; }
+        public int TimeId { get; set; }
     }
 }

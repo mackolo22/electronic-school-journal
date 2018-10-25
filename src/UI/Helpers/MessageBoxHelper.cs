@@ -21,7 +21,7 @@ namespace UI.Helpers
         }
     }
 
-    public class MessageBoxViewModel : ViewModelBase
+    public class MessageBoxViewModel : BaseViewModel
     {
         public MessageBoxViewModel(string caption, Action okAction, string buttonOkCaption)
         {
@@ -49,7 +49,7 @@ namespace UI.Helpers
         }
     }
 
-    public class ErrorMessageBoxViewModel : ViewModelBase
+    public class ErrorMessageBoxViewModel : BaseViewModel
     {
         public ErrorMessageBoxViewModel(string caption, string content)
         {

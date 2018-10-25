@@ -92,6 +92,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Communication\CommunicationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Frequency\ClassFrequencyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Frequency\StudentFrequencyView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Grades\AddGradeDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -152,7 +164,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Grades\TeacherGradesView.xaml">
+    <Page Include="Views\Grades\ClassGradesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,6 +184,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModels\Communication\CommunicationViewModel.cs" />
+    <Compile Include="ViewModels\Frequency\ClassFrequencyViewModel.cs" />
+    <Compile Include="ViewModels\Frequency\StudentFrequencyViewModel.cs" />
+    <Compile Include="ViewModels\Shared\TeacherManagingClassesBaseViewModel.cs" />
     <Compile Include="ViewModels\WrappedModels\BindableObject.cs" />
     <Compile Include="Converters\NegativeBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Grades\ShowGradeViewModel.cs" />
@@ -180,6 +196,16 @@
     <Compile Include="ViewModels\WrappedModels\WrappedGrade.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedStudent.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedSubject.cs" />
+    <Compile Include="ViewModels\WrappedModels\WrappedAttendance.cs" />
+    <Compile Include="Views\Communication\CommunicationView.xaml.cs">
+      <DependentUpon>CommunicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Frequency\ClassFrequencyView.xaml.cs">
+      <DependentUpon>ClassFrequencyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Frequency\StudentFrequencyView.xaml.cs">
+      <DependentUpon>StudentFrequencyView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Grades\AddGradeDialog.xaml.cs">
       <DependentUpon>AddGradeDialog.xaml</DependentUpon>
     </Compile>
@@ -239,17 +265,17 @@
     </Compile>
     <Compile Include="Helpers\MessageBoxHelper.cs" />
     <Compile Include="ViewModels\AddClass\AddClassViewModel.cs" />
-    <Compile Include="ViewModels\Grades\TeacherGradesViewModel.cs" />
+    <Compile Include="ViewModels\Grades\ClassGradesViewModel.cs" />
     <Compile Include="ViewModels\HomeViewModel.cs" />
     <Compile Include="ViewModels\Login\LoginFirstStepViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="ViewModels\TimeTable\TimeTableViewModel.cs" />
-    <Compile Include="ViewModels\ViewModelBase.cs" />
+    <Compile Include="ViewModels\Shared\BaseViewModel.cs" />
     <Compile Include="Views\AddClass\AddClassView.xaml.cs">
       <DependentUpon>AddClassView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Grades\TeacherGradesView.xaml.cs">
-      <DependentUpon>TeacherGradesView.xaml</DependentUpon>
+    <Compile Include="Views\Grades\ClassGradesView.xaml.cs">
+      <DependentUpon>ClassGradesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TimeTable\TimeTableView.xaml.cs">
       <DependentUpon>TimeTableView.xaml</DependentUpon>

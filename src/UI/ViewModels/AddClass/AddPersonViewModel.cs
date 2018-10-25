@@ -5,7 +5,7 @@ using UI.Helpers;
 
 namespace UI.ViewModels
 {
-    public class AddPersonViewModel : ViewModelBase
+    public class AddPersonViewModel : BaseViewModel
     {
         protected readonly ILoginService _loginService;
         protected string _firstName;

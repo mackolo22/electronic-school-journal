@@ -1,22 +1,16 @@
 ﻿using ApplicationCore.Models;
 using System;
-using System.Windows;
 using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : BaseViewModel
     {
-        private ViewModelBase _viewModel;
+        private BaseViewModel _currentViewModel;
         private bool _loggedAsParent;
         private bool _loggedAsStudent;
         private bool _loggedAsTeacher;
         private bool _loggedAsAdministrator;
-
-        public MainViewModel()
-        {
-            ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
-        }
 
         public string UserType { get; set; }
         public Person Person { get; set; }
@@ -25,13 +19,16 @@ namespace UI.ViewModels
         public Parent Parent { get; set; }
         public Administrator Administrator { get; set; }
 
-        public ViewModelBase ViewModel
+        public BaseViewModel CurrentViewModel
         {
-            get => _viewModel;
+            get => _currentViewModel;
             set
             {
-                _viewModel = value;
-                OnPropertyChanged(nameof(ViewModel));
+                if (_currentViewModel?.GetType() != value.GetType())
+                {
+                    _currentViewModel = value;
+                    OnPropertyChanged(nameof(CurrentViewModel));
+                }
             }
         }
 
@@ -63,7 +60,6 @@ namespace UI.ViewModels
             {
                 _loggedAsStudent = value;
                 OnPropertyChanged(nameof(LoggedAsStudent));
-                OnPropertyChanged(nameof(LoggedAsStudentOrParentVisibility));
             }
         }
 
@@ -84,22 +80,6 @@ namespace UI.ViewModels
             {
                 _loggedAsParent = value;
                 OnPropertyChanged(nameof(LoggedAsParent));
-                OnPropertyChanged(nameof(LoggedAsStudentOrParentVisibility));
-            }
-        }
-
-        public Visibility LoggedAsStudentOrParentVisibility
-        {
-            get
-            {
-                if (LoggedAsStudent || LoggedAsParent)
-                {
-                    return Visibility.Visible;
-                }
-                else
-                {
-                    return Visibility.Collapsed;
-                }
             }
         }
 
@@ -115,52 +95,57 @@ namespace UI.ViewModels
             string viewName = parameter as string;
             if (!String.IsNullOrWhiteSpace(viewName))
             {
-                switch (viewName)
+                if (viewName == "Home")
                 {
-                    case "HomeView":
-                        if (!(ViewModel is HomeViewModel))
-                        {
-                            ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
-                        }
-                        break;
-
-                    case "AddClassView":
-                        if (!(ViewModel is AddClassViewModel))
-                        {
-                            ViewModel = UnityConfiguration.Resolve<AddClassViewModel>();
-                        }
-                        break;
-
-                    case "TimeTableView":
-                        if (!(ViewModel is TimeTableViewModel))
-                        {
-                            var viewModel = UnityConfiguration.Resolve<TimeTableViewModel>();
-                            viewModel.Student = Student;
-                            viewModel.Teacher = Teacher;
-                            viewModel.Parent = Parent;
-                            viewModel.Person = Person;
-                            ViewModel = viewModel;
-                        }
-                        break;
-
-                    case "TeacherGradesView":
-                        if (!(ViewModel is TeacherGradesViewModel))
-                        {
-                            var viewModel = UnityConfiguration.Resolve<TeacherGradesViewModel>();
-                            viewModel.Teacher = Teacher;
-                            ViewModel = viewModel;
-                        }
-                        break;
-
-                    case "StudentGradesView":
-                        if (!(ViewModel is StudentGradesViewModel))
-                        {
-                            var viewModel = UnityConfiguration.Resolve<StudentGradesViewModel>();
-                            long? studentId = (Student != null) ? Student.Id : Parent?.ChildId;
-                            viewModel.StudentId = studentId;
-                            ViewModel = viewModel;
-                        }
-                        break;
+                    CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+                }
+                else if (viewName == "AddClass")
+                {
+                    CurrentViewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                }
+                else if (viewName == "TimeTable")
+                {
+                    var viewModel = UnityConfiguration.Resolve<TimeTableViewModel>();
+                    viewModel.Student = Student;
+                    viewModel.Teacher = Teacher;
+                    viewModel.Parent = Parent;
+                    viewModel.Person = Person;
+                    CurrentViewModel = viewModel;
+                }
+                else if (viewName == "Grades")
+                {
+                    if ((LoggedAsStudent || LoggedAsParent))
+                    {
+                        var viewModel = UnityConfiguration.Resolve<StudentGradesViewModel>();
+                        long? studentId = (Student != null) ? Student.Id : Parent?.ChildId;
+                        viewModel.StudentId = studentId;
+                        CurrentViewModel = viewModel;
+                    }
+                    else if (LoggedAsTeacher)
+                    {
+                        var viewModel = UnityConfiguration.Resolve<ClassGradesViewModel>();
+                        viewModel.Teacher = Teacher;
+                        CurrentViewModel = viewModel;
+                    }
+                }
+                else if (viewName == "Frequency")
+                {
+                    if ((LoggedAsStudent || LoggedAsParent))
+                    {
+                        var viewModel = UnityConfiguration.Resolve<StudentFrequencyViewModel>();
+                        long? studentId = (Student != null) ? Student.Id : Parent?.ChildId;
+                        CurrentViewModel = viewModel;
+                    }
+                    else if (LoggedAsTeacher)
+                    {
+                        var viewModel = UnityConfiguration.Resolve<ClassFrequencyViewModel>();
+                        viewModel.Teacher = Teacher;
+                        CurrentViewModel = viewModel;
+                    }
+                }
+                else if (viewName == "Messages")
+                {
+                    CurrentViewModel = UnityConfiguration.Resolve<CommunicationViewModel>();
                 }
             }
         }
@@ -169,7 +154,7 @@ namespace UI.ViewModels
         private void ExecuteLogout(object parameter)
         {
             ClearDataAboutLoggedUser();
-            ViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+            CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
             ProcessLoginOperation();
         }
 
@@ -225,6 +210,7 @@ namespace UI.ViewModels
                         break;
                 }
 
+                CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
                 OnPropertyChanged(nameof(LoggedAs));
                 OnPropertyChanged(nameof(UserLoggedIn));
             }

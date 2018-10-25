@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure.Storage.Table;
+﻿using ApplicationCore.Enums;
+using Microsoft.WindowsAzure.Storage.Table;
 using System;
 using System.Collections.Generic;
 
@@ -19,6 +20,9 @@ namespace ApplicationCore.Models
         [IgnoreProperty]
         public IDictionary<string, List<Grade>> Grades { get; set; }
         public string SerializedGrades { get; set; }
+        [IgnoreProperty]
+        public IList<Attendance> Attendances { get; set; }
+        public string SerializedAttendances { get; set; }
         public long? ParentId { get; set; }
         [IgnoreProperty]
         public Parent Parent { get; set; }
@@ -30,5 +34,12 @@ namespace ApplicationCore.Models
         public double Value { get; set; }
         public string Comment { get; set; }
         public DateTime LastModificationDate { get; set; }
+    }
+
+    public class Attendance
+    {
+        int Id { get; set; }
+        public DateTime Date { get; set; }
+        public Subject Subject { get; set; }
     }
 }

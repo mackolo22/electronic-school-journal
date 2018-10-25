@@ -9,7 +9,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class AddClassViewModel : ViewModelBase
+    public class AddClassViewModel : BaseViewModel
     {
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
         private readonly IClassService _classService;

@@ -3,11 +3,11 @@
 namespace UI.Views
 {
     /// <summary>
-    /// Interaction logic for TeacherGradesView.xaml
+    /// Interaction logic for CommunicationView.xaml
     /// </summary>
-    public partial class TeacherGradesView : UserControl
+    public partial class CommunicationView : UserControl
     {
-        public TeacherGradesView()
+        public CommunicationView()
         {
             InitializeComponent();
         }

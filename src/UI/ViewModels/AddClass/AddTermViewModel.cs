@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace UI.ViewModels
 {
-    public class AddTermViewModel : ViewModelBase
+    public class AddTermViewModel : BaseViewModel
     {
         private Day _day;
 

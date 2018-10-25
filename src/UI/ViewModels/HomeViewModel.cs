@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UI.ViewModels
 {
-    public class HomeViewModel : ViewModelBase
+    public class HomeViewModel : BaseViewModel
     {
         public HomeViewModel()
         {

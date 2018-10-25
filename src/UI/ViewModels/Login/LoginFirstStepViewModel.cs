@@ -4,7 +4,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class LoginFirstStepViewModel : ViewModelBase
+    public class LoginFirstStepViewModel : BaseViewModel
     {
         private Window _window;
         private bool _closeApplicationOnWindowClosed = true;

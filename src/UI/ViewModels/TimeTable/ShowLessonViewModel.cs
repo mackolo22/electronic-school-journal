@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace UI.ViewModels
 {
-    public class ShowLessonViewModel : ViewModelBase
+    public class ShowLessonViewModel : BaseViewModel
     {
         private readonly ITableStorageRepository _repository;
 

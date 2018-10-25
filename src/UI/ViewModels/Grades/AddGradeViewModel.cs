@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace UI.ViewModels
 {
-    public class AddGradeViewModel : ViewModelBase
+    public class AddGradeViewModel : BaseViewModel
     {
         private DateTime _lastModificationDate;
 

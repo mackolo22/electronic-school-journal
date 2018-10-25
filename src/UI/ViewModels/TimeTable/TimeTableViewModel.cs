@@ -7,7 +7,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class TimeTableViewModel : ViewModelBase
+    public class TimeTableViewModel : BaseViewModel
     {
         private readonly ITimeTableService _timeTableService;
 
