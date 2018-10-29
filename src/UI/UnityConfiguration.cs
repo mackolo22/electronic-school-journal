@@ -20,7 +20,7 @@ namespace UI
 
             #region Services
             _unityContainer.RegisterType<ILoginService, LoginService>();
-            _unityContainer.RegisterType<IUniqueIDGenerator, UniqueIDGenerator>();
+            _unityContainer.RegisterSingleton<IUniqueIDGenerator, UniqueIDGenerator>();
             _unityContainer.RegisterType<IClassService, ClassService>();
             _unityContainer.RegisterType<IPersonService, PersonService>();
             _unityContainer.RegisterType<ITimeTableService, TimeTableService>();

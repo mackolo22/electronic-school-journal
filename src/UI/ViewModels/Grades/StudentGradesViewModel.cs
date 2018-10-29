@@ -56,7 +56,7 @@ namespace UI.ViewModels
                         {
                             Name = subjectName,
                             Grades = wrappedGrades,
-                            Average = average
+                            Average = String.Format("{0:0.00}", average)
                         };
 
                         subjects.Add(subject);

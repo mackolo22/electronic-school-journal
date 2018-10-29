@@ -6,6 +6,6 @@ namespace UI.ViewModels.WrappedModels
     {
         public string Name { get; set; }
         public ObservableCollection<WrappedGrade> Grades { get; set; }
-        public double Average { get; set; }
+        public string Average { get; set; }
     }
 }

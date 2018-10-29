@@ -6,9 +6,6 @@ namespace ApplicationCore.Enums
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum Day
     {
-        [Description("Niedziela")]
-        Sunday = 0,
-
         [Description("Poniedziałek")]
         [Display(Name = "pon")]
         Monday = 1,
@@ -27,9 +24,6 @@ namespace ApplicationCore.Enums
 
         [Description("Piątek")]
         [Display(Name = "pt")]
-        Friday = 5,
-
-        [Description("Sobota")]
-        Saturday = 6,
+        Friday = 5
     }
 }
