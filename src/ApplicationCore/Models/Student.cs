@@ -30,7 +30,7 @@ namespace ApplicationCore.Models
 
     public class Grade
     {
-        int Id { get; set; }
+        public int Id { get; set; }
         public double Value { get; set; }
         public string Comment { get; set; }
         public DateTime LastModificationDate { get; set; }
@@ -38,8 +38,9 @@ namespace ApplicationCore.Models
 
     public class Attendance
     {
-        int Id { get; set; }
+        public bool Presence { get; set; }
+        public LessonTerm LessonTerm { get; set; }
         public DateTime Date { get; set; }
-        public Subject Subject { get; set; }
+        public string Subject { get; set; }
     }
 }

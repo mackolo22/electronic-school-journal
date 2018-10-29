@@ -15,8 +15,8 @@ namespace UI.ViewModels
     {
         protected string _selectedClass;
         protected bool _classSelected;
-        protected string _selectedSubject;
-        protected bool _subjectSelected;
+        protected WrappedLesson _selectedLesson;
+        protected bool _lessonSelected;
         protected Dictionary<string, ObservableCollection<WrappedStudent>> _studentsFromAllClasses;
         protected readonly ITableStorageRepository _repository;
 
@@ -27,7 +27,7 @@ namespace UI.ViewModels
 
         public Teacher Teacher { get; set; }
         public List<string> TeacherClasses { get; set; }
-        public List<string> Subjects { get; set; }
+        public List<WrappedLesson> Lessons { get; set; }
         public ObservableCollection<WrappedStudent> Students { get; set; }
 
         public string SelectedClass
@@ -44,16 +44,22 @@ namespace UI.ViewModels
 
         private void UpdateListOfSubjectsForGivenClass()
         {
-            Subjects = new List<string>();
+            Lessons = new List<WrappedLesson>();
             foreach (var lesson in Teacher.Lessons)
             {
                 if (lesson.ClassName == _selectedClass)
                 {
-                    Subjects.Add(lesson.Subject.GetDisplayName());
+                    var wrappedLesson = new WrappedLesson
+                    {
+                        Subject = lesson.Subject.GetDisplayName(),
+                        Terms = lesson.Terms
+                    };
+
+                    Lessons.Add(wrappedLesson);
                 }
             }
 
-            OnPropertyChanged(nameof(Subjects));
+            OnPropertyChanged(nameof(Lessons));
         }
 
         public bool ClassSelected
@@ -66,17 +72,17 @@ namespace UI.ViewModels
             }
         }
 
-        public abstract string SelectedSubject { get; set; }
+        public abstract WrappedLesson SelectedLesson { get; set; }
 
         protected abstract void UpdateListOfStudentsFromSelectedClass();
 
-        public bool SubjectSelected
+        public bool LessonSelected
         {
-            get => _subjectSelected;
+            get => _lessonSelected;
             set
             {
-                _subjectSelected = value;
-                OnPropertyChanged(nameof(SubjectSelected));
+                _lessonSelected = value;
+                OnPropertyChanged(nameof(LessonSelected));
             }
         }
 

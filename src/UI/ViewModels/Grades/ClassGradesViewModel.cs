@@ -42,7 +42,7 @@ namespace UI.ViewModels
                     var wrappedStudent = new WrappedStudent
                     {
                         Id = student.Id,
-                        Number = number,
+                        OrdinalNumber = number,
                         FullName = student.FullName,
                         AllGrades = grades
                     };
@@ -55,24 +55,24 @@ namespace UI.ViewModels
             }
         }
 
-        public override string SelectedSubject
+        public override WrappedLesson SelectedLesson
         {
-            get => _selectedSubject;
+            get => _selectedLesson;
             set
             {
-                _selectedSubject = value;
-                if (_selectedSubject == null)
+                _selectedLesson = value;
+                if (_selectedLesson == null)
                 {
                     Students = null;
-                    SubjectSelected = false;
+                    LessonSelected = false;
                 }
                 else
                 {
                     UpdateListOfStudentsFromSelectedClass();
-                    SubjectSelected = true;
+                    LessonSelected = true;
                 }
 
-                OnPropertyChanged(nameof(SelectedSubject));
+                OnPropertyChanged(nameof(SelectedLesson));
                 OnPropertyChanged(nameof(Students));
             }
         }
@@ -82,9 +82,9 @@ namespace UI.ViewModels
             Students = _studentsFromAllClasses[_selectedClass];
             foreach (var wrappedStudent in Students)
             {
-                if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_selectedSubject))
+                if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_selectedLesson.Subject))
                 {
-                    var grades = wrappedStudent.AllGrades[_selectedSubject];
+                    var grades = wrappedStudent.AllGrades[_selectedLesson.Subject];
                     wrappedStudent.Grades = grades;
                     if (wrappedStudent.Grades.Count == 0)
                     {
@@ -92,7 +92,7 @@ namespace UI.ViewModels
                     }
                     else
                     {
-                        CountAverageForSelectedSubjectForGivenStudent(wrappedStudent);
+                        CountAverageForSelectedLessonForGivenStudent(wrappedStudent);
                     }
                 }
                 else
@@ -134,22 +134,22 @@ namespace UI.ViewModels
                 {
                     wrappedStudent.AllGrades = new Dictionary<string, ObservableCollection<WrappedGrade>>
                     {
-                        { SelectedSubject, wrappedStudent.Grades }
+                        { SelectedLesson.Subject, wrappedStudent.Grades }
                     };
                 }
                 else
                 {
-                    if (wrappedStudent.AllGrades.ContainsKey(SelectedSubject))
+                    if (wrappedStudent.AllGrades.ContainsKey(SelectedLesson.Subject))
                     {
-                        wrappedStudent.AllGrades[SelectedSubject] = wrappedStudent.Grades;
+                        wrappedStudent.AllGrades[SelectedLesson.Subject] = wrappedStudent.Grades;
                     }
                     else
                     {
-                        wrappedStudent.AllGrades.Add(SelectedSubject, wrappedStudent.Grades);
+                        wrappedStudent.AllGrades.Add(SelectedLesson.Subject, wrappedStudent.Grades);
                     }
                 }
 
-                CountAverageForSelectedSubjectForGivenStudent(wrappedStudent);
+                CountAverageForSelectedLessonForGivenStudent(wrappedStudent);
                 await UpdateGradesForGivenStudentAsync(wrappedStudent);
             }
         }
@@ -174,8 +174,8 @@ namespace UI.ViewModels
                 wrappedGrade.Value = addGradeViewModel.Grade;
                 wrappedGrade.Comment = addGradeViewModel.Comment;
                 wrappedGrade.LastModificationDate = DateTime.Now;
-                wrappedStudent.AllGrades[SelectedSubject] = wrappedStudent.Grades;
-                CountAverageForSelectedSubjectForGivenStudent(wrappedStudent);
+                wrappedStudent.AllGrades[SelectedLesson.Subject] = wrappedStudent.Grades;
+                CountAverageForSelectedLessonForGivenStudent(wrappedStudent);
                 await UpdateGradesForGivenStudentAsync(wrappedStudent);
             }
         }
@@ -194,7 +194,7 @@ namespace UI.ViewModels
             }
             else
             {
-                CountAverageForSelectedSubjectForGivenStudent(wrappedStudent);
+                CountAverageForSelectedLessonForGivenStudent(wrappedStudent);
             }
 
             await UpdateGradesForGivenStudentAsync(wrappedStudent);
@@ -218,15 +218,15 @@ namespace UI.ViewModels
                     });
                 }
 
-                bool gradesContainSelectedSubject = givenStudentGrades.ContainsKey(SelectedSubject);
-                if (gradesContainSelectedSubject)
+                bool gradesContainSelectedLesson = givenStudentGrades.ContainsKey(SelectedLesson.Subject);
+                if (gradesContainSelectedLesson)
                 {
-                    givenStudentGrades[SelectedSubject] = grades;
+                    givenStudentGrades[SelectedLesson.Subject] = grades;
                     student.SerializedGrades = JsonConvert.SerializeObject(givenStudentGrades);
                 }
                 else
                 {
-                    givenStudentGrades.Add(SelectedSubject, grades);
+                    givenStudentGrades.Add(SelectedLesson.Subject, grades);
                     student.SerializedGrades = JsonConvert.SerializeObject(givenStudentGrades);
                 }
             }
@@ -239,7 +239,7 @@ namespace UI.ViewModels
             OnPropertyChanged(nameof(Students));
         }
 
-        private void CountAverageForSelectedSubjectForGivenStudent(WrappedStudent wrappedStudent)
+        private void CountAverageForSelectedLessonForGivenStudent(WrappedStudent wrappedStudent)
         {
             double sum = 0;
             foreach (var grade in wrappedStudent.Grades)

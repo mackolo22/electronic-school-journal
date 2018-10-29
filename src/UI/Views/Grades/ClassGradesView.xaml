@@ -39,12 +39,12 @@
             <ComboBox Grid.Column="1" MinWidth="100" Margin="15" ItemsSource="{Binding TeacherClasses}" SelectedValue="{Binding SelectedClass}"/>
 
             <Label Grid.Column="0" Grid.Row="1" Content="Wybierz przedmiot:" HorizontalAlignment="Left" Margin="15"
-               Visibility="{Binding ClassSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="100" Margin="15" ItemsSource="{Binding Subjects}" SelectedValue="{Binding SelectedSubject}"
-                  Visibility="{Binding ClassSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                   Visibility="{Binding ClassSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="100" Margin="15" ItemsSource="{Binding Lessons}" SelectedValue="{Binding SelectedLesson}"
+                      DisplayMemberPath="Subject" Visibility="{Binding ClassSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
             <Grid Grid.Row="2" Grid.ColumnSpan="4" Margin="15 15 15 0" 
-                  Visibility="{Binding SubjectSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                  Visibility="{Binding LessonSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="25" Width="Auto" SharedSizeGroup="StudentNumber"/>
                     <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentFullName"/>
@@ -70,7 +70,7 @@
                                 <ColumnDefinition MinWidth="100" Width="Auto"/>
                             </Grid.ColumnDefinitions>
 
-                            <Label Grid.Column="0" Margin="10" Content="{Binding Number}"/>
+                            <Label Grid.Column="0" Margin="10" Content="{Binding OrdinalNumber}"/>
                             <Label Grid.Column="1" Margin="10" Content="{Binding FullName}"/>
                             <ItemsControl Grid.Column="2" ItemsSource="{Binding Grades}" Margin="10">
                                 <ItemsControl.ItemsPanel>

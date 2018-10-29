@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
@@ -17,6 +18,18 @@ namespace ApplicationCore.Extensions
                            .GetName();
 
             return displayName;
+        }
+
+        public static string GetDescription(this Enum enumValue)
+        {
+            string description
+               = enumValue.GetType()
+                          .GetMember(enumValue.ToString())
+                          .First()
+                          .GetCustomAttribute<DescriptionAttribute>()
+                          .Description;
+
+            return description;
         }
     }
 }

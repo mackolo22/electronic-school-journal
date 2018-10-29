@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using ApplicationCore.Models;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace UI.ViewModels.WrappedModels
@@ -7,10 +8,12 @@ namespace UI.ViewModels.WrappedModels
     {
         private ObservableCollection<WrappedGrade> _grades;
         private string _average;
+        private bool _presenceInSelectedDay;
 
         public long? Id { get; set; }
-        public int Number { get; set; }
+        public int OrdinalNumber { get; set; }
         public string FullName { get; set; }
+
         public ObservableCollection<WrappedGrade> Grades
         {
             get => _grades;
@@ -20,6 +23,7 @@ namespace UI.ViewModels.WrappedModels
                 OnPropertyChanged(nameof(Grades));
             }
         }
+
         public IDictionary<string, ObservableCollection<WrappedGrade>> AllGrades { get; set; }
         public string Average
         {
@@ -28,6 +32,17 @@ namespace UI.ViewModels.WrappedModels
             {
                 _average = value;
                 OnPropertyChanged(nameof(Average));
+            }
+        }
+
+        public ObservableCollection<Attendance> Attendances { get; set; }
+        public bool PresenceInSelectedDay
+        {
+            get => _presenceInSelectedDay;
+            set
+            {
+                _presenceInSelectedDay = value;
+                OnPropertyChanged(nameof(PresenceInSelectedDay));
             }
         }
     }

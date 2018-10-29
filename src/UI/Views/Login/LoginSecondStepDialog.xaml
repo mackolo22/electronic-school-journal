@@ -16,7 +16,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=LoginTextBox}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
@@ -29,7 +29,7 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" Content="Login:" Margin="15 15 0 15" HorizontalAlignment="Right"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Login}" Margin="15"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Login}" Margin="15" Name="LoginTextBox"/>
 
         <Label Grid.Column="0" Grid.Row="1" Content="Hasło:" Margin="15 15 0 15"/>
         <PasswordBox Grid.Column="1" Grid.Row="1" Margin="15" Name="PasswordBox"/>

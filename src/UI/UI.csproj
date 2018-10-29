@@ -100,6 +100,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Frequency\SelectLessonTimeDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Frequency\StudentFrequencyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -186,6 +190,7 @@
     </Compile>
     <Compile Include="ViewModels\Communication\CommunicationViewModel.cs" />
     <Compile Include="ViewModels\Frequency\ClassFrequencyViewModel.cs" />
+    <Compile Include="ViewModels\Frequency\SelectLessonTimeViewModel.cs" />
     <Compile Include="ViewModels\Frequency\StudentFrequencyViewModel.cs" />
     <Compile Include="ViewModels\Shared\TeacherManagingClassesBaseViewModel.cs" />
     <Compile Include="ViewModels\WrappedModels\BindableObject.cs" />
@@ -194,14 +199,17 @@
     <Compile Include="ViewModels\Grades\StudentGradesViewModel.cs" />
     <Compile Include="ViewModels\Login\LoginSecondStepViewModel.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedGrade.cs" />
+    <Compile Include="ViewModels\WrappedModels\WrappedLesson.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedStudent.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedSubject.cs" />
-    <Compile Include="ViewModels\WrappedModels\WrappedAttendance.cs" />
     <Compile Include="Views\Communication\CommunicationView.xaml.cs">
       <DependentUpon>CommunicationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Frequency\ClassFrequencyView.xaml.cs">
       <DependentUpon>ClassFrequencyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Frequency\SelectLessonTimeDialog.xaml.cs">
+      <DependentUpon>SelectLessonTimeDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Frequency\StudentFrequencyView.xaml.cs">
       <DependentUpon>StudentFrequencyView.xaml</DependentUpon>
