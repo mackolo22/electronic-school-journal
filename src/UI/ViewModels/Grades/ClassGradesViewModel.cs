@@ -55,6 +55,20 @@ namespace UI.ViewModels
             }
         }
 
+        public override string SelectedClass
+        {
+            get => _selectedClass;
+            set
+            {
+                _selectedClass = value;
+                Students = null;
+                OnPropertyChanged(nameof(Students));
+                UpdateListOfSubjectsForGivenClass();
+                OnPropertyChanged(nameof(SelectedClass));
+                ClassSelected = true;
+            }
+        }
+
         public override WrappedLesson SelectedLesson
         {
             get => _selectedLesson;

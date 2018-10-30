@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Enums;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Newtonsoft.Json;
 using System;
@@ -14,12 +15,26 @@ namespace UI.ViewModels
 {
     public class ClassFrequencyViewModel : TeacherManagingClassesBaseViewModel
     {
-        private bool _firstDateCheck = true;
         private bool _termSelected;
         private LessonTerm _selectedTerm;
         private DateTime? _selectedDate;
 
         public ClassFrequencyViewModel(ITableStorageRepository repository) : base(repository) { }
+
+        public override string SelectedClass
+        {
+            get => _selectedClass;
+            set
+            {
+                _selectedClass = value;
+                SelectedDate = null;
+                Students = null;
+                OnPropertyChanged(nameof(Students));
+                UpdateListOfSubjectsForGivenClass();
+                OnPropertyChanged(nameof(SelectedClass));
+                ClassSelected = true;
+            }
+        }
 
         public override WrappedLesson SelectedLesson
         {
@@ -30,11 +45,12 @@ namespace UI.ViewModels
                 if (_selectedLesson == null)
                 {
                     Students = null;
+                    SelectedDate = null;
                     LessonSelected = false;
                 }
                 else
                 {
-                    SelectedDate = DateTime.Now.Date;
+                    SelectedDate = null;
                     LessonSelected = true;
                 }
 
@@ -48,31 +64,30 @@ namespace UI.ViewModels
             get => _selectedDate;
             set
             {
+                _selectedDate = value;
+                OnPropertyChanged(nameof(SelectedDate));
+
+                if (value == null)
+                {
+                    Students = null;
+                    OnPropertyChanged(nameof(Students));
+                    return;
+                }
+
                 DayOfWeek dayOfWeek = value.Value.DayOfWeek;
                 int dayValue = (int)dayOfWeek;
                 var terms = SelectedLesson.Terms.Where(x => (int)x.Day == dayValue);
                 if (terms.Count() == 0)
                 {
-                    _selectedDate = DateTime.Now.Date;
                     SelectedTerm = null;
-                    if (_firstDateCheck)
-                    {
-                        _firstDateCheck = false;
-                    }
-                    else
-                    {
-                        MessageBoxHelper.ShowErrorMessageBox($"Wybrane zajęcia nie odbywają się w dany dzień.", "Uwaga");
-                    }
+                    MessageBoxHelper.ShowErrorMessageBox($"Wybrane zajęcia nie odbywają się w dany dzień.", "Uwaga");
                 }
                 else if (terms.Count() == 1)
                 {
-                    _selectedDate = value;
                     SelectedTerm = terms.First();
                 }
                 else if (terms.Count() > 1)
                 {
-                    _selectedDate = value;
-
                     var viewModel = new SelectLessonTimeViewModel
                     {
                         Terms = terms,
@@ -83,8 +98,6 @@ namespace UI.ViewModels
                     dialog.ShowDialog();
                     SelectedTerm = viewModel.SelectedTerm;
                 }
-
-                OnPropertyChanged(nameof(SelectedDate));
             }
         }
 
@@ -155,16 +168,16 @@ namespace UI.ViewModels
 
         protected override void UpdateListOfStudentsFromSelectedClass()
         {
-            var students = _studentsFromAllClasses[_selectedClass];
-            foreach (var student in students)
+            var wrappedStudents = _studentsFromAllClasses[_selectedClass];
+            foreach (var wrappedStudent in wrappedStudents)
             {
-                if (student.Attendances == null || student.Attendances.Count == 0)
+                if (wrappedStudent.Attendances == null || wrappedStudent.Attendances.Count == 0)
                 {
-                    student.PresenceInSelectedDay = false;
+                    wrappedStudent.AttendanceTypeInSelectedDay = AttendanceType.None;
                 }
                 else
                 {
-                    var attendance = student.Attendances
+                    var attendance = wrappedStudent.Attendances
                         .Where(x => x.Subject == SelectedLesson.Subject
                                && x.LessonTerm.Day == SelectedTerm.Day
                                && x.LessonTerm.Time == SelectedTerm.Time
@@ -172,16 +185,16 @@ namespace UI.ViewModels
 
                     if (attendance != null)
                     {
-                        student.PresenceInSelectedDay = attendance.Presence;
+                        wrappedStudent.AttendanceTypeInSelectedDay = attendance.Type;
                     }
                     else
                     {
-                        student.PresenceInSelectedDay = false;
+                        wrappedStudent.AttendanceTypeInSelectedDay = AttendanceType.None;
                     }
                 }
             }
 
-            Students = students;
+            Students = wrappedStudents;
         }
 
         public RelayCommand ChangeAttendanceForGivenStudentCommand
@@ -204,7 +217,7 @@ namespace UI.ViewModels
 
                 if (attendance != null)
                 {
-                    attendance.Presence = wrappedStudent.PresenceInSelectedDay;
+                    attendance.Type = wrappedStudent.AttendanceTypeInSelectedDay;
 
                     var att = wrappedStudent.Attendances
                         .Where(x => x.Subject == SelectedLesson.Subject
@@ -222,7 +235,8 @@ namespace UI.ViewModels
                         Date = SelectedDate.Value,
                         LessonTerm = SelectedTerm,
                         Subject = SelectedLesson.Subject,
-                        Presence = wrappedStudent.PresenceInSelectedDay
+                        Type = wrappedStudent.AttendanceTypeInSelectedDay,
+                        TeacherFullName = Teacher.FullName
                     };
 
                     wrappedStudent.Attendances.Add(attendance);
@@ -235,7 +249,8 @@ namespace UI.ViewModels
                     Date = SelectedDate.Value,
                     LessonTerm = SelectedTerm,
                     Subject = SelectedLesson.Subject,
-                    Presence = wrappedStudent.PresenceInSelectedDay
+                    Type = wrappedStudent.AttendanceTypeInSelectedDay,
+                    TeacherFullName = Teacher.FullName
                 };
 
                 wrappedStudent.Attendances.Add(attendance);

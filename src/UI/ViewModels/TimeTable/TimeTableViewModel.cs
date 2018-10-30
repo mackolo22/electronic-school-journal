@@ -71,7 +71,7 @@ namespace UI.ViewModels
                         TeacherId = lesson.TeacherId
                     };
 
-                    Lessons[term.TimeId][(int)term.Day - 1] = wrappedLesson;
+                    Lessons[term.LessonNumber][(int)term.Day - 1] = wrappedLesson;
                 }
             }
 
@@ -94,7 +94,7 @@ namespace UI.ViewModels
                         ClassName = lesson.ClassName
                     };
 
-                    Lessons[term.TimeId][(int)term.Day - 1] = wrappedLesson;
+                    Lessons[term.LessonNumber][(int)term.Day - 1] = wrappedLesson;
                 }
             }
 

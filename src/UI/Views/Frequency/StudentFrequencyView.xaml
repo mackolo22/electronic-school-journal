@@ -3,10 +3,73 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:UI.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xml:lang="pl-PL"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             Grid.IsSharedSizeScope="True">
 
-    <Grid>
-        
-    </Grid>
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <converters:NegativeBoolToVisibilityConverter x:Key="NegativeBoolToVisibilityConverter"/>
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="15">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <DatePicker Text="Wybierz datę" SelectedDate="{Binding SelectedDate}" FirstDayOfWeek="Monday" Margin="15" Focusable="False" Width="150" HorizontalAlignment="Left"/>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="SubjectName"/>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="TeacherFullName"/>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Lesson"/>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Attendance"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Content="Przedmiot" Margin="10"/>
+                <Label Grid.Column="1" Content="Nauczyciel" Margin="10"/>
+                <Label Grid.Column="2" Content="Lekcja" Margin="10"/>
+                <Label Grid.Column="3" Content="Obecność" Margin="10"/>
+            </Grid>
+
+            <ItemsControl Grid.Row="2" ItemsSource="{Binding Attendances}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="SubjectName"/>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="TeacherFullName"/>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Lesson"/>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Attendance"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Margin="10" Content="{Binding Subject}"/>
+                            <Label Grid.Column="1" Margin="10" Content="{Binding TeacherFullName}"/>
+                            <Label Grid.Column="2" Margin="10" Content="{Binding LessonTerm}"/>
+                            <Label Grid.Column="3" Margin="10" Content="{Binding Type}"/>
+
+                        </Grid>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

@@ -134,6 +134,7 @@ namespace UI.ViewModels
                     {
                         var viewModel = UnityConfiguration.Resolve<StudentFrequencyViewModel>();
                         long? studentId = (Student != null) ? Student.Id : Parent?.ChildId;
+                        viewModel.StudentId = studentId;
                         CurrentViewModel = viewModel;
                     }
                     else if (LoggedAsTeacher)

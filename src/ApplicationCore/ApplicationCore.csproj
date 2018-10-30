@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\AttendanceType.cs" />
     <Compile Include="Enums\Day.cs" />
     <Compile Include="Enums\EnumDescriptionTypeConverter.cs" />
     <Compile Include="Enums\Subject.cs" />

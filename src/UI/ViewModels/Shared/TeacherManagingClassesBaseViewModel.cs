@@ -30,19 +30,9 @@ namespace UI.ViewModels
         public List<WrappedLesson> Lessons { get; set; }
         public ObservableCollection<WrappedStudent> Students { get; set; }
 
-        public string SelectedClass
-        {
-            get => _selectedClass;
-            set
-            {
-                _selectedClass = value;
-                UpdateListOfSubjectsForGivenClass();
-                OnPropertyChanged(nameof(SelectedClass));
-                ClassSelected = true;
-            }
-        }
+        public abstract string SelectedClass { get; set; }
 
-        private void UpdateListOfSubjectsForGivenClass()
+        protected void UpdateListOfSubjectsForGivenClass()
         {
             Lessons = new List<WrappedLesson>();
             foreach (var lesson in Teacher.Lessons)

@@ -44,23 +44,24 @@
             <ComboBox Grid.Column="1" Grid.Row="1" MinWidth="100" Margin="15" ItemsSource="{Binding Lessons}" SelectedValue="{Binding SelectedLesson}"
                       DisplayMemberPath="Subject" Visibility="{Binding ClassSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-            <Label Grid.Column="0" Grid.Row="2" Content="Wybierz termin:" HorizontalAlignment="Left" Margin="15"
-                   Visibility="{Binding LessonSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-            <Calendar Grid.Column="1" Grid.Row="2" SelectedDate="{Binding SelectedDate, Mode=TwoWay}" FirstDayOfWeek="Monday"
-                      Visibility="{Binding LessonSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <DatePicker Grid.ColumnSpan="2" Grid.Row="2" SelectedDate="{Binding SelectedDate}" FirstDayOfWeek="Monday" Margin="15" Text="Wybierz datę"
+                        Focusable="False" Visibility="{Binding LessonSelected, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
             <Grid Grid.Row="3" Grid.ColumnSpan="4" Margin="15 15 15 0" 
                   Visibility="{Binding TermSelected, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="25" Width="Auto" SharedSizeGroup="StudentNumber"/>
                     <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentFullName"/>
-                    <ColumnDefinition MinWidth="150" Width="Auto" SharedSizeGroup="StudentAttendance"/>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentPresence"/>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentAbsence"/>
+                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentJustifiedAbsence"/>
                 </Grid.ColumnDefinitions>
 
                 <Label Grid.Column="0" Margin="10" Content="Lp"/>
                 <Label Grid.Column="1" Margin="10" Content="Uczeń"/>
                 <Label Grid.Column="2" Margin="10" Content="Obecność"/>
+                <Label Grid.Column="3" Margin="10" Content="Nieobecność"/>
+                <Label Grid.Column="4" Margin="10" Content="Nieobecność usprawiedliwiona"/>
             </Grid>
 
             <ItemsControl Grid.Row="4" Grid.ColumnSpan="4" Margin="15 0 15 15" ItemsSource="{Binding Students}">
@@ -70,14 +71,25 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="25" Width="Auto" SharedSizeGroup="StudentNumber"/>
                                 <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentFullName"/>
-                                <ColumnDefinition MinWidth="150" Width="Auto" SharedSizeGroup="StudentAttendance"/>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentPresence"/>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentAbsence"/>
+                                <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="StudentJustifiedAbsence"/>
                             </Grid.ColumnDefinitions>
 
                             <Label Grid.Column="0" Margin="10" Content="{Binding OrdinalNumber}"/>
                             <Label Grid.Column="1" Margin="10" Content="{Binding FullName}"/>
-                            <CheckBox Grid.Column="2" Margin="15" Content="Obecny(a)" IsChecked="{Binding PresenceInSelectedDay}"
-                                      Command="{Binding Path=DataContext.ChangeAttendanceForGivenStudentCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
-                                      CommandParameter="{Binding}"/>
+
+                            <RadioButton Grid.Column="2" Margin="10" IsChecked="{Binding Presence}" HorizontalAlignment="Center"
+                                         Command="{Binding Path=DataContext.ChangeAttendanceForGivenStudentCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                         CommandParameter="{Binding}"/>
+
+                            <RadioButton Grid.Column="3" Margin="10" IsChecked="{Binding Absence}" HorizontalAlignment="Center"
+                                         Command="{Binding Path=DataContext.ChangeAttendanceForGivenStudentCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                         CommandParameter="{Binding}"/>
+
+                            <RadioButton Grid.Column="4" Margin="10" IsChecked="{Binding JustifiedAbsence}" HorizontalAlignment="Center"
+                                         Command="{Binding Path=DataContext.ChangeAttendanceForGivenStudentCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                                         CommandParameter="{Binding}"/>
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

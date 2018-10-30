@@ -44,6 +44,12 @@ namespace ApplicationCore.Models
     {
         public Day Day { get; set; }
         public string Time { get; set; }
-        public int TimeId { get; set; }
+        public int LessonNumber { get; set; }
+
+        public override string ToString()
+        {
+            string lesson = $"Lekcja {LessonNumber + 1} ({Time})";
+            return lesson;
+        }
     }
 }

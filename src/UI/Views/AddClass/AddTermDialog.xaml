@@ -24,7 +24,7 @@
         <ComboBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" ItemsSource="{Binding Days}" SelectedValue="{Binding Day}"/>
 
         <Label Grid.Row="1" Grid.Column="0" Margin="10" Content="Godzina:"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" ItemsSource="{Binding AvailableHours}" SelectedValue="{Binding Time}" SelectedIndex="{Binding TimeId}"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Margin="10" ItemsSource="{Binding AvailableHours}" SelectedValue="{Binding Time}" SelectedIndex="{Binding LessonNumber}"/>
 
         <Button Grid.Row="2" Grid.ColumnSpan="4" Margin="10,42,-69,10" HorizontalAlignment="Center" Content="Zapisz"
                 Command="{Binding SaveChangesCommand}" CommandParameter="{Binding ElementName=AddTermWindow}" Width="270"/>

@@ -87,7 +87,7 @@ namespace UI.ViewModels
             {
                 Day = viewModel.Day,
                 Time = viewModel.Time,
-                TimeId = viewModel.TimeId
+                LessonNumber = viewModel.LessonNumber
             };
 
             Terms.Add(term);

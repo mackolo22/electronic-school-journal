@@ -38,9 +38,10 @@ namespace ApplicationCore.Models
 
     public class Attendance
     {
-        public bool Presence { get; set; }
+        public AttendanceType Type { get; set; }
         public LessonTerm LessonTerm { get; set; }
         public DateTime Date { get; set; }
         public string Subject { get; set; }
+        public string TeacherFullName { get; set; }
     }
 }
