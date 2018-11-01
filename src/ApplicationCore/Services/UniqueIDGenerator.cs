@@ -22,7 +22,7 @@ namespace ApplicationCore.Services
             string filePath = Path.Combine(appDataPath, "Electronic school journal", "connectionString.txt");
             string connectionString = File.ReadAllText(filePath);
             _connectionString = connectionString;
-            _containerName = "peopleContainer";
+            _containerName = "peoplecontainer";
             _scopeName = "peopleIds";
             ConnectToStorageAccountAndInitializeGenerator();
         }

@@ -148,15 +148,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Login\RecoverPasswordDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\OperationInProgressDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TimeTable\ShowLessonDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Helpers\ErrorMessageBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -192,6 +192,7 @@
     <Compile Include="ViewModels\Frequency\ClassFrequencyViewModel.cs" />
     <Compile Include="ViewModels\Frequency\SelectLessonTimeViewModel.cs" />
     <Compile Include="ViewModels\Frequency\StudentFrequencyViewModel.cs" />
+    <Compile Include="ViewModels\Login\RecoverPasswordViewModel.cs" />
     <Compile Include="ViewModels\Shared\TeacherManagingClassesBaseViewModel.cs" />
     <Compile Include="ViewModels\WrappedModels\BindableObject.cs" />
     <Compile Include="Converters\NegativeBoolToVisibilityConverter.cs" />
@@ -243,6 +244,9 @@
     <Compile Include="Views\Login\LoginSecondStepDialog.xaml.cs">
       <DependentUpon>LoginSecondStepDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Login\RecoverPasswordDialog.xaml.cs">
+      <DependentUpon>RecoverPasswordDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\OperationInProgressDialog.xaml.cs">
       <DependentUpon>OperationInProgressDialog.xaml</DependentUpon>
     </Compile>
@@ -264,10 +268,6 @@
     </Compile>
     <Compile Include="ViewModels\AddClass\AddTeacherViewModel.cs" />
     <Compile Include="ViewModels\AddClass\AddStudentViewModel.cs" />
-    <Compile Include="Helpers\DialogRequest.cs" />
-    <Compile Include="Helpers\ErrorMessageBox.xaml.cs">
-      <DependentUpon>ErrorMessageBox.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Helpers\MessageBox.xaml.cs">
       <DependentUpon>MessageBox.xaml</DependentUpon>
     </Compile>

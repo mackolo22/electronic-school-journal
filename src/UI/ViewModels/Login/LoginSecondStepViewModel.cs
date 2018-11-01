@@ -111,5 +111,14 @@ namespace UI.ViewModels
                 }
             }
         }
+
+        public RelayCommand RecoverPasswordCommand => new RelayCommand(ExecuteRecoverPassword, () => true);
+        private void ExecuteRecoverPassword(object parameter)
+        {
+            var viewModel = UnityConfiguration.Resolve<RecoverPasswordViewModel>();
+            viewModel.UserType = RootViewModel.UserType;
+            var dialog = new RecoverPasswordDialog(viewModel);
+            dialog.ShowDialog();
+        }
     }
 }

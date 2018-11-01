@@ -2,6 +2,7 @@
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using System.Collections.Generic;
+using UI.Views;
 
 namespace UI.ViewModels
 {
@@ -9,13 +10,12 @@ namespace UI.ViewModels
     {
         private readonly IPersonService _personService;
 
-        public AddTeacherViewModel(
-            ILoginService loginService,
-            IPersonService personService) : base(loginService)
+        public AddTeacherViewModel(ILoginService loginService, IPersonService personService) : base(loginService)
         {
             _personService = personService;
         }
 
+        public Administrator Administrator { get; set; }
         public Teacher Teacher { get; set; }
 
         protected override async void ExecuteSaveChanges(object parameter)
@@ -25,8 +25,13 @@ namespace UI.ViewModels
 
             try
             {
-                Teacher = await _personService.AddTeacherAsync(FirstName, LastName, Login, Password, HashedPassword);
+                var dialog = new OperationInProgressDialog();
+                dialog.Show();
+
+                Teacher = await _personService.AddTeacherAsync(Administrator, FirstName, LastName, Login, Email, Password, HashedPassword);
                 Teacher.Lessons = new List<Lesson>();
+
+                dialog.Close();
             }
             catch (TableException)
             {

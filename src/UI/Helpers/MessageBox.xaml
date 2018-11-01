@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI.Helpers"
         mc:Ignorable="d"
+        WindowStyle="ToolWindow"
         x:Name="MessageBoxWindow"
         Title="{Binding Caption}" Height="250" Width="400"
         WindowStartupLocation="CenterScreen">
@@ -21,6 +21,10 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Button Grid.Column="1" Grid.Row="2" Content="{Binding ButtonOkCaption}" Command="{Binding OkClickCommand}" CommandParameter="{Binding ElementName=MessageBoxWindow}"/>
+        <TextBlock Grid.RowSpan="2" Grid.ColumnSpan="3" Text="{Binding Content}" TextWrapping="Wrap" TextAlignment="Center" 
+                   HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16" Margin="15"/>
+
+        <Button Grid.Column="1" Grid.Row="2" Content="{Binding ButtonOkCaption}" Margin="15"
+                Command="{Binding OkClickCommand}" CommandParameter="{Binding ElementName=MessageBoxWindow}"/>
     </Grid>
 </Window>

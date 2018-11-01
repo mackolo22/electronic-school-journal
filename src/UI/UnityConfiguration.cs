@@ -24,13 +24,14 @@ namespace UI
             _unityContainer.RegisterType<IClassService, ClassService>();
             _unityContainer.RegisterType<IPersonService, PersonService>();
             _unityContainer.RegisterType<ITimeTableService, TimeTableService>();
-            _unityContainer.RegisterType<IEmailSender, EmailSender>();
+            _unityContainer.RegisterType<IMailingService, MailingService>();
             #endregion Services
 
             #region ViewModels
             _unityContainer.RegisterType<MainViewModel>();
             _unityContainer.RegisterType<LoginFirstStepViewModel>();
             _unityContainer.RegisterType<LoginSecondStepViewModel>();
+            _unityContainer.RegisterType<RecoverPasswordViewModel>();
             _unityContainer.RegisterType<HomeViewModel>();
             _unityContainer.RegisterType<AddClassViewModel>();
             _unityContainer.RegisterType<AddStudentViewModel>();

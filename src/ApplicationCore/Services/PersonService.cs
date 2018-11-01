@@ -9,15 +9,26 @@ namespace ApplicationCore.Services
     {
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
         private readonly ITableStorageRepository _repository;
+        private readonly IMailingService _mailingService;
 
-        public PersonService(IUniqueIDGenerator uniqueIDGenerator, ITableStorageRepository repository)
+        public PersonService(
+            IUniqueIDGenerator uniqueIDGenerator,
+            ITableStorageRepository repository,
+            IMailingService mailingService)
         {
             _uniqueIDGenerator = uniqueIDGenerator;
             _repository = repository;
+            _mailingService = mailingService;
         }
 
-        // TODO: wykorzystać polimorfizm i złączyć te 2 metody w jedną.
-        public async Task<Teacher> AddTeacherAsync(string firstName, string lastName, string login, string password, string hashedPassword)
+        public async Task<Teacher> AddTeacherAsync(
+            Administrator administrator,
+            string firstName, 
+            string lastName, 
+            string login,
+            string email, 
+            string password, 
+            string hashedPassword)
         {
             long id = _uniqueIDGenerator.GetNextId();
             var teacher = new Teacher(id)
@@ -25,27 +36,14 @@ namespace ApplicationCore.Services
                 FirstName = firstName,
                 LastName = lastName,
                 Login = login,
+                Email = email,
                 Password = password,
                 HashedPassword = hashedPassword
             };
 
             await _repository.InsertOrReplaceAsync(teacher);
+            await _mailingService.SendEmailWithLoginAndPasswordAsync(teacher, administrator);
             return teacher;
-        }
-
-        public async Task<Parent> AddParentAsync(string firstName, string lastName, string login, string password)
-        {
-            long id = _uniqueIDGenerator.GetNextId();
-            var parent = new Parent(id)
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                Login = login,
-                Password = password
-            };
-
-            await _repository.InsertOrReplaceAsync(parent);
-            return parent;
         }
 
         public async Task<IEnumerable<Teacher>> GetAllTeachersAsync()

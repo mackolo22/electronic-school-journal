@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using UI.Helpers;
 using UI.Views;
 
 namespace UI.ViewModels
@@ -32,7 +33,8 @@ namespace UI.ViewModels
             Lessons = new ObservableCollection<Lesson>();
         }
 
-        // TODO: trzeba będzie pobrać z bazy wszystkie dodane klasy i wrzucić do tych list te które pozostały niestworzone.
+        public Administrator Administrator { get; set; }
+
         public List<int> AvailableClassNumbers => new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
         public List<string> AvailableClassLetters => new List<string> { "A", "B", "C", "D" };
 
@@ -75,6 +77,9 @@ namespace UI.ViewModels
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
         {
+            var dialog = new OperationInProgressDialog();
+            dialog.Show();
+
             var teachers = await _personService.GetAllTeachersAsync();
             foreach (var teacher in teachers)
             {
@@ -89,12 +94,15 @@ namespace UI.ViewModels
 
                 Teachers.Add(teacher);
             }
+
+            dialog.Close();
         }
 
         public RelayCommand AddTeacherCommand => new RelayCommand(ExecuteAddTeacher, () => true);
         private void ExecuteAddTeacher(object parameter)
         {
             var viewModel = UnityConfiguration.Resolve<AddTeacherViewModel>();
+            viewModel.Administrator = Administrator;
             var dialog = new AddTeacherDialog(viewModel);
             dialog.ShowDialog();
 
@@ -106,9 +114,6 @@ namespace UI.ViewModels
         public RelayCommand AddStudentCommand => new RelayCommand(ExecuteAddStudent, () => true);
         private void ExecuteAddStudent(object parameter)
         {
-            // TODO: opakować to w DialogRequest i jakoś refleksją zdobywać widoki dla podanych view modeli.
-            // var request = new DialogRequest(viewModel);
-            // request.ShowDialog();
             var viewModel = UnityConfiguration.Resolve<AddStudentViewModel>();
             var dialog = new AddStudentDialog(viewModel);
             dialog.ShowDialog();
@@ -123,6 +128,7 @@ namespace UI.ViewModels
                     ParentId = viewModel.Parent?.Id,
                     Parent = viewModel.Parent,
                     Login = viewModel.Login,
+                    Email = viewModel.Email,
                     Password = viewModel.Password,
                     HashedPassword = viewModel.HashedPassword
                 };
@@ -140,6 +146,7 @@ namespace UI.ViewModels
         private void ExecuteAddLesson(object parameter)
         {
             var viewModel = UnityConfiguration.Resolve<AddLessonViewModel>();
+            viewModel.Administrator = Administrator;
             viewModel.Teachers = Teachers;
             var dialog = new AddLessonDialog(viewModel);
             dialog.ShowDialog();
@@ -164,7 +171,14 @@ namespace UI.ViewModels
         private async void ExecuteSaveChanges(object parameter)
         {
             // TODO: sprawdzenie czy pola są podane
-            bool success = await _classService.AddNewClassAsync(ClassNumber, ClassLetter, Educator, Students, Lessons);
+
+            var dialog = new OperationInProgressDialog();
+            dialog.Show();
+
+            bool success = await _classService.AddNewClassAsync(Administrator, ClassNumber, ClassLetter, Educator, Students, Lessons);
+
+            dialog.Close();
+            MessageBoxHelper.ShowMessageBox($"Utworzono klasę {ClassNumber}{ClassLetter} wraz z kontami użytkowników.");
         }
     }
 }

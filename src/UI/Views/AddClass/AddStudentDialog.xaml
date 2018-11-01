@@ -27,7 +27,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -44,11 +45,14 @@
                 IsEnabled="{Binding LoginGenerated, Converter={StaticResource NegativeBoolConverter}}" 
                 Command="{Binding GenerateLoginCommand}"/>
 
-        <Button Grid.Row="3" Grid.ColumnSpan="2" Content="Dodaj rodzica" Margin="15" IsEnabled="{Binding ParentAdded, Converter={StaticResource NegativeBoolConverter}}" Command="{Binding AddParentCommand}"/>
+        <Label Grid.Row="3" Grid.Column="0" Content="E-mail:" Margin="10"/>
+        <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Email}" Margin="10"/>
 
-        <Button Grid.Row="4" Grid.Column="4" Margin="10" Content="Anuluj" Command="{Binding CancelCommand}" 
+        <Button Grid.Row="4" Grid.ColumnSpan="2" Content="Dodaj rodzica" Margin="15" IsEnabled="{Binding ParentAdded, Converter={StaticResource NegativeBoolConverter}}" Command="{Binding AddParentCommand}"/>
+
+        <Button Grid.Row="5" Grid.Column="4" Margin="10" Content="Anuluj" Command="{Binding CancelCommand}" 
                 CommandParameter="{Binding ElementName=AddStudentWindow}"/>
-        <Button Grid.Row="4" Grid.Column="5" Margin="10" Content="Zapisz" Command="{Binding SaveChangesCommand}" 
+        <Button Grid.Row="5" Grid.Column="5" Margin="10" Content="Zapisz" Command="{Binding SaveChangesCommand}" 
                 CommandParameter="{Binding ElementName=AddStudentWindow}"/>
     </Grid>
 </Window>

@@ -47,7 +47,7 @@ namespace UI.ViewModels
 
                 if (Attendances.Count == 0)
                 {
-                    MessageBoxHelper.ShowErrorMessageBox("Brak sprawdzonych obecności w podanym dniu.", "Uwaga");
+                    MessageBoxHelper.ShowErrorMessageBox("Brak sprawdzonych obecności w podanym dniu.");
                 }
 
                 OnPropertyChanged(nameof(SelectedDate));

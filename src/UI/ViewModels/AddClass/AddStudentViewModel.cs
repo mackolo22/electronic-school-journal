@@ -31,6 +31,7 @@ namespace UI.ViewModels
                     FirstName = viewModel.FirstName,
                     LastName = viewModel.LastName,
                     Login = viewModel.Login,
+                    Email = viewModel.Email,
                     Password = viewModel.Password,
                     HashedPassword = viewModel.HashedPassword
                 };

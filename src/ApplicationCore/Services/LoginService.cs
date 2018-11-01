@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Enums;
-using ApplicationCore.Exceptions;
+﻿using ApplicationCore.Exceptions;
 using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
@@ -28,7 +27,6 @@ namespace ApplicationCore.Services
             }
             else
             {
-                // TODO: Sprawdzenie w bazie czy nie ma już takiego nicku.
                 string login = String.Empty;
                 login += firstName.ToLower().RemoveDiacritics();
                 login += lastName.ToLower().RemoveDiacritics();
@@ -38,17 +36,15 @@ namespace ApplicationCore.Services
 
         public string GeneratePassword(int length = 8)
         {
-            //const string availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-            //StringBuilder password = new StringBuilder();
-            //Random random = new Random();
-            //while (0 < length--)
-            //{
-            //    password.Append(availableChars[random.Next(availableChars.Length)]);
-            //}
+            const string availableChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+            StringBuilder password = new StringBuilder();
+            Random random = new Random();
+            while (0 < length--)
+            {
+                password.Append(availableChars[random.Next(availableChars.Length)]);
+            }
 
-            //return password.ToString();
-
-            return "test";
+            return password.ToString();
         }
 
         public string HashPassword(string password)

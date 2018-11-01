@@ -20,6 +20,8 @@ namespace UI.ViewModels
             Terms = new ObservableCollection<LessonTerm>();
         }
 
+        public Administrator Administrator { get; set; }
+
         public bool ChangesSaved { get; set; }
 
         public IEnumerable<Subject> Subjects
@@ -68,6 +70,7 @@ namespace UI.ViewModels
         private void ExecuteAddTeacher(object parameter)
         {
             var viewModel = UnityConfiguration.Resolve<AddTeacherViewModel>();
+            viewModel.Administrator = Administrator;
             var dialog = new AddTeacherDialog(viewModel);
             dialog.ShowDialog();
 

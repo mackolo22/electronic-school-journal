@@ -80,7 +80,7 @@ namespace UI.ViewModels
                 if (terms.Count() == 0)
                 {
                     SelectedTerm = null;
-                    MessageBoxHelper.ShowErrorMessageBox($"Wybrane zajęcia nie odbywają się w dany dzień.", "Uwaga");
+                    MessageBoxHelper.ShowErrorMessageBox("Wybrane zajęcia nie odbywają się w dany dzień.");
                 }
                 else if (terms.Count() == 1)
                 {

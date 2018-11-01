@@ -101,7 +101,9 @@ namespace UI.ViewModels
                 }
                 else if (viewName == "AddClass")
                 {
-                    CurrentViewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                    var viewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                    viewModel.Administrator = Administrator;
+                    CurrentViewModel = viewModel;
                 }
                 else if (viewName == "TimeTable")
                 {

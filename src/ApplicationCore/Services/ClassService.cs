@@ -11,13 +11,16 @@ namespace ApplicationCore.Services
     public class ClassService : IClassService
     {
         private readonly ITableStorageRepository _repository;
+        private readonly IMailingService _mailingService;
 
-        public ClassService(ITableStorageRepository repository)
+        public ClassService(ITableStorageRepository repository, IMailingService mailingService)
         {
             _repository = repository;
+            _mailingService = mailingService;
         }
 
         public async Task<bool> AddNewClassAsync(
+            Administrator administrator,
             int classNumber,
             string classLetter,
             Teacher educator,
@@ -73,10 +76,13 @@ namespace ApplicationCore.Services
                 await _repository.InsertBatchAsync(studentsClass.Students);
                 foreach (var student in studentsClass.Students)
                 {
+                    await _mailingService.SendEmailWithLoginAndPasswordAsync(student, administrator);
+
                     if (student.Parent != null)
                     {
                         student.Parent.ChildClassId = studentsClass.FullName;
                         await _repository.InsertOrReplaceAsync(student.Parent);
+                        await _mailingService.SendEmailWithLoginAndPasswordAsync(student.Parent, administrator);
                     }
                 }
 
