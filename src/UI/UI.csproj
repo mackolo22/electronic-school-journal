@@ -88,10 +88,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="CustomControls\NumericUpDown.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Communication\CommunicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -156,6 +152,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\TimeTable\ShowLessonDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -193,6 +193,7 @@
     <Compile Include="ViewModels\Frequency\SelectLessonTimeViewModel.cs" />
     <Compile Include="ViewModels\Frequency\StudentFrequencyViewModel.cs" />
     <Compile Include="ViewModels\Login\RecoverPasswordViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\Shared\TeacherManagingClassesBaseViewModel.cs" />
     <Compile Include="ViewModels\WrappedModels\BindableObject.cs" />
     <Compile Include="Converters\NegativeBoolToVisibilityConverter.cs" />
@@ -250,6 +251,9 @@
     <Compile Include="Views\OperationInProgressDialog.xaml.cs">
       <DependentUpon>OperationInProgressDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TimeTable\ShowLessonDialog.xaml.cs">
       <DependentUpon>ShowLessonDialog.xaml</DependentUpon>
     </Compile>
@@ -257,9 +261,6 @@
     <Compile Include="UnityConfiguration.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\NegativeBoolConverter.cs" />
-    <Compile Include="CustomControls\NumericUpDown.xaml.cs">
-      <DependentUpon>NumericUpDown.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\AddClass\AddTeacherDialog.xaml.cs">
       <DependentUpon>AddTeacherDialog.xaml</DependentUpon>
     </Compile>
@@ -351,6 +352,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CustomControls\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

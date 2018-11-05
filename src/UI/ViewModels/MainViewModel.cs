@@ -99,6 +99,17 @@ namespace UI.ViewModels
                 {
                     CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
                 }
+                else if (viewName == "Settings")
+                {
+                    var viewModel = UnityConfiguration.Resolve<SettingsViewModel>();
+                    viewModel.UserType = UserType;
+                    viewModel.Person = Person;
+                    viewModel.Student = Student;
+                    viewModel.Teacher = Teacher;
+                    viewModel.Parent = Parent;
+                    viewModel.Administrator = Administrator;
+                    CurrentViewModel = viewModel;
+                }
                 else if (viewName == "AddClass")
                 {
                     var viewModel = UnityConfiguration.Resolve<AddClassViewModel>();

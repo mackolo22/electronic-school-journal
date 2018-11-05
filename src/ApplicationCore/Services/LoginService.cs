@@ -49,12 +49,15 @@ namespace ApplicationCore.Services
 
         public string HashPassword(string password)
         {
-            var sha256 = new SHA256Managed();
             string stringHash = String.Empty;
-            byte[] hash = sha256.ComputeHash(Encoding.ASCII.GetBytes(password));
-            foreach (byte theByte in hash)
+            if (!String.IsNullOrWhiteSpace(password))
             {
-                stringHash += theByte.ToString("x2");
+                var sha256 = new SHA256Managed();
+                byte[] hash = sha256.ComputeHash(Encoding.ASCII.GetBytes(password));
+                foreach (byte theByte in hash)
+                {
+                    stringHash += theByte.ToString("x2");
+                }
             }
 
             return stringHash;

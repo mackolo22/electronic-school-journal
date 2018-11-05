@@ -22,6 +22,9 @@
         <DataTemplate DataType="{x:Type viewModels:HomeViewModel}">
             <views:HomeView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
+            <views:SettingsView/>
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:AddClassViewModel}">
             <views:AddClassView/>
         </DataTemplate>
@@ -84,7 +87,11 @@
 
         <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="#486888">
             <Label Margin="10" Content="Elektroniczny dziennik szkolny" FontWeight="DemiBold" FontSize="30" VerticalContentAlignment="Center" DockPanel.Dock="Left"/>
-            <Button Margin="10" Height="25" Content="Wyloguj się" DockPanel.Dock="Right" Command="{Binding LogoutCommand}"/>
+            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Margin="10" Height="25" Content="Ustawienia" Command="{Binding ChangeViewCommand}"
+                        CommandParameter="Settings"/>
+                <Button Margin="10" Height="25" Content="Wyloguj się" Command="{Binding LogoutCommand}"/>
+            </StackPanel>
             <Label Margin="10" Content="{Binding LoggedAs}" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" DockPanel.Dock="Right"/>
         </DockPanel>
 

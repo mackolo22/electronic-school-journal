@@ -33,6 +33,7 @@ namespace UI
             _unityContainer.RegisterType<LoginSecondStepViewModel>();
             _unityContainer.RegisterType<RecoverPasswordViewModel>();
             _unityContainer.RegisterType<HomeViewModel>();
+            _unityContainer.RegisterType<SettingsViewModel>();
             _unityContainer.RegisterType<AddClassViewModel>();
             _unityContainer.RegisterType<AddStudentViewModel>();
             _unityContainer.RegisterType<AddTeacherViewModel>();
