@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ApplicationCore.Models
 {
-    public class Teacher : Person
+    public class Teacher : User
     {
         public Teacher() { }
 

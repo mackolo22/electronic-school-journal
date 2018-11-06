@@ -19,7 +19,7 @@ namespace UI.ViewModels
         private LessonTerm _selectedTerm;
         private DateTime? _selectedDate;
 
-        public ClassFrequencyViewModel(ITableStorageRepository repository) : base(repository) { }
+        public ClassFrequencyViewModel(IUsersRepository usersRepository) : base(usersRepository) { }
 
         public override string SelectedClass
         {
@@ -138,11 +138,11 @@ namespace UI.ViewModels
             _studentsFromAllClasses = new Dictionary<string, ObservableCollection<WrappedStudent>>();
             foreach (var teacherClass in TeacherClasses)
             {
-                var students = await _repository.GetAllByPropertyAsync<Student>(nameof(Student), "ClassId", teacherClass);
-                var studentsAsList = students.OrderBy(x => x.FullName).ToList();
+                var users = await _usersRepository.GetAllByPropertyAsync(nameof(Student), "ClassId", teacherClass);
+                var students = users.OrderBy(x => x.FullName).Cast<Student>().ToList();
                 var wrappedStudents = new ObservableCollection<WrappedStudent>();
                 int number = 1;
-                foreach (var student in studentsAsList)
+                foreach (var student in students)
                 {
                     var attendances = new ObservableCollection<Attendance>();
                     if (!String.IsNullOrWhiteSpace(student.SerializedAttendances))
@@ -205,7 +205,8 @@ namespace UI.ViewModels
             var wrappedStudent = parameter as WrappedStudent;
             Attendance attendance;
             string studentId = wrappedStudent.Id.ToString();
-            var student = await _repository.GetAsync<Student>(nameof(Student), studentId);
+            var user = await _usersRepository.GetAsync(nameof(Student), studentId);
+            Student student = user as Student;
             if (!String.IsNullOrWhiteSpace(student.SerializedAttendances))
             {
                 var givenStudentAttendances = JsonConvert.DeserializeObject<List<Attendance>>(student.SerializedAttendances);
@@ -257,7 +258,7 @@ namespace UI.ViewModels
             }
 
             student.SerializedAttendances = JsonConvert.SerializeObject(wrappedStudent.Attendances);
-            await _repository.InsertOrReplaceAsync(student);
+            await _usersRepository.InsertOrReplaceAsync(student);
             OnPropertyChanged(nameof(Students));
         }
     }

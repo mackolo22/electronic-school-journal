@@ -4,7 +4,6 @@ using System;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using UI.Helpers;
-using UI.Views;
 
 namespace UI.ViewModels
 {
@@ -12,26 +11,35 @@ namespace UI.ViewModels
     {
         private const string EditButtonContent = "Edytuj";
         private const string SaveButtonContent = "Zapisz";
-        private readonly ITableStorageRepository _repository;
-        private readonly ILoginService _loginService;
-        private Person _person;
 
-        public SettingsViewModel(ITableStorageRepository repository, ILoginService loginService)
+        private readonly IUsersRepository _usersRepository;
+        private readonly ILoginService _loginService;
+        private readonly IApplicationSettingsService _appSettingsService;
+        private readonly LongRunningOperationHelper _longRunningOperationHelper;
+        private User _user;
+
+        public SettingsViewModel(
+            IUsersRepository usersRepository,
+            ILoginService loginService,
+            IApplicationSettingsService appSettingsService,
+            LongRunningOperationHelper longRunningOperationHelper)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
             _loginService = loginService;
+            _appSettingsService = appSettingsService;
+            _longRunningOperationHelper = longRunningOperationHelper;
         }
 
         public string UserType { get; set; }
-        public Person Person
+        public User User
         {
-            get => _person;
+            get => _user;
             set
             {
-                _person = value;
-                Login = Person.Login;
-                Email = Person.Email;
-                OnPropertyChanged(nameof(Person));
+                _user = value;
+                Login = User.Login;
+                Email = User.Email;
+                OnPropertyChanged(nameof(User));
                 OnPropertyChanged(nameof(Login));
                 OnPropertyChanged(nameof(Email));
             }
@@ -39,10 +47,6 @@ namespace UI.ViewModels
 
         public string Login { get; set; }
         public string Email { get; set; }
-        public Administrator Administrator { get; set; }
-        public Student Student { get; set; }
-        public Teacher Teacher { get; set; }
-        public Parent Parent { get; set; }
         public string EditOrSaveButtonContent { get; set; } = EditButtonContent;
         public bool IsEditMode { get; set; }
         public bool IsChangePasswordMode { get; set; }
@@ -59,57 +63,41 @@ namespace UI.ViewModels
                 if (String.IsNullOrWhiteSpace(Login))
                 {
                     MessageBoxHelper.ShowErrorMessageBox("Login nie może być pusty!");
-                    Login = Person.Login;
+                    Login = User.Login;
                     OnPropertyChanged(nameof(Login));
                     ChangeViewState();
                     return;
                 }
                 else
                 {
-                    Person.Login = Login;
+                    User.Login = Login;
                 }
 
                 if (String.IsNullOrWhiteSpace(Email))
                 {
                     MessageBoxHelper.ShowErrorMessageBox("E-mail nie może być pusty!");
-                    Email = Person.Email;
+                    Email = User.Email;
                     OnPropertyChanged(nameof(Email));
                     ChangeViewState();
                     return;
                 }
                 else
                 {
-                    Person.Email = Email;
+                    User.Email = Email;
                 }
 
-                var dialog = new OperationInProgressDialog();
-                dialog.Show();
+                await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
+                {
+                    var passwordBox = parameter as PasswordBox;
+                    string hashedPassword = _loginService.HashPassword(passwordBox.Password);
+                    if (!String.IsNullOrWhiteSpace(hashedPassword))
+                    {
+                        User.HashedPassword = hashedPassword;
+                    }
 
-                var passwordBox = parameter as PasswordBox;
-                string hashedPassword = _loginService.HashPassword(passwordBox.Password);
-                if (!String.IsNullOrWhiteSpace(hashedPassword))
-                {
-                    Person.HashedPassword = hashedPassword;
-                }
-
-                if (UserType == "Administrator")
-                {
-                    await _repository.InsertOrReplaceAsync(Administrator);
-                }
-                else if (UserType == "Student")
-                {
-                    await _repository.InsertOrReplaceAsync(Student);
-                }
-                else if (UserType == "Teacher")
-                {
-                    await _repository.InsertOrReplaceAsync(Teacher);
-                }
-                else if (UserType == "Parent")
-                {
-                    await _repository.InsertOrReplaceAsync(Parent);
-                }
-
-                dialog.Close();
+                    await _usersRepository.InsertOrReplaceAsync(User);
+                    _appSettingsService.SaveLoggedUserDataInRegistry(UserType, User);
+                });
             }
             else
             {

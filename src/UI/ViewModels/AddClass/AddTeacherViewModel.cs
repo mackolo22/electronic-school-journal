@@ -2,17 +2,22 @@
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using System.Collections.Generic;
-using UI.Views;
+using UI.Helpers;
 
 namespace UI.ViewModels
 {
-    public class AddTeacherViewModel : AddPersonViewModel
+    public class AddTeacherViewModel : AddUserViewModel
     {
-        private readonly IPersonService _personService;
+        private readonly IUserService _userService;
+        private readonly LongRunningOperationHelper _longRunningOperationHelper;
 
-        public AddTeacherViewModel(ILoginService loginService, IPersonService personService) : base(loginService)
+        public AddTeacherViewModel(
+            ILoginService loginService,
+            IUserService userService,
+            LongRunningOperationHelper longRunningOperationHelper) : base(loginService)
         {
-            _personService = personService;
+            _userService = userService;
+            _longRunningOperationHelper = longRunningOperationHelper;
         }
 
         public Administrator Administrator { get; set; }
@@ -25,13 +30,11 @@ namespace UI.ViewModels
 
             try
             {
-                var dialog = new OperationInProgressDialog();
-                dialog.Show();
-
-                Teacher = await _personService.AddTeacherAsync(Administrator, FirstName, LastName, Login, Email, Password, HashedPassword);
-                Teacher.Lessons = new List<Lesson>();
-
-                dialog.Close();
+                await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
+                {
+                    Teacher = await _userService.AddTeacherAsync(Administrator, FirstName, LastName, Login, Email, Password, HashedPassword);
+                    Teacher.Lessons = new List<Lesson>();
+                });
             }
             catch (TableException)
             {

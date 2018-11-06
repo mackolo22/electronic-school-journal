@@ -12,11 +12,11 @@ namespace ApplicationCore.Services
 {
     public class LoginService : ILoginService
     {
-        private readonly ITableStorageRepository _repository;
+        private readonly IUsersRepository _usersRepository;
 
-        public LoginService(ITableStorageRepository repository)
+        public LoginService(IUsersRepository usersRepository)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
         }
 
         public string GenerateLogin(string firstName, string lastName)
@@ -63,52 +63,39 @@ namespace ApplicationCore.Services
             return stringHash;
         }
 
-        public async Task<Administrator> LoginAdministratorAsync(string login, string password)
+        public async Task<User> LoginUserAsync(string userType, string login, string password)
         {
-            var matchingAdministrators = await _repository.GetAllByPropertyAsync<Administrator>(nameof(Administrator), "Login", login);
-            var administrator = matchingAdministrators.Where(x => x.Login == login).FirstOrDefault();
-            if (administrator != null && administrator.HashedPassword == password)
+            var users = await _usersRepository.GetAllByPropertyAsync(userType, "Login", login);
+            var user = users.FirstOrDefault();
+            if (user != null)
             {
-                return administrator;
+                string hashedPassword = HashPassword(password);
+                if (user.HashedPassword == hashedPassword)
+                {
+                    return user;
+                }
+                else
+                {
+                    return null;
+                }
             }
-
-            return null;
+            else
+            {
+                return null;
+            }
         }
 
-        public async Task<Parent> LoginParentAsync(string login, string password)
+        public bool LoginUserInOfflineMode(User user, string login, string password)
         {
-            var matchingParents = await _repository.GetAllByPropertyAsync<Parent>(nameof(Parent), "Login", login);
-            var parent = matchingParents.Where(x => x.Login == login).FirstOrDefault();
-            if (parent != null && parent.HashedPassword == password)
+            string hashedPassword = HashPassword(password);
+            if (user.Login == login && user.HashedPassword == hashedPassword)
             {
-                return parent;
+                return true;
             }
-
-            return null;
-        }
-
-        public async Task<Student> LoginStudentAsync(string login, string password)
-        {
-            var matchingStudents = await _repository.GetAllByPropertyAsync<Student>(nameof(Student), "Login", login);
-            var student = matchingStudents.Where(x => x.Login == login).FirstOrDefault();
-            if (student != null && student.HashedPassword == password)
+            else
             {
-                return student;
+                return false;
             }
-
-            return null;
-        }
-
-        public async Task<Teacher> LoginTeacherAsync(string login, string password)
-        {
-            var matchingTeachers = await _repository.GetAllByPropertyAsync<Teacher>(nameof(Teacher), "Login", login);
-            var teacher = matchingTeachers.Where(x => x.Login == login).FirstOrDefault();
-            if (teacher != null && teacher.HashedPassword == password)
-            {
-                return teacher;
-            }
-
-            return null;
         }
     }
 }

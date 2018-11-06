@@ -5,29 +5,29 @@ using System.Threading.Tasks;
 
 namespace ApplicationCore.Services
 {
-    public class PersonService : IPersonService
+    public class UserService : IUserService
     {
+        private readonly IUsersRepository _usersRepository;
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
-        private readonly ITableStorageRepository _repository;
         private readonly IMailingService _mailingService;
 
-        public PersonService(
+        public UserService(
+            IUsersRepository usersRepository,
             IUniqueIDGenerator uniqueIDGenerator,
-            ITableStorageRepository repository,
             IMailingService mailingService)
         {
+            _usersRepository = usersRepository;
             _uniqueIDGenerator = uniqueIDGenerator;
-            _repository = repository;
             _mailingService = mailingService;
         }
 
         public async Task<Teacher> AddTeacherAsync(
             Administrator administrator,
-            string firstName, 
-            string lastName, 
+            string firstName,
+            string lastName,
             string login,
-            string email, 
-            string password, 
+            string email,
+            string password,
             string hashedPassword)
         {
             long id = _uniqueIDGenerator.GetNextId();
@@ -41,15 +41,15 @@ namespace ApplicationCore.Services
                 HashedPassword = hashedPassword
             };
 
-            await _repository.InsertOrReplaceAsync(teacher);
+            await _usersRepository.InsertOrReplaceAsync(teacher);
             await _mailingService.SendEmailWithLoginAndPasswordAsync(teacher, administrator);
             return teacher;
         }
 
         public async Task<IEnumerable<Teacher>> GetAllTeachersAsync()
         {
-            var teachers = await _repository.GetAllAsync<Teacher>(nameof(Teacher));
-            return teachers;
+            var teachers = await _usersRepository.GetAllAsync(nameof(Teacher));
+            return teachers as List<Teacher>;
         }
     }
 }

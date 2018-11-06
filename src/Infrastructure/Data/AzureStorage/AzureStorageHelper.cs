@@ -1,5 +1,4 @@
 ﻿using ApplicationCore.Exceptions.AzureStorage;
-using ApplicationCore.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
@@ -14,13 +13,13 @@ namespace Infrastructure.Data.AzureStorage
         private readonly CloudTableClient _tableClient;
         private readonly IDictionary<string, CloudTable> _tables;
 
-        public IDictionary<Type, string> TableNamesByTypeOfEntity { get; set; } = new Dictionary<Type, string>
+        private static readonly IDictionary<string, string> TableNamesByTypeOfEntity = new Dictionary<string, string>
         {
-            { typeof(Administrator),    "PeopleTable" },
-            { typeof(Student),          "PeopleTable" },
-            { typeof(Teacher),          "PeopleTable" },
-            { typeof(Parent),           "PeopleTable" },
-            { typeof(StudentsClass),    "ClassesTable" },
+            { "Administrator",  "UsersTable" },
+            { "Student",        "UsersTable" },
+            { "Teacher",        "UsersTable" },
+            { "Parent",         "UsersTable" },
+            { "StudentsClass",  "ClassesTable" }
         };
 
         public AzureStorageHelper()
@@ -34,33 +33,31 @@ namespace Infrastructure.Data.AzureStorage
             _tables = new Dictionary<string, CloudTable>();
         }
 
-        public async Task<CloudTable> EnsureTableExistenceAndGetReferenceAsync(Type typeOfEntity)
+        public async Task<CloudTable> EnsureTableExistenceAndGetReferenceAsync(string typeOfEntity)
         {
-            string tableName = String.Empty;
-            try
+            bool tableNameFound = TableNamesByTypeOfEntity.TryGetValue(typeOfEntity, out string tableName);
+            if (tableNameFound)
             {
-                tableName = TableNamesByTypeOfEntity[typeOfEntity];
-            }
-            catch (Exception ex)
-            {
-                throw new TableException($"Nie znaleziono nazwy tabeli dla encji typu: {typeOfEntity.Name}.", ex);
-            }
-
-            if (!_tables.ContainsKey(tableName))
-            {
-                try
+                if (!_tables.ContainsKey(tableName))
                 {
-                    var table = _tableClient.GetTableReference(tableName);
-                    await table.CreateIfNotExistsAsync();
-                    _tables[tableName] = table;
+                    try
+                    {
+                        var table = _tableClient.GetTableReference(tableName);
+                        await table.CreateIfNotExistsAsync();
+                        _tables[tableName] = table;
+                    }
+                    catch (Exception exception)
+                    {
+                        throw new TableException($"Nie udało się utworzyć tabeli dla encji typu: {typeOfEntity}", exception);
+                    }
                 }
-                catch (Exception ex)
-                {
-                    throw new TableException($"Nie udało się utworzyć tabeli dla encji typu: {typeOfEntity.Name}", ex);
-                }
-            }
 
-            return _tables[tableName];
+                return _tables[tableName];
+            }
+            else
+            {
+                throw new TableException($"Nie znaleziono nazwy tabeli dla encji typu: {typeOfEntity}.");
+            }
         }
     }
 }

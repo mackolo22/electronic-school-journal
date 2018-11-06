@@ -188,6 +188,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Helpers\LongRunningOperationHelper.cs" />
     <Compile Include="ViewModels\Communication\CommunicationViewModel.cs" />
     <Compile Include="ViewModels\Frequency\ClassFrequencyViewModel.cs" />
     <Compile Include="ViewModels\Frequency\SelectLessonTimeViewModel.cs" />
@@ -228,7 +229,7 @@
       <DependentUpon>AddParentDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\AddClass\AddParentViewModel.cs" />
-    <Compile Include="ViewModels\AddClass\AddPersonViewModel.cs" />
+    <Compile Include="ViewModels\AddClass\AddUserViewModel.cs" />
     <Compile Include="Views\AddClass\AddTermDialog.xaml.cs">
       <DependentUpon>AddTermDialog.xaml</DependentUpon>
     </Compile>

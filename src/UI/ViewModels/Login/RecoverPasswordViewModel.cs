@@ -5,30 +5,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using UI.Helpers;
-using UI.Views;
 
 namespace UI.ViewModels
 {
     public class RecoverPasswordViewModel : BaseViewModel
     {
-        private readonly ITableStorageRepository _repository;
+        private readonly IUsersRepository _usersRepository;
         private readonly IMailingService _mailingService;
         private readonly ILoginService _loginService;
+        private readonly LongRunningOperationHelper _longRunningOperationHelper;
         private Window _window;
         private int _recoveryCode;
-        private Student _student;
-        private Teacher _teacher;
-        private Parent _parent;
-        private Administrator _administrator;
+        private User _user;
 
         public RecoverPasswordViewModel(
-            ITableStorageRepository repository,
+            IUsersRepository usersRepository,
             IMailingService mailingService,
-            ILoginService loginService)
+            ILoginService loginService,
+            LongRunningOperationHelper longRunningOperationHelper)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
             _mailingService = mailingService;
             _loginService = loginService;
+            _longRunningOperationHelper = longRunningOperationHelper;
         }
 
         public string UserType { get; set; }
@@ -48,47 +47,28 @@ namespace UI.ViewModels
         public RelayCommand SendEmailWithCodeCommand => new RelayCommand(async (parameter) => await ExecuteSendEmailWithCodeAsync(parameter), () => true);
         private async Task ExecuteSendEmailWithCodeAsync(object parameter)
         {
-            var dialog = new OperationInProgressDialog();
-            dialog.Show();
-
-            switch (UserType)
+            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
             {
-                case "Student":
-                    var students = await _repository.GetAllByPropertyAsync<Student>(nameof(Student), "Email", Email);
-                    _student = students.FirstOrDefault();
-                    break;
+                var users = await _usersRepository.GetAllByPropertyAsync(nameof(Student), "Email", Email);
+                _user = users.FirstOrDefault();
+                if (_user != null)
+                {
+                    var random = new Random();
+                    _recoveryCode = random.Next(10000, 90000);
+                    await _mailingService.SendEmailWithRecoveryCodeAsync(Email, _recoveryCode);
+                }
+            });
 
-                case "Parent":
-                    var parents = await _repository.GetAllByPropertyAsync<Parent>(nameof(Parent), "Email", Email);
-                    _parent = parents.FirstOrDefault();
-                    break;
-
-                case "Teacher":
-                    var teachers = await _repository.GetAllByPropertyAsync<Teacher>(nameof(Teacher), "Email", Email);
-                    _teacher = teachers.FirstOrDefault();
-                    break;
-
-                case "Administrator":
-                    var administrators = await _repository.GetAllByPropertyAsync<Administrator>(nameof(Administrator), "Email", Email);
-                    _administrator = administrators.FirstOrDefault();
-                    break;
+            if (_user != null)
+            {
+                MessageBoxHelper.ShowMessageBox("Na podany adres e-mail został wysłany kod resetujący hasło.");
+                RecoveryCodeSent = true;
+                OnPropertyChanged(nameof(RecoveryCodeSent));
             }
-
-            if (_student == null && _parent == null && _teacher == null && _administrator == null)
+            else
             {
-                dialog.Close();
                 MessageBoxHelper.ShowErrorMessageBox("Podany adres e-mail nie jest przypisany do żadnego użytkownika.");
-                return;
             }
-
-            var random = new Random();
-            _recoveryCode = random.Next(10000, 90000);
-            await _mailingService.SendEmailWithRecoveryCodeAsync(Email, _recoveryCode);
-
-            dialog.Close();
-            MessageBoxHelper.ShowMessageBox("Na podany adres e-mail został wysłany kod resetujący hasło.");
-            RecoveryCodeSent = true;
-            OnPropertyChanged(nameof(RecoveryCodeSent));
         }
 
         public RelayCommand RecoverPasswordCommand => new RelayCommand(async (parameter) => await ExecuteRecoverPasswordAsync(parameter), () => true);
@@ -103,37 +83,16 @@ namespace UI.ViewModels
             Int32.TryParse(RecoveryCode, out int userCode);
             if (userCode == _recoveryCode)
             {
-                var dialog = new OperationInProgressDialog();
-                dialog.Show();
-
-                string password = _loginService.GeneratePassword();
-                string hashedPassword = _loginService.HashPassword(password);
-                switch (UserType)
+                await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
                 {
-                    case "Student":
-                        _student.HashedPassword = hashedPassword;
-                        await _repository.InsertOrReplaceAsync(_student);
-                        break;
+                    string password = _loginService.GeneratePassword();
+                    string hashedPassword = _loginService.HashPassword(password);
+                    _user.HashedPassword = hashedPassword;
+                    await _usersRepository.InsertOrReplaceAsync(_user);
+                    await _mailingService.SendEmailWithNewPasswordAsync(Email, password);
 
-                    case "Parent":
-                        _parent.HashedPassword = hashedPassword;
-                        await _repository.InsertOrReplaceAsync(_parent);
-                        break;
+                });
 
-                    case "Teacher":
-                        _teacher.HashedPassword = hashedPassword;
-                        await _repository.InsertOrReplaceAsync(_teacher);
-                        break;
-
-                    case "Administrator":
-                        _administrator.HashedPassword = hashedPassword;
-                        await _repository.InsertOrReplaceAsync(_administrator);
-                        break;
-                }
-
-                await _mailingService.SendEmailWithNewPasswordAsync(Email, password);
-
-                dialog.Close();
                 MessageBoxHelper.ShowMessageBox("Twoje hasło zostało zresetowane. Na podany adres e-mail zostało wysłane nowe hasło.");
                 _window.Close();
             }

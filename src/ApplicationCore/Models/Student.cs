@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ApplicationCore.Models
 {
-    public class Student : Person
+    public class Student : User
     {
         public Student() { }
 

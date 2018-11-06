@@ -12,7 +12,7 @@ namespace ApplicationCore.Services
         private const string Password = "eschooljournal";
         private const string MessageFooter = "Podana wiadomość została wysłana automatycznie przez system. Proszę na nią nie odpowiadać. W razie pytań należy zgłosić się do administratora systemu.";
 
-        public async Task SendEmailWithLoginAndPasswordAsync(Person newUser, Person administrator)
+        public async Task SendEmailWithLoginAndPasswordAsync(User newUser, User administrator)
         {
             const string subject = "Twoje konto w systemie Elektroniczny Dziennik Szkolny zostało utworzone";
             StringBuilder body = new StringBuilder();

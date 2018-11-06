@@ -4,7 +4,7 @@ using UI.Views;
 
 namespace UI.ViewModels
 {
-    public class AddStudentViewModel : AddPersonViewModel
+    public class AddStudentViewModel : AddUserViewModel
     {
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
 

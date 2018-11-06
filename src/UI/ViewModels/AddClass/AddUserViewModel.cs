@@ -5,7 +5,7 @@ using UI.Helpers;
 
 namespace UI.ViewModels
 {
-    public class AddPersonViewModel : BaseViewModel
+    public class AddUserViewModel : BaseViewModel
     {
         protected readonly ILoginService _loginService;
         protected string _firstName;
@@ -13,7 +13,7 @@ namespace UI.ViewModels
         protected string _login;
         protected bool _loginGenerated;
 
-        public AddPersonViewModel(ILoginService loginService)
+        public AddUserViewModel(ILoginService loginService)
         {
             _loginService = loginService;
         }

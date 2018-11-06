@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Interfaces;
+using ApplicationCore.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -14,26 +15,34 @@ namespace UI.ViewModels
         private Window _window;
         private LoginFirstStepViewModel _rootViewModel;
         private readonly ILoginService _loginService;
-        private Dictionary<string, string> _userTypesWithPolishNames = new Dictionary<string, string>
+        private readonly IApplicationSettingsService _appSettingsService;
+        private readonly LongRunningOperationHelper _longRunningOperationHelper;
+
+        private static readonly Dictionary<string, string> UserTypesWithPolishNames = new Dictionary<string, string>
         {
-            { "Administrator", "administrator" },
-            { "Student", "uczeń" },
-            { "Teacher", "nauczyciel" },
-            { "Parent", "rodzic" }
+            { "Administrator",  "administrator" },
+            { "Student",        "uczeń" },
+            { "Teacher",        "nauczyciel" },
+            { "Parent",         "rodzic" }
         };
 
-        public LoginSecondStepViewModel(ILoginService loginService)
+        public LoginSecondStepViewModel(
+            ILoginService loginService,
+            IApplicationSettingsService appSettingsService,
+            LongRunningOperationHelper longRunningOperationHelper)
         {
             _loginService = loginService;
+            _appSettingsService = appSettingsService;
+            _longRunningOperationHelper = longRunningOperationHelper;
         }
 
-        public LoginFirstStepViewModel RootViewModel
+        public LoginFirstStepViewModel ParentViewModel
         {
             get => _rootViewModel;
             set
             {
                 _rootViewModel = value;
-                string polishUserType = _userTypesWithPolishNames[value.UserType];
+                string polishUserType = UserTypesWithPolishNames[value.UserType];
                 Title = $"Logowanie jako {polishUserType}";
                 OnPropertyChanged(nameof(Title));
             }
@@ -60,55 +69,34 @@ namespace UI.ViewModels
                 return;
             }
 
-            if (parameter is PasswordBox passwordBox)
+            var passwordBox = parameter as PasswordBox;
+            if (String.IsNullOrWhiteSpace(passwordBox.Password))
             {
-                if (String.IsNullOrWhiteSpace(passwordBox.Password))
-                {
-                    MessageBoxHelper.ShowErrorMessageBox("Podaj hasło.");
-                    return;
-                }
+                MessageBoxHelper.ShowErrorMessageBox("Podaj hasło.");
+                return;
+            }
 
-                var dialog = new OperationInProgressDialog();
-                dialog.Show();
-                string hashedPassword = _loginService.HashPassword(passwordBox.Password);
-                switch (RootViewModel.UserType)
-                {
-                    case "Student":
-                        var student = await _loginService.LoginStudentAsync(Login, hashedPassword);
-                        RootViewModel.Student = student;
-                        RootViewModel.Person = student;
-                        break;
+            User user = null;
+            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
+            {
+                user = await _loginService.LoginUserAsync(ParentViewModel.UserType, Login, passwordBox.Password);
+            });
 
-                    case "Teacher":
-                        var teacher = await _loginService.LoginTeacherAsync(Login, hashedPassword);
-                        RootViewModel.Teacher = teacher;
-                        RootViewModel.Person = teacher;
-                        break;
+            bool loggedIn = (user != null);
+            if (loggedIn)
+            {
+                _appSettingsService.SaveLoggedUserDataInRegistry(ParentViewModel.UserType, user);
+            }
 
-                    case "Parent":
-                        var parent = await _loginService.LoginParentAsync(Login, hashedPassword);
-                        RootViewModel.Parent = parent;
-                        RootViewModel.Person = parent;
-                        break;
-
-                    case "Administrator":
-                        var administrator = await _loginService.LoginAdministratorAsync(Login, hashedPassword);
-                        RootViewModel.Administrator = administrator;
-                        RootViewModel.Person = administrator;
-                        break;
-                }
-
-                dialog.Close();
-                bool loggedIn = (RootViewModel.Person != null);
-                RootViewModel.LoggedIn = loggedIn;
-                if (loggedIn)
-                {
-                    _window.Close();
-                }
-                else
-                {
-                    MessageBoxHelper.ShowErrorMessageBox("Nie udało się zalogować!");
-                }
+            ParentViewModel.User = user;
+            ParentViewModel.LoggedIn = loggedIn;
+            if (loggedIn)
+            {
+                _window.Close();
+            }
+            else
+            {
+                MessageBoxHelper.ShowErrorMessageBox("Niepoprawne dane logowania!");
             }
         }
 
@@ -116,9 +104,47 @@ namespace UI.ViewModels
         private void ExecuteRecoverPassword(object parameter)
         {
             var viewModel = UnityConfiguration.Resolve<RecoverPasswordViewModel>();
-            viewModel.UserType = RootViewModel.UserType;
+            viewModel.UserType = ParentViewModel.UserType;
             var dialog = new RecoverPasswordDialog(viewModel);
             dialog.ShowDialog();
+        }
+
+        public RelayCommand LoginInOfflineModeCommand => new RelayCommand(ExecuteLoginInOfflineMode, () => true);
+        private void ExecuteLoginInOfflineMode(object parameter)
+        {
+            var passwordBox = parameter as PasswordBox;
+
+            if (String.IsNullOrWhiteSpace(Login))
+            {
+                MessageBoxHelper.ShowErrorMessageBox("Podaj login.");
+                return;
+            }
+
+            if (String.IsNullOrWhiteSpace(passwordBox.Password))
+            {
+                MessageBoxHelper.ShowErrorMessageBox("Podaj hasło.");
+                return;
+            }
+
+            User user = _appSettingsService.GetLoggedUserDataFromRegistry(ParentViewModel.UserType);
+            if (user != null)
+            {
+                bool loggedIn = _loginService.LoginUserInOfflineMode(user, Login, passwordBox.Password);
+                ParentViewModel.LoggedIn = loggedIn;
+                ParentViewModel.User = user;
+                if (loggedIn)
+                {
+                    _window.Close();
+                }
+                else
+                {
+                    MessageBoxHelper.ShowErrorMessageBox("Niepoprawne dane logowania!");
+                }
+            }
+            else
+            {
+                MessageBoxHelper.ShowErrorMessageBox("W systemie nie zapisano żadnych danych logowania.");
+            }
         }
     }
 }

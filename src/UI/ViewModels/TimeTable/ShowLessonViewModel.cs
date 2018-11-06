@@ -6,11 +6,11 @@ namespace UI.ViewModels
 {
     public class ShowLessonViewModel : BaseViewModel
     {
-        private readonly ITableStorageRepository _repository;
+        private readonly IUsersRepository _usersRepository;
 
-        public ShowLessonViewModel(ITableStorageRepository repository)
+        public ShowLessonViewModel(IUsersRepository usersRepository)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
         }
 
         public string Subject { get; set; }
@@ -25,15 +25,13 @@ namespace UI.ViewModels
         {
             if (TeacherId != null)
             {
-                var teacher = await _repository.GetAsync<Teacher>(nameof(Teacher), TeacherId.ToString());
+                var teacher = await _usersRepository.GetAsync(nameof(Teacher), TeacherId.ToString());
                 if (teacher != null)
                 {
                     TeacherFullName = teacher.FullName;
                     OnPropertyChanged(nameof(TeacherFullName));
                 }
             }
-
-
         }
     }
 }

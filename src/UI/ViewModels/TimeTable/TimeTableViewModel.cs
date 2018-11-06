@@ -16,10 +16,8 @@ namespace UI.ViewModels
             _timeTableService = timeTableService;
         }
 
-        public Person Person { get; set; }
-        public Student Student { get; set; }
-        public Teacher Teacher { get; set; }
-        public Parent Parent { get; set; }
+        public string UserType { get; set; }
+        public User User { get; set; }
         public List<List<WrappedLesson>> Lessons { get; set; }
         public bool TimeTableLoaded { get; set; }
 
@@ -30,24 +28,26 @@ namespace UI.ViewModels
             for (int i = 0; i < 8; i++)
             {
                 Lessons.Add(new List<WrappedLesson>());
-
                 for (int j = 0; j < 5; j++)
                 {
                     Lessons[i].Add(null);
                 }
             }
 
-            if (Student != null)
+            if (UserType == "Student")
             {
-                await CreateTimeTableForStudentAsync(Student.ClassId);
+                var student = User as Student;
+                await CreateTimeTableForStudentAsync(student.ClassId);
             }
-            else if (Parent != null)
+            else if (UserType == "Parent")
             {
-                await CreateTimeTableForStudentAsync(Parent.ChildClassId);
+                var parent = User as Parent;
+                await CreateTimeTableForStudentAsync(parent.ChildClassId);
             }
-            else if (Teacher != null)
+            else if (UserType == "Teacher")
             {
-                await CreateTimeTableForTeacherAsync(Teacher.Id);
+                var teacher = User as Teacher;
+                await CreateTimeTableForTeacherAsync(teacher.Id);
             }
 
             TimeTableLoaded = true;

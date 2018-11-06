@@ -14,7 +14,8 @@ namespace UI.ViewModels
     {
         private readonly IUniqueIDGenerator _uniqueIDGenerator;
         private readonly IClassService _classService;
-        private readonly IPersonService _personService;
+        private readonly IUserService _userService;
+        private readonly LongRunningOperationHelper _longRunningOperationHelper;
         private int _classNumber = 1;
         private string _classLetter = "A";
         private Teacher _educator;
@@ -22,11 +23,13 @@ namespace UI.ViewModels
         public AddClassViewModel(
             IUniqueIDGenerator uniqueIDGenerator,
             IClassService classService,
-            IPersonService personService)
+            IUserService userService,
+            LongRunningOperationHelper longRunningOperationHelper)
         {
             _uniqueIDGenerator = uniqueIDGenerator;
             _classService = classService;
-            _personService = personService;
+            _userService = userService;
+            _longRunningOperationHelper = longRunningOperationHelper;
 
             Students = new ObservableCollection<Student>();
             Teachers = new ObservableCollection<Teacher>();
@@ -71,31 +74,28 @@ namespace UI.ViewModels
         }
 
         public ObservableCollection<Student> Students { get; set; }
-
         public ObservableCollection<Lesson> Lessons { get; set; }
 
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
         {
-            var dialog = new OperationInProgressDialog();
-            dialog.Show();
-
-            var teachers = await _personService.GetAllTeachersAsync();
-            foreach (var teacher in teachers)
+            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
             {
-                if (!String.IsNullOrEmpty(teacher.SerializedLessons))
+                var teachers = await _userService.GetAllTeachersAsync();
+                foreach (var teacher in teachers)
                 {
-                    teacher.Lessons = JsonConvert.DeserializeObject<List<Lesson>>(teacher.SerializedLessons);
-                }
-                else
-                {
-                    teacher.Lessons = new List<Lesson>();
-                }
+                    if (!String.IsNullOrEmpty(teacher.SerializedLessons))
+                    {
+                        teacher.Lessons = JsonConvert.DeserializeObject<List<Lesson>>(teacher.SerializedLessons);
+                    }
+                    else
+                    {
+                        teacher.Lessons = new List<Lesson>();
+                    }
 
-                Teachers.Add(teacher);
-            }
-
-            dialog.Close();
+                    Teachers.Add(teacher);
+                }
+            });
         }
 
         public RelayCommand AddTeacherCommand => new RelayCommand(ExecuteAddTeacher, () => true);
@@ -171,13 +171,11 @@ namespace UI.ViewModels
         private async void ExecuteSaveChanges(object parameter)
         {
             // TODO: sprawdzenie czy pola są podane
+            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
+            {
+                bool success = await _classService.AddNewClassAsync(Administrator, ClassNumber, ClassLetter, Educator, Students, Lessons);
+            });
 
-            var dialog = new OperationInProgressDialog();
-            dialog.Show();
-
-            bool success = await _classService.AddNewClassAsync(Administrator, ClassNumber, ClassLetter, Educator, Students, Lessons);
-
-            dialog.Close();
             MessageBoxHelper.ShowMessageBox($"Utworzono klasę {ClassNumber}{ClassLetter} wraz z kontami użytkowników.");
         }
     }

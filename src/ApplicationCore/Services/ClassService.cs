@@ -10,12 +10,17 @@ namespace ApplicationCore.Services
 {
     public class ClassService : IClassService
     {
-        private readonly ITableStorageRepository _repository;
+        private readonly IUsersRepository _usersRepository;
+        private readonly IClassesRepository _classesRepository;
         private readonly IMailingService _mailingService;
 
-        public ClassService(ITableStorageRepository repository, IMailingService mailingService)
+        public ClassService(
+            IUsersRepository usersRepository,
+            IClassesRepository classesRepository,
+            IMailingService mailingService)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
+            _classesRepository = classesRepository;
             _mailingService = mailingService;
         }
 
@@ -48,7 +53,7 @@ namespace ApplicationCore.Services
             foreach (var teacher in teachersToUpdate)
             {
                 teacher.SerializedLessons = JsonConvert.SerializeObject(teacher.Lessons);
-                await _repository.InsertOrReplaceAsync(teacher);
+                await _usersRepository.InsertOrReplaceAsync(teacher);
             }
 
             string serializedLessons = string.Empty;
@@ -72,8 +77,8 @@ namespace ApplicationCore.Services
 
             try
             {
-                await _repository.InsertOrReplaceAsync(studentsClass.Educator);
-                await _repository.InsertBatchAsync(studentsClass.Students);
+                await _usersRepository.InsertOrReplaceAsync(studentsClass.Educator);
+                await _usersRepository.InsertBatchAsync(studentsClass.Students);
                 foreach (var student in studentsClass.Students)
                 {
                     await _mailingService.SendEmailWithLoginAndPasswordAsync(student, administrator);
@@ -81,12 +86,12 @@ namespace ApplicationCore.Services
                     if (student.Parent != null)
                     {
                         student.Parent.ChildClassId = studentsClass.FullName;
-                        await _repository.InsertOrReplaceAsync(student.Parent);
+                        await _usersRepository.InsertOrReplaceAsync(student.Parent);
                         await _mailingService.SendEmailWithLoginAndPasswordAsync(student.Parent, administrator);
                     }
                 }
 
-                await _repository.InsertOrReplaceAsync(studentsClass);
+                await _classesRepository.InsertOrReplaceAsync(studentsClass);
             }
             catch (TableException)
             {

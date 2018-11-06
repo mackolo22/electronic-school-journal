@@ -10,11 +10,7 @@ namespace UI.ViewModels
         private bool _closeApplicationOnWindowClosed = true;
 
         public string UserType { get; set; }
-        public Person Person { get; set; }
-        public Student Student { get; set; }
-        public Teacher Teacher { get; set; }
-        public Parent Parent { get; set; }
-        public Administrator Administrator { get; set; }
+        public User User { get; set; }
         public bool LoggedIn { get; set; }
 
         public RelayCommand LoadedCommand => new RelayCommand(ExecuteLoaded, () => true);
@@ -41,7 +37,7 @@ namespace UI.ViewModels
             string userType = parameter as string;
             UserType = userType;
             var viewModel = UnityConfiguration.Resolve<LoginSecondStepViewModel>();
-            viewModel.RootViewModel = this;
+            viewModel.ParentViewModel = this;
             var dialog = new LoginSecondStepDialog(viewModel);
             dialog.ShowDialog();
             if (LoggedIn)

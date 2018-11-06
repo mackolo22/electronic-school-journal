@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="230" Width="220"
+        Title="{Binding Title}" Height="270" Width="220"
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow"
         x:Name="Window">
@@ -27,6 +27,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Label Grid.Column="0" Grid.Row="0" Content="Login:" Margin="15 15 0 15" HorizontalAlignment="Right"/>
@@ -39,6 +40,14 @@
                 Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>
 
         <Label Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="15 0 15 15">
+            <Label.Content>
+                <Hyperlink Command="{Binding LoginInOfflineModeCommand}" CommandParameter="{Binding ElementName=PasswordBox}">
+                    Zaloguj w trybie offline
+                </Hyperlink>
+            </Label.Content>
+        </Label>
+
+        <Label Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="15 0 15 15">
             <Label.Content>
                 <Hyperlink Command="{Binding RecoverPasswordCommand}">
                     Nie pamiętam hasła

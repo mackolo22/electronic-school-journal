@@ -1,6 +1,6 @@
 ﻿namespace ApplicationCore.Models
 {
-    public class Administrator : Person
+    public class Administrator : User
     {
         public Administrator() { }
 

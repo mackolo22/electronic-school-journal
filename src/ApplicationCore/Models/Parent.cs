@@ -2,7 +2,7 @@
 
 namespace ApplicationCore.Models
 {
-    public class Parent : Person
+    public class Parent : User
     {
         public Parent() { }
 

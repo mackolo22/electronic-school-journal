@@ -11,12 +11,12 @@ namespace UI.ViewModels
 {
     public class StudentFrequencyViewModel : BaseViewModel
     {
-        private readonly ITableStorageRepository _repository;
+        private readonly IUsersRepository _usersRepository;
         private DateTime? _selectedDate;
 
-        public StudentFrequencyViewModel(ITableStorageRepository repository)
+        public StudentFrequencyViewModel(IUsersRepository usersRepository)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
             Attendances = new List<Attendance>();
         }
 
@@ -26,10 +26,15 @@ namespace UI.ViewModels
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
         {
-            Student = await _repository.GetAsync<Student>(nameof(Student), StudentId.ToString());
+            var user = await _usersRepository.GetAsync(nameof(Student), StudentId.ToString());
+            Student = user as Student;
             if (!String.IsNullOrEmpty(Student.SerializedAttendances))
             {
                 Student.Attendances = JsonConvert.DeserializeObject<List<Attendance>>(Student.SerializedAttendances);
+            }
+            else
+            {
+                Student.Attendances = new List<Attendance>();
             }
         }
 

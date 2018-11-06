@@ -18,11 +18,11 @@ namespace UI.ViewModels
         protected WrappedLesson _selectedLesson;
         protected bool _lessonSelected;
         protected Dictionary<string, ObservableCollection<WrappedStudent>> _studentsFromAllClasses;
-        protected readonly ITableStorageRepository _repository;
+        protected readonly IUsersRepository _usersRepository;
 
-        public TeacherManagingClassesBaseViewModel(ITableStorageRepository repository)
+        public TeacherManagingClassesBaseViewModel(IUsersRepository usersRepository)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
         }
 
         public Teacher Teacher { get; set; }

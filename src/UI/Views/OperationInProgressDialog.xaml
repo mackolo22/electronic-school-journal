@@ -8,8 +8,8 @@
         mc:Ignorable="d"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        Height="300" Width="300">
+        Height="400" Width="400">
     <Grid>
-        <fa:ImageAwesome Icon="Refresh" Spin="True" Height="50" Width="50"/>
+        <fa:ImageAwesome Icon="Refresh" Spin="True" Height="150" Width="150"/>
     </Grid>
 </Window>

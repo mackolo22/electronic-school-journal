@@ -1,6 +1,8 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Services;
+using Infrastructure.Data.AzureStorage;
 using Infrastructure.Data.AzureStorage.Tables;
+using UI.Helpers;
 using UI.ViewModels;
 using Unity;
 
@@ -15,14 +17,16 @@ namespace UI
             _unityContainer = new UnityContainer();
 
             #region Repositories
-            _unityContainer.RegisterType<ITableStorageRepository, TableStorageRepository>();
+            _unityContainer.RegisterType<IUsersRepository, UsersRepository>();
+            _unityContainer.RegisterType<IClassesRepository, ClassesRepository>();
             #endregion Repositories
 
             #region Services
+            _unityContainer.RegisterType<IApplicationSettingsService, ApplicationSettingsService>();
             _unityContainer.RegisterType<ILoginService, LoginService>();
             _unityContainer.RegisterSingleton<IUniqueIDGenerator, UniqueIDGenerator>();
             _unityContainer.RegisterType<IClassService, ClassService>();
-            _unityContainer.RegisterType<IPersonService, PersonService>();
+            _unityContainer.RegisterType<IUserService, UserService>();
             _unityContainer.RegisterType<ITimeTableService, TimeTableService>();
             _unityContainer.RegisterType<IMailingService, MailingService>();
             #endregion Services
@@ -50,6 +54,11 @@ namespace UI
             _unityContainer.RegisterType<StudentFrequencyViewModel>();
             _unityContainer.RegisterType<CommunicationViewModel>();
             #endregion ViewModels
+
+            #region Helpers
+            _unityContainer.RegisterSingleton<AzureStorageHelper>();
+            _unityContainer.RegisterType<LongRunningOperationHelper>();
+            #endregion Helpers
         }
 
         public static T Resolve<T>()

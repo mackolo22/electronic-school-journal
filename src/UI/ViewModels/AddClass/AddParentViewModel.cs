@@ -3,15 +3,15 @@ using ApplicationCore.Models;
 
 namespace UI.ViewModels
 {
-    public class AddParentViewModel : AddPersonViewModel
+    public class AddParentViewModel : AddUserViewModel
     {
-        private readonly IPersonService _personService;
+        private readonly IUserService _userService;
 
         public AddParentViewModel(
             ILoginService loginService,
-            IPersonService personService) : base(loginService)
+            IUserService userService) : base(loginService)
         {
-            _personService = personService;
+            _userService = userService;
         }
 
         public Parent Parent { get; set; }

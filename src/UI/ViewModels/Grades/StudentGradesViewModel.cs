@@ -12,11 +12,11 @@ namespace UI.ViewModels
 {
     public class StudentGradesViewModel : BaseViewModel
     {
-        private readonly ITableStorageRepository _repository;
+        private readonly IUsersRepository _usersRepository;
 
-        public StudentGradesViewModel(ITableStorageRepository repository)
+        public StudentGradesViewModel(IUsersRepository usersRepository)
         {
-            _repository = repository;
+            _usersRepository = usersRepository;
         }
 
         public long? StudentId { get; set; }
@@ -27,7 +27,8 @@ namespace UI.ViewModels
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
         {
-            var student = await _repository.GetAsync<Student>(nameof(Student), StudentId.ToString());
+            var user = await _usersRepository.GetAsync(nameof(Student), StudentId.ToString());
+            Student student = user as Student;
             if (!String.IsNullOrWhiteSpace(student.SerializedGrades))
             {
                 student.Grades = JsonConvert.DeserializeObject<Dictionary<string, List<Grade>>>(student.SerializedGrades);

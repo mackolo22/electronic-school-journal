@@ -13,18 +13,18 @@ namespace UI.ViewModels
 {
     public class ClassGradesViewModel : TeacherManagingClassesBaseViewModel
     {
-        public ClassGradesViewModel(ITableStorageRepository repository) : base(repository) { }
+        public ClassGradesViewModel(IUsersRepository usersRepository) : base(usersRepository) { }
 
         protected override async Task GetAllStudentsFromAllTeacherClassesAsync()
         {
             _studentsFromAllClasses = new Dictionary<string, ObservableCollection<WrappedStudent>>();
             foreach (var teacherClass in TeacherClasses)
             {
-                var students = await _repository.GetAllByPropertyAsync<Student>(nameof(Student), "ClassId", teacherClass);
-                var studentsAsList = students.OrderBy(x => x.FullName).ToList();
+                var users = await _usersRepository.GetAllByPropertyAsync(nameof(Student), "ClassId", teacherClass);
+                var students = users.OrderBy(x => x.FullName).Cast<Student>().ToList();
                 var wrappedStudents = new ObservableCollection<WrappedStudent>();
                 int number = 1;
-                foreach (var student in studentsAsList)
+                foreach (var student in students)
                 {
                     Dictionary<string, ObservableCollection<WrappedGrade>> grades = null;
                     if (!String.IsNullOrWhiteSpace(student.SerializedGrades))
@@ -217,7 +217,8 @@ namespace UI.ViewModels
         private async Task UpdateGradesForGivenStudentAsync(WrappedStudent wrappedStudent)
         {
             string studentId = wrappedStudent.Id.ToString();
-            var student = await _repository.GetAsync<Student>(nameof(Student), studentId);
+            var user = await _usersRepository.GetAsync(nameof(Student), studentId);
+            Student student = user as Student;
             if (!String.IsNullOrWhiteSpace(student.SerializedGrades))
             {
                 var givenStudentGrades = JsonConvert.DeserializeObject<Dictionary<string, List<Grade>>>(student.SerializedGrades);
@@ -249,7 +250,7 @@ namespace UI.ViewModels
                 student.SerializedGrades = JsonConvert.SerializeObject(wrappedStudent.AllGrades);
             }
 
-            await _repository.InsertOrReplaceAsync(student);
+            await _usersRepository.InsertOrReplaceAsync(student);
             OnPropertyChanged(nameof(Students));
         }
 

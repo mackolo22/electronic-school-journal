@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Enums;
-using ApplicationCore.Models;
+﻿using ApplicationCore.Models;
 using System.Threading.Tasks;
 
 namespace ApplicationCore.Interfaces
@@ -9,9 +8,7 @@ namespace ApplicationCore.Interfaces
         string GenerateLogin(string firstName, string lastName);
         string GeneratePassword(int length = 8);
         string HashPassword(string password);
-        Task<Student> LoginStudentAsync(string login, string password);
-        Task<Teacher> LoginTeacherAsync(string login, string password);
-        Task<Parent> LoginParentAsync(string login, string password);
-        Task<Administrator> LoginAdministratorAsync(string login, string password);
+        Task<User> LoginUserAsync(string userType, string login, string password);
+        bool LoginUserInOfflineMode(User user, string login, string password);
     }
 }

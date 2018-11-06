@@ -2,11 +2,11 @@
 
 namespace ApplicationCore.Models
 {
-    public class Person : TableEntity
+    public class User : TableEntity
     {
-        public Person() { }
+        public User() { }
 
-        public Person(long id)
+        public User(long id)
         {
             Id = id;
             RowKey = id.ToString();
