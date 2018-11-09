@@ -31,6 +31,8 @@ namespace UI.ViewModels
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
         {
+            SenderReceiver = "Od";
+            OnPropertyChanged(nameof(SenderReceiver));
             await ChangeSelectedFolderAsync(SelectedFolder);
         }
 

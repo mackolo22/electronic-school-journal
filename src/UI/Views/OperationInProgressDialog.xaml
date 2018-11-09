@@ -11,6 +11,7 @@
         AllowsTransparency="True"
         Background="Transparent">
     <Grid>
-        <fa:ImageAwesome Icon="Refresh" Spin="True" Height="200" Width="200"/>
+        
+        <fa:ImageAwesome Icon="Undo" Foreground="Black" FlowDirection="RightToLeft" SpinDuration="2" Spin="True" Height="200" Width="200"/>
     </Grid>
 </Window>

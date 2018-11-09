@@ -46,7 +46,7 @@ namespace UI.ViewModels
                     _addresseeSelected = false;
                 }
 
-                if (value.Length >= 3)
+                if (value.Length >= 1)
                 {
                     MatchingAddressees = AllUsers.Where(x =>
                     {

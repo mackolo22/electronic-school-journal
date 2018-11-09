@@ -21,7 +21,7 @@
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <Grid FocusManager.FocusedElement="{Binding ElementName=ToTextBox}">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="200"/>
@@ -38,13 +38,22 @@
         </Grid.RowDefinitions>
 
         <Label Content="Do:" Margin="15"/>
-        <StackPanel Grid.Column="1" Margin="15">
+        <!--<StackPanel Grid.Column="1" Margin="15">
             <TextBox Text="{Binding To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="ToTextBox" Panel.ZIndex="1"/>
-            <ListBox Panel.ZIndex="2" ItemsSource="{Binding MatchingAddressees}" 
-                     DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}"
-                     Visibility="{Binding ShowMatchingAddressees, Converter={StaticResource BoolToVisibilityConverter}}">
-            </ListBox>
-        </StackPanel>
+            <ListView Panel.ZIndex="2" ItemsSource="{Binding MatchingAddressees}" 
+                      DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}"
+                      Visibility="{Binding ShowMatchingAddressees, Converter={StaticResource BoolToVisibilityConverter}}">
+            </ListView>
+        </StackPanel>-->
+        <TextBox Grid.Column="1" Margin="15" Text="{Binding To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="ToTextBox"/>
+        <!--<ComboBox Grid.Column="1" Margin="15" IsEditable="True" ItemsSource="{Binding MatchingAddressees}"
+                  DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}" Text="{Binding To, UpdateSourceTrigger=PropertyChanged}"/>-->
+
+        <Popup PlacementTarget="{Binding ElementName=ToTextBox}" Placement="Bottom" IsOpen="{Binding ShowMatchingAddressees}"
+               Width="{Binding ActualWidth, ElementName=ToTextBox}">
+            <ListBox ItemsSource="{Binding MatchingAddressees}" 
+                     DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}"/>
+        </Popup>
 
         <Label Grid.Row="1" Content="Temat:" Margin="15"/>
         <TextBox Grid.Column="1" Grid.Row="1" Margin="15" Text="{Binding Subject, Mode=OneWayToSource}" Panel.ZIndex="1"/>

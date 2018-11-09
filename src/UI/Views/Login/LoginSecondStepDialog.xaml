@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="270" Width="220"
+        Title="{Binding Title}" Height="340" Width="275"
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow"
         x:Name="Window">
@@ -27,30 +27,29 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Label Grid.Column="0" Grid.Row="0" Content="Login:" Margin="15 15 0 15" HorizontalAlignment="Right"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding Login}" Margin="15" Name="LoginTextBox"/>
+        <Label Grid.Column="0" Grid.Row="0" Content="Login:" Margin="15 30 0 15" HorizontalAlignment="Right" FontFamily="Segoe Script"/>
+        <TextBox Grid.Column="1" Grid.Row="0" VerticalContentAlignment="Center" Text="{Binding Login}" Margin="0 30 15 15" Name="LoginTextBox" FontFamily="Segoe Script"/>
 
-        <Label Grid.Column="0" Grid.Row="1" Content="Hasło:" Margin="15 15 0 15"/>
-        <PasswordBox Grid.Column="1" Grid.Row="1" Margin="15" Name="PasswordBox"/>
+        <Label Grid.Column="0" Grid.Row="1" Content="Hasło:" Margin="15 15 0 15" FontFamily="Segoe Script"/>
+        <PasswordBox Grid.Column="1" VerticalContentAlignment="Center" Grid.Row="1" Margin="0 15 15 15" Name="PasswordBox"/>
 
-        <Button Grid.ColumnSpan="2" Grid.Row="2" Margin="15" Content="Zaloguj się" IsDefault="True"
+        <Button Grid.ColumnSpan="2" Grid.Row="2" Height="40" Margin="15 35 15 0" Content="Zaloguj się" IsDefault="True" FontSize="15" FontWeight="Bold" FontFamily="Segoe Script"
                 Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=PasswordBox}"/>
 
-        <Label Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="15 0 15 15">
+        <Label Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="15 0 15 15" FontSize="11" FontFamily="Segoe Script">
             <Label.Content>
-                <Hyperlink Command="{Binding LoginInOfflineModeCommand}" CommandParameter="{Binding ElementName=PasswordBox}">
-                    Zaloguj w trybie offline
+                <Hyperlink Command="{Binding RecoverPasswordCommand}">
+                    Nie pamiętam hasła
                 </Hyperlink>
             </Label.Content>
         </Label>
 
-        <Label Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="15 0 15 15">
+        <Label Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="15 20 15 15" FontSize="12" FontFamily="Segoe Script">
             <Label.Content>
-                <Hyperlink Command="{Binding RecoverPasswordCommand}">
-                    Nie pamiętam hasła
+                <Hyperlink Command="{Binding LoginInOfflineModeCommand}" CommandParameter="{Binding ElementName=PasswordBox}">
+                    Zaloguj w trybie offline
                 </Hyperlink>
             </Label.Content>
         </Label>

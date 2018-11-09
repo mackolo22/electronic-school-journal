@@ -14,6 +14,7 @@ namespace UI.ViewModels
 
         public string UserType { get; set; }
         public User User { get; set; }
+        public string MenuBackground { get; set; }
 
         public BaseViewModel CurrentViewModel
         {
@@ -207,25 +208,30 @@ namespace UI.ViewModels
                     case "Administrator":
                         LoggedAsAdministrator = true;
                         OnPropertyChanged(nameof(LoggedAsAdministrator));
+                        MenuBackground = "#FF95928C";
                         break;
 
                     case "Student":
                         LoggedAsStudent = true;
                         OnPropertyChanged(nameof(LoggedAsStudent));
+                        MenuBackground = "#FF162158";
                         break;
 
                     case "Teacher":
                         LoggedAsTeacher = true;
                         OnPropertyChanged(nameof(LoggedAsTeacher));
+                        MenuBackground = "#FF614819";
                         break;
 
                     case "Parent":
                         LoggedAsParent = true;
                         OnPropertyChanged(nameof(LoggedAsParent));
+                        MenuBackground = "#FF0A3C18";
                         break;
                 }
 
                 CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+                OnPropertyChanged(nameof(MenuBackground));
                 OnPropertyChanged(nameof(LoggedAs));
                 OnPropertyChanged(nameof(UserLoggedIn));
             }

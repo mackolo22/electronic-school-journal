@@ -6,9 +6,10 @@
         xmlns:views="clr-namespace:UI.Views"
         xmlns:viewModels="clr-namespace:UI.ViewModels"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:converters="clr-namespace:UI.Converters"
         mc:Ignorable="d"
-        Title="Elektroniczy dziennik szkolny" Height="450" Width="800"
+        Title="Elektroniczy dziennik szkolny" Height="600" Width="800"
         WindowState="Maximized"
         WindowStartupLocation="CenterScreen">
 
@@ -57,7 +58,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="320"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
@@ -66,31 +67,53 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Grid.Row="1" Background="Silver">
-            <Button Margin="10,15" Content="Strona główna" Command="{Binding ChangeViewCommand}" CommandParameter="Home"/>
+        <StackPanel Grid.Column="0" Grid.Row="1" Background="{Binding MenuBackground}">
+            <Button Margin="10 20 10 10" Height="90" ToolTip="Aktualności" 
+                    Command="{Binding ChangeViewCommand}" CommandParameter="Home">
+                <fa:ImageAwesome Icon="NewspaperOutline" Margin="5"/>
+            </Button>
 
-            <Button Margin="10,15" Content="Dodaj klasę" Command="{Binding ChangeViewCommand}" CommandParameter="AddClass"
-                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <Button Margin="10" Height="90" ToolTip="Dodaj klasę" 
+                    Command="{Binding ChangeViewCommand}" CommandParameter="AddClass"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}">
+                <fa:ImageAwesome Icon="PlusSquareOutline" Margin="4"/>
+            </Button>
 
-            <Button Margin="10,15" Content="Plan lekcji" Command="{Binding ChangeViewCommand}" CommandParameter="TimeTable"
-                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"/>
+            <Button Margin="10" Height="90" ToolTip="Plan lekcji"
+                    Command="{Binding ChangeViewCommand}" CommandParameter="TimeTable"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
+                <fa:ImageAwesome Icon="Table" Margin="4"/>
+            </Button>
 
-            <Button Margin="10,15" Content="Oceny" Command="{Binding ChangeViewCommand}" CommandParameter="Grades"
-                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"/>
+            <Button Margin="10" Height="90" ToolTip="Oceny" 
+                    Command="{Binding ChangeViewCommand}" CommandParameter="Grades"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
+                <fa:ImageAwesome Icon="Book" Margin="3"/>
+            </Button>
 
-            <Button Margin="10,15" Content="Frekwencja" Command="{Binding ChangeViewCommand}" CommandParameter="Frequency"
-                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"/>
+            <Button Margin="10" Height="90" ToolTip="Obecności"
+                    Command="{Binding ChangeViewCommand}" CommandParameter="Frequency"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
+                <fa:ImageAwesome Icon="CheckSquareOutline" Margin="4"/>
+            </Button>
 
-            <Button Margin="10, 15" Content="Wiadomości" Command="{Binding ChangeViewCommand}" CommandParameter="Messages"/>
+            <Button Margin="10" Height="90" ToolTip="Wiadomości"
+                    Command="{Binding ChangeViewCommand}" CommandParameter="Messages">
+                <fa:ImageAwesome Icon="EnvelopeOutline" Margin="6"/>
+            </Button>
 
         </StackPanel>
 
-        <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="#486888">
-            <Label Margin="10" Content="Elektroniczny dziennik szkolny" FontWeight="DemiBold" FontSize="30" VerticalContentAlignment="Center" DockPanel.Dock="Left"/>
+        <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="{Binding MenuBackground}">
             <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <Button Margin="10" Height="25" Content="Ustawienia" Command="{Binding ChangeViewCommand}"
-                        CommandParameter="Settings"/>
-                <Button Margin="10" Height="25" Content="Wyloguj się" Command="{Binding LogoutCommand}"/>
+                <Button Margin="10" Height="30" Width="30" Background="Transparent" BorderThickness="0" ToolTip="Ustawienia"
+                        Command="{Binding ChangeViewCommand}" CommandParameter="Settings">
+                    <fa:ImageAwesome Icon="Cogs"/>
+                </Button>
+                <Button Margin="10" Height="25" Background="Transparent" BorderThickness="0" ToolTip="Wyloguj się" 
+                        Command="{Binding LogoutCommand}">
+                    <fa:ImageAwesome Icon="SignOut"/>
+                </Button>
             </StackPanel>
             <Label Margin="10" Content="{Binding LoggedAs}" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" DockPanel.Dock="Right"/>
         </DockPanel>
