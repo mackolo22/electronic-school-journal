@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
+using System.Collections.Generic;
 
 namespace ApplicationCore.Models
 {
@@ -22,5 +23,8 @@ namespace ApplicationCore.Models
         [IgnoreProperty]
         public string Password { get; set; }
         public string HashedPassword { get; set; }
+        [IgnoreProperty]
+        public IList<Message> Messages { get; set; }
+        public string SerializedMessages { get; set; }
     }
 }

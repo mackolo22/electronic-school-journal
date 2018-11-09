@@ -30,7 +30,7 @@ namespace UI.ViewModels
                 Lessons.Add(new List<WrappedLesson>());
                 for (int j = 0; j < 5; j++)
                 {
-                    Lessons[i].Add(null);
+                    Lessons[i].Add(new WrappedLesson());
                 }
             }
 

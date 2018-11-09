@@ -88,7 +88,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\Communication\CommunicationView.xaml">
+    <Page Include="Views\Communication\CreateNewMessageDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Communication\MessagesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -188,8 +192,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\LessonButtonIsEnabledConverter.cs" />
     <Compile Include="Helpers\LongRunningOperationHelper.cs" />
-    <Compile Include="ViewModels\Communication\CommunicationViewModel.cs" />
+    <Compile Include="ViewModels\Communication\CreateNewMessageViewModel.cs" />
+    <Compile Include="ViewModels\Communication\MessagesViewModel.cs" />
     <Compile Include="ViewModels\Frequency\ClassFrequencyViewModel.cs" />
     <Compile Include="ViewModels\Frequency\SelectLessonTimeViewModel.cs" />
     <Compile Include="ViewModels\Frequency\StudentFrequencyViewModel.cs" />
@@ -205,8 +211,11 @@
     <Compile Include="ViewModels\WrappedModels\WrappedLesson.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedStudent.cs" />
     <Compile Include="ViewModels\WrappedModels\WrappedSubject.cs" />
-    <Compile Include="Views\Communication\CommunicationView.xaml.cs">
-      <DependentUpon>CommunicationView.xaml</DependentUpon>
+    <Compile Include="Views\Communication\CreateNewMessageDialog.xaml.cs">
+      <DependentUpon>CreateNewMessageDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Communication\MessagesView.xaml.cs">
+      <DependentUpon>MessagesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Frequency\ClassFrequencyView.xaml.cs">
       <DependentUpon>ClassFrequencyView.xaml</DependentUpon>

@@ -165,7 +165,9 @@ namespace UI.ViewModels
                 }
                 else if (viewName == "Messages")
                 {
-                    CurrentViewModel = UnityConfiguration.Resolve<CommunicationViewModel>();
+                    var viewModel = UnityConfiguration.Resolve<MessagesViewModel>();
+                    viewModel.User = User;
+                    CurrentViewModel = viewModel;
                 }
             }
         }

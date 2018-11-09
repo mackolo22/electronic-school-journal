@@ -1,0 +1,63 @@
+﻿<Window x:Class="UI.Views.CreateNewMessageDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:converters="clr-namespace:UI.Converters"
+        mc:Ignorable="d"
+        Title="Tworzenie nowej wiadomości" Height="500" Width="600"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow"
+        Name="Window">
+
+    <Window.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=Window}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid FocusManager.FocusedElement="{Binding ElementName=ToTextBox}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Do:" Margin="15"/>
+        <StackPanel Grid.Column="1" Margin="15">
+            <TextBox Text="{Binding To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="ToTextBox" Panel.ZIndex="1"/>
+            <ListBox Panel.ZIndex="2" ItemsSource="{Binding MatchingAddressees}" 
+                     DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}"
+                     Visibility="{Binding ShowMatchingAddressees, Converter={StaticResource BoolToVisibilityConverter}}">
+            </ListBox>
+        </StackPanel>
+
+        <Label Grid.Row="1" Content="Temat:" Margin="15"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="15" Text="{Binding Subject, Mode=OneWayToSource}" Panel.ZIndex="1"/>
+
+        <Label Grid.Row="2" Content="Treść:" Margin="15"/>
+        <Border Grid.Row="3" Grid.ColumnSpan="5" Margin="15 0" BorderBrush="Black" BorderThickness="1">
+            <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                <TextBox Text="{Binding Content, Mode=OneWayToSource}"
+                         TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True"/>
+            </ScrollViewer>
+        </Border>
+
+        <Button Grid.Column="3" Grid.Row="4" Content="Anuluj" Margin="15" Command="{Binding CancelCommand}"/>
+        <Button Grid.Column="4" Grid.Row="4" Content="Wyślij" Margin="15" Command="{Binding SendMessageCommand}"/>
+    </Grid>
+</Window>

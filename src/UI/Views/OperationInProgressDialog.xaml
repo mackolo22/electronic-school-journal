@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:UI.Views"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
-        Height="400" Width="400">
+        Height="400" Width="400"
+        AllowsTransparency="True"
+        Background="Transparent">
     <Grid>
-        <fa:ImageAwesome Icon="Refresh" Spin="True" Height="150" Width="150"/>
+        <fa:ImageAwesome Icon="Refresh" Spin="True" Height="200" Width="200"/>
     </Grid>
 </Window>

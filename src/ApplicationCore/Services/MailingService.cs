@@ -57,6 +57,7 @@ namespace ApplicationCore.Services
 
         private async Task SendEmailAsync(string subject, string email, string body)
         {
+            // TODO: sprawdzać wcześniej czy adres email ma poprawną formę.
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(MailAddress),

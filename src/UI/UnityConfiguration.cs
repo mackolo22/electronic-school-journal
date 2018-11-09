@@ -52,7 +52,7 @@ namespace UI
             _unityContainer.RegisterType<ShowGradeViewModel>();
             _unityContainer.RegisterType<ClassFrequencyViewModel>();
             _unityContainer.RegisterType<StudentFrequencyViewModel>();
-            _unityContainer.RegisterType<CommunicationViewModel>();
+            _unityContainer.RegisterType<MessagesViewModel>();
             #endregion ViewModels
 
             #region Helpers

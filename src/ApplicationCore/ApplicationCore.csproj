@@ -59,6 +59,7 @@
     <Compile Include="Enums\AttendanceType.cs" />
     <Compile Include="Enums\Day.cs" />
     <Compile Include="Enums\EnumDescriptionTypeConverter.cs" />
+    <Compile Include="Enums\MessageFolder.cs" />
     <Compile Include="Enums\Subject.cs" />
     <Compile Include="Exceptions\AzureStorage\TableException.cs" />
     <Compile Include="Exceptions\LoginException.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Interfaces\IUsersRepository.cs" />
     <Compile Include="Models\Administrator.cs" />
     <Compile Include="Models\Lesson.cs" />
+    <Compile Include="Models\Message.cs" />
     <Compile Include="Models\Parent.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Student.cs" />

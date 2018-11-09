@@ -5,9 +5,9 @@ namespace UI.Views
     /// <summary>
     /// Interaction logic for CommunicationView.xaml
     /// </summary>
-    public partial class CommunicationView : UserControl
+    public partial class MessagesView : UserControl
     {
-        public CommunicationView()
+        public MessagesView()
         {
             InitializeComponent();
         }
