@@ -9,7 +9,8 @@
         Height="500" Width="750"
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow"
-        x:Name="Window">
+        x:Name="Window"
+        ResizeMode="NoResize">
   
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -35,6 +36,9 @@
 
         <Button Grid.Column="0" Margin="8 8 2 8" Command="{Binding UserTypeSelectedCommand}"
                 CommandParameter="Student">
+            <Button.Effect>
+                <DropShadowEffect Color="#FF060919"/>
+            </Button.Effect>
             <Button.Background>
                 <ImageBrush ImageSource="pack://application:,,,/Resources/button_student.png"/>
             </Button.Background>
@@ -42,6 +46,9 @@
 
         <Button Grid.Column="1" Margin="6 8 2 8" Command="{Binding UserTypeSelectedCommand}"
                 CommandParameter="Teacher">
+            <Button.Effect>
+                <DropShadowEffect Color="#FF181106"/>
+            </Button.Effect>
             <Button.Background>
                 <ImageBrush ImageSource="pack://application:,,,/Resources/button_teacher.png"/>
             </Button.Background>
@@ -49,13 +56,20 @@
 
         <Button Grid.Column="2" Margin="6 8 8 8" Command="{Binding UserTypeSelectedCommand}"
                 CommandParameter="Parent">
+            <Button.Effect>
+                <DropShadowEffect Color="#FF0F1A10"/>
+            </Button.Effect>
             <Button.Background>
                 <ImageBrush ImageSource="pack://application:,,,/Resources/button_parent.png" Stretch="Fill"/>
             </Button.Background>
         </Button>
 
         <Button Grid.Row="2" Grid.ColumnSpan="3" Margin="8 0 8 8" FontSize="20" FontWeight="Thin" FontFamily="Segoe Script"
-                Content="Zaloguj jako administrator" Background="#FF95928C"
-                Command="{Binding UserTypeSelectedCommand}" CommandParameter="Administrator"/>
+                Content="Zaloguj jako administrator" Background="#FFBFBFBF"
+                Command="{Binding UserTypeSelectedCommand}" CommandParameter="Administrator">
+            <Button.Effect>
+                <DropShadowEffect/>
+            </Button.Effect>
+        </Button>
     </Grid>
 </Window>

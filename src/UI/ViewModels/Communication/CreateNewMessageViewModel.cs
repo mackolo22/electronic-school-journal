@@ -5,6 +5,7 @@ using ApplicationCore.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,12 +21,12 @@ namespace UI.ViewModels
         private string _to;
         private bool _showMatchingAddressees;
         private User _selectedAddressee;
-        private bool _addresseeSelected;
 
         public CreateNewMessageViewModel(IUsersRepository usersRepository, LongRunningOperationHelper longRunningOperationHelper)
         {
             _usersRepository = usersRepository;
             _longRunningOperationHelper = longRunningOperationHelper;
+            SelectedAddressees = new ObservableCollection<User>();
         }
 
         public User User { get; set; }
@@ -36,16 +37,6 @@ namespace UI.ViewModels
             set
             {
                 _to = value;
-                if (_addresseeSelected && _selectedAddressee.FullName == _to)
-                {
-                    OnPropertyChanged(nameof(To));
-                    return;
-                }
-                else if (_addresseeSelected && _selectedAddressee.FullName != _to)
-                {
-                    _addresseeSelected = false;
-                }
-
                 if (value.Length >= 1)
                 {
                     MatchingAddressees = AllUsers.Where(x =>
@@ -115,17 +106,17 @@ namespace UI.ViewModels
                 {
                     ShowMatchingAddressees = false;
                     MatchingAddressees = null;
-                    _addresseeSelected = true;
-                    To = value.FullName;
+                    To = String.Empty;
+                    AllUsers.Remove(value);
+                    SelectedAddressees.Add(value);
+                    OnPropertyChanged(nameof(To));
                     OnPropertyChanged(nameof(MatchingAddressees));
-                }
-                else
-                {
-                    _addresseeSelected = false;
+                    OnPropertyChanged(nameof(SelectedAddressees));
                 }
             }
         }
 
+        public ObservableCollection<User> SelectedAddressees { get; set; }
         public string Subject { get; set; }
         public string Content { get; set; }
         public bool MessageSent { get; set; }
@@ -150,82 +141,82 @@ namespace UI.ViewModels
             });
         }
 
-        public RelayCommand CancelCommand => new RelayCommand(ExecuteCancel, () => true);
-        private void ExecuteCancel(object parameter)
+        public RelayCommand RemoveAddresseeCommand => new RelayCommand(ExecuteRemoveAddressee, () => true);
+        private void ExecuteRemoveAddressee(object parameter)
         {
-            _window.Close();
+            User addressee = parameter as User;
+            SelectedAddressees.Remove(addressee);
+            OnPropertyChanged(nameof(SelectedAddressees));
+            AllUsers.Add(addressee);
         }
 
         public RelayCommand SendMessageCommand => new RelayCommand(async (parameter) => await ExecuteSendMessageAsync(parameter), () => true);
         private async Task ExecuteSendMessageAsync(object parameter)
         {
-            // TODO: dodać możliwość wyboru wielu userów i np. całej klasy
-            // i rozbić to na mniejsze metody
-            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
+            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(_window, async () =>
             {
-                if (_selectedAddressee != null)
+                if (SelectedAddressees.Count > 0)
                 {
                     var today = DateTime.Now;
                     string dateAndTime = $"{today.ToShortDateString()}, g. {today.ToShortTimeString()}";
                     Message message = new Message()
                     {
                         From = User.FullName,
-                        To = _selectedAddressee.FullName,
                         Subject = Subject,
                         DateAndTime = dateAndTime,
                         Content = Content,
                         Folder = MessageFolder.Received
                     };
 
-                    var receiver = await _usersRepository.GetAsync(_selectedAddressee.PartitionKey, _selectedAddressee.RowKey);
-                    if (receiver != null)
+                    foreach (var addreessee in SelectedAddressees)
                     {
-                        if (String.IsNullOrWhiteSpace(receiver.SerializedMessages))
-                        {
-                            receiver.Messages = new List<Message>
-                            {
-                                message
-                            };
-                        }
-                        else
-                        {
-                            receiver.Messages = JsonConvert.DeserializeObject<List<Message>>(receiver.SerializedMessages);
-                            receiver.Messages.Add(message);
-                        }
-
-                        receiver.SerializedMessages = JsonConvert.SerializeObject(receiver.Messages);
-                        await _usersRepository.InsertOrReplaceAsync(receiver);
-
-                        var sender = await _usersRepository.GetAsync(User.PartitionKey, User.RowKey);
-                        if (sender != null)
-                        {
-                            message.Folder = MessageFolder.Sent;
-                            if (String.IsNullOrWhiteSpace(sender.SerializedMessages))
-                            {
-                                sender.Messages = new List<Message>
-                                {
-                                    message
-                                };
-                            }
-                            else
-                            {
-                                sender.Messages = JsonConvert.DeserializeObject<List<Message>>(sender.SerializedMessages);
-                                sender.Messages.Add(message);
-                            }
-
-                            sender.SerializedMessages = JsonConvert.SerializeObject(sender.Messages);
-                            await _usersRepository.InsertOrReplaceAsync(sender);
-                        }
-
-                        MessageSent = true;
-                        _window.Close();
+                        message.To += $"{addreessee.FullName} ";
+                        await AddMessageToFolderForGivenUserAsync(addreessee, message);
                     }
+
+                    string addressees = message.To;
+                    int index = addressees.Count() - 1;
+                    message.To = addressees.Remove(index, 1);
+                    message.Folder = MessageFolder.Sent;
+                    await AddMessageToFolderForGivenUserAsync(User, message);
+
+                    MessageSent = true;
+                    _window.Close();
                 }
                 else
                 {
                     MessageBoxHelper.ShowErrorMessageBox("Musisz wskazać adresata wiadomości.");
                 }
             });
+        }
+
+        private async Task AddMessageToFolderForGivenUserAsync(User user, Message message)
+        {
+            var userToUpdate = await _usersRepository.GetAsync(user.PartitionKey, user.RowKey);
+            if (userToUpdate != null)
+            {
+                if (String.IsNullOrWhiteSpace(userToUpdate.SerializedMessages))
+                {
+                    userToUpdate.Messages = new List<Message>
+                    {
+                        message
+                    };
+                }
+                else
+                {
+                    userToUpdate.Messages = JsonConvert.DeserializeObject<List<Message>>(userToUpdate.SerializedMessages);
+                    userToUpdate.Messages.Add(message);
+                }
+
+                userToUpdate.SerializedMessages = JsonConvert.SerializeObject(userToUpdate.Messages);
+                await _usersRepository.InsertOrReplaceAsync(userToUpdate);
+            }
+        }
+
+        public RelayCommand CancelCommand => new RelayCommand(ExecuteCancel, () => true);
+        private void ExecuteCancel(object parameter)
+        {
+            _window.Close();
         }
     }
 }

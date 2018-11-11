@@ -15,6 +15,7 @@ namespace UI.ViewModels
         public string UserType { get; set; }
         public User User { get; set; }
         public string MenuBackground { get; set; }
+        public string ContentBackground { get; set; }
 
         public BaseViewModel CurrentViewModel
         {
@@ -208,30 +209,35 @@ namespace UI.ViewModels
                     case "Administrator":
                         LoggedAsAdministrator = true;
                         OnPropertyChanged(nameof(LoggedAsAdministrator));
-                        MenuBackground = "#FF95928C";
+                        MenuBackground = "#FF3F3F46";
+                        ContentBackground = "#FFBFBFBF";
                         break;
 
                     case "Student":
                         LoggedAsStudent = true;
                         OnPropertyChanged(nameof(LoggedAsStudent));
-                        MenuBackground = "#FF162158";
+                        MenuBackground = "#FF0F1735";
+                        ContentBackground = "#FFB8D3DC";
                         break;
 
                     case "Teacher":
                         LoggedAsTeacher = true;
                         OnPropertyChanged(nameof(LoggedAsTeacher));
-                        MenuBackground = "#FF614819";
+                        MenuBackground = "#FF3B2B10";
+                        ContentBackground = "#FFDACA99";
                         break;
 
                     case "Parent":
                         LoggedAsParent = true;
                         OnPropertyChanged(nameof(LoggedAsParent));
-                        MenuBackground = "#FF0A3C18";
+                        MenuBackground = "#FF0E3D06";
+                        ContentBackground = "#FF84A77F";
                         break;
                 }
 
                 CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
                 OnPropertyChanged(nameof(MenuBackground));
+                OnPropertyChanged(nameof(ContentBackground));
                 OnPropertyChanged(nameof(LoggedAs));
                 OnPropertyChanged(nameof(UserLoggedIn));
             }

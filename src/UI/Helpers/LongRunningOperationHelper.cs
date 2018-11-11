@@ -18,15 +18,11 @@ namespace UI.Helpers
         // TODO: wszystkie widoki mają wywołać tę metodę zamiast ^
         public async Task ProceedLongRunningOperationAsync(Control caller, Func<Task> operation)
         {
-            //Application.Current.Dispatcher.BeginInvoke(new Action(() =>
-            //{
-            //    dialog.ShowDialog();
-            //}));
-
             caller.IsEnabled = false;
             var dialog = new OperationInProgressDialog();
             dialog.Show();
             await operation();
+            await Task.Delay(5000);
             dialog.Close();
             caller.IsEnabled = true;
         }

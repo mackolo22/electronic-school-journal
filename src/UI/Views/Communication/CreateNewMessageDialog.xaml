@@ -4,12 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:converters="clr-namespace:UI.Converters"
         mc:Ignorable="d"
         Title="Tworzenie nowej wiadomości" Height="500" Width="600"
         WindowStartupLocation="CenterScreen"
         WindowStyle="ToolWindow"
-        Name="Window">
+        Name="Window"
+        Grid.IsSharedSizeScope="True">
 
     <Window.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -38,25 +40,40 @@
         </Grid.RowDefinitions>
 
         <Label Content="Do:" Margin="15"/>
-        <!--<StackPanel Grid.Column="1" Margin="15">
-            <TextBox Text="{Binding To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="ToTextBox" Panel.ZIndex="1"/>
-            <ListView Panel.ZIndex="2" ItemsSource="{Binding MatchingAddressees}" 
-                      DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}"
-                      Visibility="{Binding ShowMatchingAddressees, Converter={StaticResource BoolToVisibilityConverter}}">
-            </ListView>
-        </StackPanel>-->
         <TextBox Grid.Column="1" Margin="15" Text="{Binding To, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Name="ToTextBox"/>
-        <!--<ComboBox Grid.Column="1" Margin="15" IsEditable="True" ItemsSource="{Binding MatchingAddressees}"
-                  DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}" Text="{Binding To, UpdateSourceTrigger=PropertyChanged}"/>-->
-
         <Popup PlacementTarget="{Binding ElementName=ToTextBox}" Placement="Bottom" IsOpen="{Binding ShowMatchingAddressees}"
                Width="{Binding ActualWidth, ElementName=ToTextBox}">
-            <ListBox ItemsSource="{Binding MatchingAddressees}" 
+            <ListBox ItemsSource="{Binding MatchingAddressees}" KeyboardNavigation.DirectionalNavigation="Cycle"
                      DisplayMemberPath="FullName" SelectedValue="{Binding SelectedAddressee}"/>
         </Popup>
 
         <Label Grid.Row="1" Content="Temat:" Margin="15"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Margin="15" Text="{Binding Subject, Mode=OneWayToSource}" Panel.ZIndex="1"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Margin="15" Text="{Binding Subject, Mode=OneWayToSource}"/>
+
+        <Border Grid.Column="2" Grid.ColumnSpan="3" Grid.RowSpan="3" Margin="15" BorderThickness="1" BorderBrush="Black" MaxHeight="130">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding SelectedAddressees}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="AddreesseFullName"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Label Content="{Binding FullName}"/>
+                                <Button Grid.Column="1" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" Margin="0 0 10 0"
+                                        Command="{Binding Path=DataContext.RemoveAddresseeCommand, 
+                                                  RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                        CommandParameter="{Binding}">
+                                    <fa:ImageAwesome Icon="Remove" Foreground="Red" Width="10" Height="10"/>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
 
         <Label Grid.Row="2" Content="Treść:" Margin="15"/>
         <Border Grid.Row="3" Grid.ColumnSpan="5" Margin="15 0" BorderBrush="Black" BorderThickness="1">

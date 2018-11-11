@@ -56,7 +56,7 @@
         <Binding Mode="TwoWay" Path="UserLoggedIn" Converter="{StaticResource BoolToVisibilityConverter}"/>
     </Window.Visibility>
 
-    <Grid>
+    <Grid Background="{Binding ContentBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="320"/>
             <ColumnDefinition Width="*"/>
@@ -68,54 +68,105 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0" Grid.Row="1" Background="{Binding MenuBackground}">
-            <Button Margin="10 20 10 10" Height="90" ToolTip="Aktualności" 
+            <Button Margin="10 0 10 10" Height="90" ToolTip="Aktualności" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Home">
-                <fa:ImageAwesome Icon="NewspaperOutline" Margin="5"/>
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="NewspaperOutline" Margin="5" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
             </Button>
 
-            <Button Margin="10" Height="90" ToolTip="Dodaj klasę" 
+            <Button Margin="10" Height="90" ToolTip="Dodaj klasę" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="AddClass"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}">
-                <fa:ImageAwesome Icon="PlusSquareOutline" Margin="4"/>
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="PlusSquareOutline" Margin="4" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
             </Button>
 
-            <Button Margin="10" Height="90" ToolTip="Plan lekcji"
+            <Button Margin="10" Height="90" ToolTip="Plan lekcji" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="TimeTable"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
-                <fa:ImageAwesome Icon="Table" Margin="4"/>
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="Table" Margin="4" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
             </Button>
 
-            <Button Margin="10" Height="90" ToolTip="Oceny" 
+            <Button Margin="10" Height="90" ToolTip="Oceny" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Grades"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
-                <fa:ImageAwesome Icon="Book" Margin="3"/>
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="Book" Margin="3" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
             </Button>
 
-            <Button Margin="10" Height="90" ToolTip="Obecności"
+            <Button Margin="10" Height="90" ToolTip="Obecności" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Frequency"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
-                <fa:ImageAwesome Icon="CheckSquareOutline" Margin="4"/>
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="CheckSquareOutline" Margin="4" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
             </Button>
 
-            <Button Margin="10" Height="90" ToolTip="Wiadomości"
+            <Button Margin="10" Height="90" ToolTip="Wiadomości" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Messages">
-                <fa:ImageAwesome Icon="EnvelopeOutline" Margin="6"/>
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="EnvelopeOutline" Margin="6" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
             </Button>
 
         </StackPanel>
 
         <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="{Binding MenuBackground}">
-            <StackPanel DockPanel.Dock="Right" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
                 <Button Margin="10" Height="30" Width="30" Background="Transparent" BorderThickness="0" ToolTip="Ustawienia"
                         Command="{Binding ChangeViewCommand}" CommandParameter="Settings">
-                    <fa:ImageAwesome Icon="Cogs"/>
+                    <fa:ImageAwesome Icon="Wrench" Foreground="{Binding ContentBackground}">
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
                 </Button>
                 <Button Margin="10" Height="25" Background="Transparent" BorderThickness="0" ToolTip="Wyloguj się" 
                         Command="{Binding LogoutCommand}">
-                    <fa:ImageAwesome Icon="SignOut"/>
+                    <fa:ImageAwesome Icon="PowerOff" Foreground="{Binding ContentBackground}">
+                        <fa:ImageAwesome.Effect>
+                            <DropShadowEffect/>
+                        </fa:ImageAwesome.Effect>
+                    </fa:ImageAwesome>
                 </Button>
             </StackPanel>
-            <Label Margin="10" Content="{Binding LoggedAs}" FontSize="20" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" DockPanel.Dock="Right"/>
+            <Label Margin="10" Content="{Binding LoggedAs}" FontSize="16" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" 
+                   DockPanel.Dock="Left" Foreground="{Binding ContentBackground}" FontFamily="Segoe Script"/>
         </DockPanel>
 
         <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding CurrentViewModel}"/>
