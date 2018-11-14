@@ -25,7 +25,7 @@ namespace UI.ViewModels
 
             if (viewModel.ChangesSaved)
             {
-                long id = _uniqueIDGenerator.GetNextId();
+                long id = _uniqueIDGenerator.GetNextIdForUser();
                 Parent = new Parent(id)
                 {
                     FirstName = viewModel.FirstName,

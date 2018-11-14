@@ -8,12 +8,14 @@ namespace ApplicationCore.Services
 {
     public class UniqueIDGenerator : IUniqueIDGenerator
     {
-        private UniqueIdGenerator _generator;
+        private UniqueIdGenerator _generatorForUsers;
+        private UniqueIdGenerator _generatorForMessages;
         private readonly string _connectionString;
-        private readonly string _containerName;
-        private readonly string _scopeName;
-        private const int _batchSize = 10;
-        private const int _maxWriteAttempts = 25;
+
+        private const string UsersContainer = "userscontainer";
+        private const string MessagesContainer = "messagescontainer";
+        private const int BatchSize = 10;
+        private const int MaxWriteAttempts = 25;
 
         public UniqueIDGenerator()
         {
@@ -22,25 +24,38 @@ namespace ApplicationCore.Services
             string filePath = Path.Combine(appDataPath, "Electronic school journal", "connectionString.txt");
             string connectionString = File.ReadAllText(filePath);
             _connectionString = connectionString;
-            _containerName = "peoplecontainer";
-            _scopeName = "peopleIds";
-            ConnectToStorageAccountAndInitializeGenerator();
+            ConnectToStorageAccountAndInitializeGenerators();
         }
 
-        public void ConnectToStorageAccountAndInitializeGenerator()
+        public void ConnectToStorageAccountAndInitializeGenerators()
         {
             var cloudStorageAccount = CloudStorageAccount.Parse(_connectionString);
-            var dataStore = new BlobOptimisticDataStore(cloudStorageAccount, _containerName);
-            _generator = new UniqueIdGenerator(dataStore)
+            var dataStoreForUsers = new BlobOptimisticDataStore(cloudStorageAccount, UsersContainer);
+            _generatorForUsers = new UniqueIdGenerator(dataStoreForUsers)
             {
-                BatchSize = _batchSize,
-                MaxWriteAttempts = _maxWriteAttempts
+                BatchSize = BatchSize,
+                MaxWriteAttempts = MaxWriteAttempts
+            };
+
+            var dataStoreForMessages = new BlobOptimisticDataStore(cloudStorageAccount, MessagesContainer);
+            _generatorForMessages = new UniqueIdGenerator(dataStoreForMessages)
+            {
+                BatchSize = BatchSize,
+                MaxWriteAttempts = MaxWriteAttempts
             };
         }
 
-        public long GetNextId()
+        public long GetNextIdForUser()
         {
-            var id = _generator.NextId(_scopeName);
+            string scopeName = "usersIds";
+            long id = _generatorForUsers.NextId(scopeName);
+            return id;
+        }
+
+        public long GetNextIdForMessage()
+        {
+            string scopeName = "messagesIds";
+            long id = _generatorForMessages.NextId(scopeName);
             return id;
         }
     }

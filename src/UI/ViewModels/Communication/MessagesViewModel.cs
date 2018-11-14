@@ -27,6 +27,7 @@ namespace UI.ViewModels
         public List<Message> Messages { get; set; }
         public string SelectedFolder { get; set; } = "Received";
         public string SenderReceiver { get; set; }
+        public bool IsReceivedFolder { get; set; }
 
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
@@ -40,18 +41,16 @@ namespace UI.ViewModels
         private void ExecuteMessageSelected(object parameter)
         {
             Message message = parameter as Message;
-            // TODO: wyświetlić dialog z wiadomością
-            MessageBoxHelper.ShowMessageBox(message.Subject);
+            var viewModel = new ShowMessageViewModel(message);
+            var dialog = new ShowMessageDialog(viewModel);
+            dialog.ShowDialog();
         }
 
         public RelayCommand CreateNewMessageCommand => new RelayCommand(ExecuteCreateNewMessage, () => true);
         private void ExecuteCreateNewMessage(object parameter)
         {
-            var viewModel = new CreateNewMessageViewModel(_usersRepository, _longRunningOperationHelper)
-            {
-                User = User
-            };
-
+            var viewModel = UnityConfiguration.Resolve<CreateNewMessageViewModel>();
+            viewModel.User = User;
             var dialog = new CreateNewMessageDialog(viewModel);
             dialog.ShowDialog();
 
@@ -65,11 +64,6 @@ namespace UI.ViewModels
         private async Task ExecuteChangeSelectedFolderAsync(object parameter)
         {
             string folder = parameter as string;
-            if (folder == SelectedFolder)
-            {
-                return;
-            }
-
             await ChangeSelectedFolderAsync(folder);
         }
 
@@ -102,6 +96,7 @@ namespace UI.ViewModels
                     }
 
                     SenderReceiver = "Od";
+                    IsReceivedFolder = true;
                 }
                 else if (folder == "Sent")
                 {
@@ -112,6 +107,7 @@ namespace UI.ViewModels
                     }
 
                     SenderReceiver = "Do";
+                    IsReceivedFolder = false;
                 }
                 else if (folder == "Trash")
                 {
@@ -122,10 +118,28 @@ namespace UI.ViewModels
                     }
 
                     SenderReceiver = "Od";
+                    IsReceivedFolder = false;
                 }
 
+                OnPropertyChanged(nameof(IsReceivedFolder));
                 OnPropertyChanged(nameof(SenderReceiver));
                 OnPropertyChanged(nameof(Messages));
+            });
+        }
+
+        public RelayCommand RemoveMessageCommand => new RelayCommand(async (parameter) => await ExecuteRemoveMessageAsync(parameter), () => true);
+        private async Task ExecuteRemoveMessageAsync(object parameter)
+        {
+            await _longRunningOperationHelper.ProceedLongRunningOperationAsync(async () =>
+            {
+                Message message = parameter as Message;
+                User user = await _usersRepository.GetAsync(User.PartitionKey, User.RowKey);
+                user.Messages = JsonConvert.DeserializeObject<List<Message>>(user.SerializedMessages);
+                var messageToUpdate = user.Messages.Where(x => x.Id == message.Id).FirstOrDefault();
+                messageToUpdate.Folder = MessageFolder.Trash;
+                user.SerializedMessages = JsonConvert.SerializeObject(user.Messages);
+                await _usersRepository.InsertOrReplaceAsync(user);
+                await ChangeSelectedFolderAsync("Received");
             });
         }
     }

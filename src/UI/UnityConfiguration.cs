@@ -25,8 +25,6 @@ namespace UI
             _unityContainer.RegisterType<IApplicationSettingsService, ApplicationSettingsService>();
             _unityContainer.RegisterType<ILoginService, LoginService>();
             _unityContainer.RegisterSingleton<IUniqueIDGenerator, UniqueIDGenerator>();
-            _unityContainer.RegisterType<IClassService, ClassService>();
-            _unityContainer.RegisterType<IUserService, UserService>();
             _unityContainer.RegisterType<ITimeTableService, TimeTableService>();
             _unityContainer.RegisterType<IMailingService, MailingService>();
             #endregion Services
@@ -38,12 +36,9 @@ namespace UI
             _unityContainer.RegisterType<RecoverPasswordViewModel>();
             _unityContainer.RegisterType<HomeViewModel>();
             _unityContainer.RegisterType<SettingsViewModel>();
-            _unityContainer.RegisterType<AddClassViewModel>();
-            _unityContainer.RegisterType<AddStudentViewModel>();
-            _unityContainer.RegisterType<AddTeacherViewModel>();
-            _unityContainer.RegisterType<AddParentViewModel>();
-            _unityContainer.RegisterType<AddLessonViewModel>();
-            _unityContainer.RegisterType<AddTermViewModel>();
+            _unityContainer.RegisterType<CreateClassViewModel>();
+            _unityContainer.RegisterType<TeachersViewModel>();
+            _unityContainer.RegisterType<ManageTimeTablesViewModel>();
             _unityContainer.RegisterType<TimeTableViewModel>();
             _unityContainer.RegisterType<ShowLessonViewModel>();
             _unityContainer.RegisterType<ClassGradesViewModel>();
@@ -53,6 +48,7 @@ namespace UI
             _unityContainer.RegisterType<ClassFrequencyViewModel>();
             _unityContainer.RegisterType<StudentFrequencyViewModel>();
             _unityContainer.RegisterType<MessagesViewModel>();
+            _unityContainer.RegisterType<CreateNewMessageViewModel>();
             #endregion ViewModels
 
             #region Helpers

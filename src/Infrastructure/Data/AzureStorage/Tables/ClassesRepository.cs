@@ -3,6 +3,8 @@ using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Microsoft.WindowsAzure.Storage.Table;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data.AzureStorage.Tables
@@ -24,6 +26,20 @@ namespace Infrastructure.Data.AzureStorage.Tables
                 var retrieveOperation = TableOperation.Retrieve<StudentsClass>(partitionKey, rowKey);
                 var tableResult = await table.ExecuteAsync(retrieveOperation);
                 return tableResult.Result as StudentsClass;
+            }
+            catch (Exception exception)
+            {
+                throw new TableException("Pobieranie obiektu z bazy danych nie powiodło się.", exception);
+            }
+        }
+
+        public async Task<IEnumerable<StudentsClass>> GetAllAsync()
+        {
+            try
+            {
+                var table = await _azureStorageHelper.EnsureTableExistenceAndGetReferenceAsync("StudentsClass");
+                var allClasses = table.ExecuteQuery(new TableQuery<StudentsClass>());
+                return allClasses;
             }
             catch (Exception exception)
             {

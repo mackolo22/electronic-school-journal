@@ -104,11 +104,21 @@ namespace UI.ViewModels
                     viewModel.User = User;
                     CurrentViewModel = viewModel;
                 }
-                else if (viewName == "AddClass")
+                else if (viewName == "Teachers")
                 {
-                    var viewModel = UnityConfiguration.Resolve<AddClassViewModel>();
+                    var viewModel = UnityConfiguration.Resolve<TeachersViewModel>();
                     viewModel.Administrator = User as Administrator;
                     CurrentViewModel = viewModel;
+                }
+                else if (viewName == "CreateClass")
+                {
+                    var viewModel = UnityConfiguration.Resolve<CreateClassViewModel>();
+                    viewModel.Administrator = User as Administrator;
+                    CurrentViewModel = viewModel;
+                }
+                else if (viewName == "ManageTimeTables")
+                {
+                    CurrentViewModel = UnityConfiguration.Resolve<ManageTimeTablesViewModel>();
                 }
                 else if (viewName == "TimeTable")
                 {

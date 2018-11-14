@@ -5,6 +5,7 @@ namespace ApplicationCore.Models
 {
     public class Message
     {
+        public long Id { get; set; }
         public string From { get; set; }
         public string To { get; set; }
         [IgnoreProperty]

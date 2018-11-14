@@ -77,9 +77,10 @@
 
         <Label Grid.Row="2" Content="Treść:" Margin="15"/>
         <Border Grid.Row="3" Grid.ColumnSpan="5" Margin="15 0" BorderBrush="Black" BorderThickness="1">
-            <ScrollViewer  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
-                <TextBox Text="{Binding Content, Mode=OneWayToSource}"
-                         TextWrapping="Wrap" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True"/>
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                <TextBox Text="{Binding Content, Mode=OneWayToSource}" Width="Auto" MaxWidth="550"
+                         TextWrapping="WrapWithOverflow" AcceptsReturn="True" AcceptsTab="True" SpellCheck.IsEnabled="True"
+                         HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"/>
             </ScrollViewer>
         </Border>
 

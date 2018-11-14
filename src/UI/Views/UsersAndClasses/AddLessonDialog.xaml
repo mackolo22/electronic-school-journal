@@ -1,0 +1,52 @@
+﻿<Window x:Class="UI.Views.AddLessonDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:s="clr-namespace:System;assembly=mscorlib"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        mc:Ignorable="d"
+        Title="Dodawanie lekcji" Height="300" Width="400"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow"
+        Name="Window">
+
+    <Window.Resources>
+        <s:Boolean x:Key="True">True</s:Boolean>
+        <s:Boolean x:Key="False">False</s:Boolean>
+    </Window.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" CommandParameter="{Binding ElementName=Window}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Margin="15" Content="Przedmiot:"/>
+        <ComboBox Grid.Column="1" Margin="15" ItemsSource="{Binding Subjects}" SelectedValue="{Binding SelectedSubject}"/>
+
+        <Label Grid.Row="1" Margin="15" Content="Nauczyciel:"/>
+        <ComboBox Grid.Column="1" Grid.Row="1" Margin="15" ItemsSource="{Binding AllTeachers}" SelectedValue="{Binding SelectedTeacher}"
+                  DisplayMemberPath="FullName"/>
+
+        <Label Grid.Row="2" Margin="15" Content="Sala:"/>
+        <TextBox Grid.Row="2" Grid.Column="1" Margin="15" Text="{Binding Classroom}"/>
+
+        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+            <Button Content="Anuluj" Command="{Binding CloseWindowCommand}" CommandParameter="{StaticResource False}" Margin="15"/>
+            <Button Content="Zapisz" Command="{Binding CloseWindowCommand}" CommandParameter="{StaticResource True}" Margin="15"/>
+        </StackPanel>
+    </Grid>
+</Window>

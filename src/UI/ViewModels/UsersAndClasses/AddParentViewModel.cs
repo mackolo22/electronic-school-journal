@@ -5,14 +5,7 @@ namespace UI.ViewModels
 {
     public class AddParentViewModel : AddUserViewModel
     {
-        private readonly IUserService _userService;
-
-        public AddParentViewModel(
-            ILoginService loginService,
-            IUserService userService) : base(loginService)
-        {
-            _userService = userService;
-        }
+        public AddParentViewModel(ILoginService loginService) : base(loginService) { }
 
         public Parent Parent { get; set; }
 
@@ -24,4 +17,3 @@ namespace UI.ViewModels
         }
     }
 }
-  

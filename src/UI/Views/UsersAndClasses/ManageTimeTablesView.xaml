@@ -1,0 +1,102 @@
+﻿<UserControl x:Class="UI.Views.ManageTimeTablesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converters="clr-namespace:UI.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="1000" d:DesignWidth="2000">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <DataTemplate x:Key="DataTemplate_SubjectCell">
+            <Button Height="50" Width="150" HorizontalAlignment="Center" Background="Transparent" Cursor="Hand"
+                    VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                    Command="{Binding Path=DataContext.AddLessonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
+                    CommandParameter="{Binding}">
+                <Button.Content>
+                    <TextBlock Text="{Binding Subject}" TextWrapping="Wrap" TextAlignment="Center"/>
+                </Button.Content>
+            </Button>
+        </DataTemplate>
+
+        <DataTemplate x:Key="DataTemplate_TimeTable">
+            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_SubjectCell}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="15">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Content="Klasa:" Margin="15"/>
+            <ComboBox Grid.Column="1" Margin="15" ItemsSource="{Binding AllClasses}" SelectedValue="{Binding SelectedClass}" DisplayMemberPath="FullName" Width="70"/>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="1000" Margin="0, 0, 15, 15"
+                  Visibility="{Binding ClassSelected, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="125"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Row="1" Grid.ColumnSpan="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Label Width="150" Content="Poniedziałek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Label Width="150" Content="Wtorek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Label Width="150" Content="Środa" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Label Width="150" Content="Czwartek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                        <Label Width="150" Content="Piątek" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical">
+                    <Label Height="50" Content="8:00 - 8:45" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="8:55 - 9:40" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="9:50 - 10:35" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="10:50 - 11:35" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="11:45 - 12:30" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="12:40 - 13:25" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="13:30 - 14:15" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                    <Label Height="50" Content="14:20 - 15:05" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Padding="15"/>
+                </StackPanel>
+
+                <Grid Grid.Row="2" Grid.Column="1" >
+                    <ItemsControl ItemTemplate="{DynamicResource DataTemplate_TimeTable}" ItemsSource="{Binding Lessons}"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

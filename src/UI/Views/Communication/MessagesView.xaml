@@ -4,9 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             xmlns:converters="clr-namespace:UI.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              Grid.IsSharedSizeScope="True">
+
+    <UserControl.Resources>
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -21,57 +27,93 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Margin="15">
-            <Button Content="Nowa wiadomość" Margin="15" Command="{Binding CreateNewMessageCommand}"/>
-            <Button Content="Odebrane" Margin="15" Command="{Binding ChangeSelectedFolderCommand}" CommandParameter="Received"/>
-            <Button Content="Wysłane" Margin="15" Command="{Binding ChangeSelectedFolderCommand}" CommandParameter="Sent"/>
-            <Button Content="Kosz" Margin="15" Command="{Binding ChangeSelectedFolderCommand}" CommandParameter="Trash"/>
+            <Button Background="Transparent" BorderThickness="0" ToolTip="Nowa wiadomość" Margin="30" Width="40" Height="40"
+                    Command="{Binding CreateNewMessageCommand}">
+                <fa:ImageAwesome Icon="Send" Foreground="Green">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+            </Button>
+            <Button ToolTip="Odebrane" Margin="30" BorderThickness="0" Background="Transparent" Width="40" Height="40"
+                    Command="{Binding ChangeSelectedFolderCommand}" CommandParameter="Received">
+                <fa:ImageAwesome Icon="Envelope" Foreground="AliceBlue">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+            </Button>
+            <Button ToolTip="Wysłane" Margin="30" BorderThickness="0" Background="Transparent" Width="40" Height="40" 
+                    Command="{Binding ChangeSelectedFolderCommand}" CommandParameter="Sent">
+                <fa:ImageAwesome Icon="MailForward" Foreground="DodgerBlue">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+            </Button>
+            <Button Background="Transparent" BorderThickness="0" Width="40" Height="40" ToolTip="Kosz" Margin="30" 
+                    Command="{Binding ChangeSelectedFolderCommand}" CommandParameter="Trash">
+                <fa:ImageAwesome Icon="Trash" Foreground="Red">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+            </Button>
         </StackPanel>
 
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
+        <ScrollViewer Grid.Column="1" Margin="15" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="User"/>
-                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Subject"/>
-                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="DateAndTime"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200" SharedSizeGroup="User"/>
+                        <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Subject"/>
+                        <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="DateAndTime"/>
+                    </Grid.ColumnDefinitions>
 
-                <Label Content="{Binding SenderReceiver}" Margin="15"/>
-                <Label Grid.Column="1" Content="Temat" Margin="15"/>
-                <Label Grid.Column="2" Content="Data wysłania" Margin="15"/>
-            </Grid>
+                    <Label Content="{Binding SenderReceiver}" Margin="10,15,0,0" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
+                    <Label Grid.Column="1" Content="Temat" Margin="15,15,0,0"/>
+                    <Label Grid.Column="2" Content="Data wysłania" Margin="15,15,0,0"/>
+                </Grid>
 
-            <ItemsControl Grid.Row="1" ItemsSource="{Binding Messages}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Cursor="Hand" 
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding Messages}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Cursor="Hand" 
                                 Command="{Binding Path=DataContext.MessageSelectedCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 
                                 CommandParameter="{Binding}" >
-                            <Button.Template>
-                                <ControlTemplate TargetType="{x:Type Button}">
-                                    <ContentPresenter />
-                                </ControlTemplate>
-                            </Button.Template>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="User"/>
-                                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Subject"/>
-                                    <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="DateAndTime"/>
-                                </Grid.ColumnDefinitions>
+                                <Button.Template>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="200" SharedSizeGroup="User"/>
+                                        <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="Subject"/>
+                                        <ColumnDefinition MinWidth="100" Width="Auto" SharedSizeGroup="DateAndTime"/>
+                                        <ColumnDefinition Width="Auto" SharedSizeGroup="RemoveMessage"/>
+                                    </Grid.ColumnDefinitions>
 
-                                <Label Content="{Binding UserToDisplay}" Margin="15,0"/>
-                                <Label Grid.Column="1" Content="{Binding Subject}" Margin="15,0"/>
-                                <Label Grid.Column="2" Content="{Binding DateAndTime}" Margin="15,0"/>
-                            </Grid>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-
-        </Grid>
+                                    <TextBlock Text="{Binding UserToDisplay}" Margin="15,10" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                                    <Label Grid.Column="1" Content="{Binding Subject}" Margin="15,10" VerticalContentAlignment="Center"/>
+                                    <Label Grid.Column="2" Content="{Binding DateAndTime}" Margin="15,10" VerticalContentAlignment="Center"/>
+                                    <Button Grid.Column="3" Margin="15,10" Background="Transparent" BorderThickness="0"
+                                        Command="{Binding Path=DataContext.RemoveMessageCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}"
+                                        CommandParameter="{Binding}"
+                                        Visibility="{Binding Path=DataContext.IsReceivedFolder, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, 
+                                                    Converter={StaticResource BoolToVisibilityConverter}}">
+                                        <fa:ImageAwesome Icon="Remove" Foreground="Red" Width="10" Height="10"/>
+                                    </Button>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

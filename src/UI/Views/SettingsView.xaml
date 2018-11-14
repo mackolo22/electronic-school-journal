@@ -22,7 +22,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition MinWidth="150" Width="Auto"/>
+            <ColumnDefinition MinWidth="200" Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -47,7 +47,7 @@
 
         <Label Grid.Row="4" Content="Nowe hasło:" Margin="15"
                Visibility="{Binding IsChangePasswordMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-        <PasswordBox Name="PasswordBoxNewPassword" Grid.Row="4" Grid.Column="1" Margin="15" 
+        <PasswordBox Name="PasswordBoxNewPassword" Grid.Row="4" Grid.Column="1" Margin="15" VerticalContentAlignment="Center"
                      Visibility="{Binding IsChangePasswordMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
     </Grid>
 </UserControl>

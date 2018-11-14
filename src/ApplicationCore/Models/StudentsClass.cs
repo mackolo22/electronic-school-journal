@@ -5,10 +5,7 @@ namespace ApplicationCore.Models
 {
     public class StudentsClass : TableEntity
     {
-        public StudentsClass()
-        {
-
-        }
+        public StudentsClass() { }
 
         public StudentsClass(int number, string letter)
         {
@@ -33,7 +30,7 @@ namespace ApplicationCore.Models
         [IgnoreProperty]
         public IEnumerable<Student> Students { get; set; }
         [IgnoreProperty]
-        public IEnumerable<Lesson> Lessons { get; set; }
+        public List<Lesson> Lessons { get; set; }
         public string SerializedLessons { get; set; }
     }
 }

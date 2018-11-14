@@ -26,8 +26,14 @@
         <DataTemplate DataType="{x:Type viewModels:SettingsViewModel}">
             <views:SettingsView/>
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:AddClassViewModel}">
-            <views:AddClassView/>
+        <DataTemplate DataType="{x:Type viewModels:CreateClassViewModel}">
+            <views:CreateClassView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:TeachersViewModel}">
+            <views:TeachersView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:ManageTimeTablesViewModel}">
+            <views:ManageTimeTablesView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:TimeTableViewModel}">
             <views:TimeTableView/>
@@ -63,7 +69,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="110"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
@@ -80,8 +86,21 @@
                 </fa:ImageAwesome>
             </Button>
 
-            <Button Margin="10" Height="90" ToolTip="Dodaj klasę" Background="{Binding ContentBackground}"
-                    Command="{Binding ChangeViewCommand}" CommandParameter="AddClass"
+            <Button Margin="10" Height="90" ToolTip="Dodaj nauczyciela" Background="{Binding ContentBackground}"
+                    Command="{Binding ChangeViewCommand}" CommandParameter="Teachers"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="UserPlus" Margin="4" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+            </Button>
+
+            <Button Margin="10" Height="90" ToolTip="Stwórz klasę" Background="{Binding ContentBackground}"
+                    Command="{Binding ChangeViewCommand}" CommandParameter="CreateClass"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}">
                 <Button.Effect>
                     <DropShadowEffect/>
@@ -106,6 +125,19 @@
                 </fa:ImageAwesome>
             </Button>
 
+            <Button Margin="10" Height="90" ToolTip="Plany lekcji" Background="{Binding ContentBackground}"
+                    Command="{Binding ChangeViewCommand}" CommandParameter="ManageTimeTables"
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button.Effect>
+                    <DropShadowEffect/>
+                </Button.Effect>
+                <fa:ImageAwesome Icon="Table" Margin="4" Foreground="{Binding MenuBackground}">
+                    <fa:ImageAwesome.Effect>
+                        <DropShadowEffect/>
+                    </fa:ImageAwesome.Effect>
+                </fa:ImageAwesome>
+            </Button>
+            
             <Button Margin="10" Height="90" ToolTip="Oceny" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Grades"
                     Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
@@ -147,7 +179,9 @@
         </StackPanel>
 
         <DockPanel Grid.ColumnSpan="2" Grid.Row="0" Background="{Binding MenuBackground}">
-            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+            <Label Margin="10" Content="{Binding LoggedAs}" FontSize="16" VerticalContentAlignment="Top" 
+                   HorizontalContentAlignment="Right" DockPanel.Dock="Top" Foreground="{Binding ContentBackground}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                 <Button Margin="10" Height="30" Width="30" Background="Transparent" BorderThickness="0" ToolTip="Ustawienia"
                         Command="{Binding ChangeViewCommand}" CommandParameter="Settings">
                     <fa:ImageAwesome Icon="Wrench" Foreground="{Binding ContentBackground}">
@@ -165,8 +199,6 @@
                     </fa:ImageAwesome>
                 </Button>
             </StackPanel>
-            <Label Margin="10" Content="{Binding LoggedAs}" FontSize="16" VerticalContentAlignment="Top" HorizontalContentAlignment="Right" 
-                   DockPanel.Dock="Left" Foreground="{Binding ContentBackground}" FontFamily="Segoe Script"/>
         </DockPanel>
 
         <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding CurrentViewModel}"/>

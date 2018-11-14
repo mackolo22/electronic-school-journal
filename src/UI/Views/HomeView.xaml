@@ -7,6 +7,6 @@
              d:DesignHeight="450" d:DesignWidth="800">
     
     <Grid>
-        <Label Content="Strona główna" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60"/>
+        <Label Content="Aktualności" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="60"/>
     </Grid>
 </UserControl>

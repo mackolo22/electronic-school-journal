@@ -3,11 +3,11 @@
 namespace UI.Views
 {
     /// <summary>
-    /// Interaction logic for AddClassView.xaml
+    /// Interaction logic for ManageTimeTablesView.xaml
     /// </summary>
-    public partial class AddClassView : UserControl
+    public partial class ManageTimeTablesView : UserControl
     {
-        public AddClassView()
+        public ManageTimeTablesView()
         {
             InitializeComponent();
         }

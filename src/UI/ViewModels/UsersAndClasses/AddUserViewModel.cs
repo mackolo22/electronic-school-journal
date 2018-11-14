@@ -1,5 +1,6 @@
 ﻿using ApplicationCore.Exceptions;
 using ApplicationCore.Interfaces;
+using System;
 using System.Windows;
 using UI.Helpers;
 
@@ -50,20 +51,8 @@ namespace UI.ViewModels
             }
         }
 
-        public bool LoginGenerated
-        {
-            get => _loginGenerated;
-            set
-            {
-                _loginGenerated = value;
-                OnPropertyChanged(nameof(LoginGenerated));
-            }
-        }
-
         public string Email { get; set; }
-
         public string Password { get; set; }
-
         public string HashedPassword { get; set; }
 
         public RelayCommand GenerateLoginCommand => new RelayCommand(ExecuteGenerateLogin, () => true);
@@ -72,7 +61,6 @@ namespace UI.ViewModels
             try
             {
                 Login = _loginService.GenerateLogin(FirstName, LastName);
-                LoginGenerated = true;
             }
             catch (LoginException ex)
             {
@@ -92,6 +80,13 @@ namespace UI.ViewModels
         public RelayCommand SaveChangesCommand => new RelayCommand(ExecuteSaveChanges, () => true);
         protected virtual void ExecuteSaveChanges(object parameter)
         {
+            if (String.IsNullOrWhiteSpace(FirstName) || String.IsNullOrWhiteSpace(LastName) || String.IsNullOrWhiteSpace(Login) || String.IsNullOrWhiteSpace(Email))
+            {
+                ChangesSaved = false;
+                MessageBoxHelper.ShowMessageBox("Wypełnij wszystkie pola.");
+                return;
+            }
+
             ChangesSaved = true;
             if (parameter is Window window)
             {

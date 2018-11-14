@@ -1,6 +1,7 @@
 ﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace ApplicationCore.Services
             string classNumber = classId[0].ToString();
             string classLetter = classId[1].ToString();
             var studentsClass = await _classesRepository.GetAsync(classNumber, classLetter);
-            if (studentsClass != null)
+            if (studentsClass != null && !String.IsNullOrWhiteSpace(studentsClass.SerializedLessons))
             {
                 var lessons = JsonConvert.DeserializeObject<List<Lesson>>(studentsClass.SerializedLessons);
                 return lessons;
@@ -36,15 +37,14 @@ namespace ApplicationCore.Services
         public async Task<List<Lesson>> GetLessonsForGivenTeacherAsync(long? teacherId)
         {
             var user = await _usersRepository.GetAsync(nameof(Teacher), teacherId.ToString());
-            if (user != null)
+            if (user is Teacher teacher && !String.IsNullOrWhiteSpace(teacher.SerializedLessons))
             {
-                Teacher teacher = user as Teacher;
                 var lessons = JsonConvert.DeserializeObject<List<Lesson>>(teacher.SerializedLessons);
                 return lessons;
             }
             else
             {
-                return null;
+                return new List<Lesson>();
             }
         }
     }

@@ -1,5 +1,6 @@
-﻿using System.Windows;
-using UI.ViewModels;
+﻿using UI.ViewModels;
+using System.Windows;
+
 
 namespace UI.Views
 {

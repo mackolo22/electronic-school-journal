@@ -16,15 +16,20 @@ namespace UI.ViewModels
     public class CreateNewMessageViewModel : BaseViewModel
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly IUniqueIDGenerator _uniqueIDGenerator;
         private readonly LongRunningOperationHelper _longRunningOperationHelper;
         private Window _window;
         private string _to;
         private bool _showMatchingAddressees;
         private User _selectedAddressee;
 
-        public CreateNewMessageViewModel(IUsersRepository usersRepository, LongRunningOperationHelper longRunningOperationHelper)
+        public CreateNewMessageViewModel(
+            IUsersRepository usersRepository,
+            IUniqueIDGenerator uniqueIDGenerator,
+            LongRunningOperationHelper longRunningOperationHelper)
         {
             _usersRepository = usersRepository;
+            _uniqueIDGenerator = uniqueIDGenerator;
             _longRunningOperationHelper = longRunningOperationHelper;
             SelectedAddressees = new ObservableCollection<User>();
         }
@@ -159,8 +164,10 @@ namespace UI.ViewModels
                 {
                     var today = DateTime.Now;
                     string dateAndTime = $"{today.ToShortDateString()}, g. {today.ToShortTimeString()}";
+                    long id = _uniqueIDGenerator.GetNextIdForMessage();
                     Message message = new Message()
                     {
+                        Id = id,
                         From = User.FullName,
                         Subject = Subject,
                         DateAndTime = dateAndTime,

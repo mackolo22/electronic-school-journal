@@ -2,6 +2,7 @@
 {
     public interface IUniqueIDGenerator
     {
-        long GetNextId();
+        long GetNextIdForUser();
+        long GetNextIdForMessage();
     }
 }

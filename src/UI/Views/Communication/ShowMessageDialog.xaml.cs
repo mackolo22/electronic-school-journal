@@ -4,11 +4,11 @@ using UI.ViewModels;
 namespace UI.Views
 {
     /// <summary>
-    /// Interaction logic for AddTermDialog.xaml
+    /// Interaction logic for ShowMessageDialog.xaml
     /// </summary>
-    public partial class AddTermDialog : Window
+    public partial class ShowMessageDialog : Window
     {
-        public AddTermDialog(AddTermViewModel viewModel)
+        public ShowMessageDialog(ShowMessageViewModel viewModel)
         {
             InitializeComponent();
             DataContext = viewModel;
