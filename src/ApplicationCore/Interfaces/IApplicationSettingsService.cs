@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Models;
+﻿using System.Collections.Generic;
+using ApplicationCore.Models;
 
 namespace ApplicationCore.Interfaces
 {
@@ -6,5 +7,7 @@ namespace ApplicationCore.Interfaces
     {
         void SaveLoggedUserDataInRegistry(string userType, User user);
         User GetLoggedUserDataFromRegistry(string userType);
+        void SaveTimeTableForUserInRegistry(string userType, List<Lesson> lessons);
+        List<Lesson> GetTimeTableForUserFromRegistry(string userType);
     }
 }

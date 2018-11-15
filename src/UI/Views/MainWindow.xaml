@@ -56,6 +56,8 @@
 
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <converters:NegativeBoolToVisibilityConverter x:Key="NegativeBoolToVisibilityConverter"/>
+        <converters:NegativeBoolConverter x:Key="NegativeBoolConverter"/>
+        <converters:LogicalAndConverter x:Key="LogicalAndConverter"/>
     </Window.Resources>
 
     <Window.Visibility>
@@ -137,10 +139,11 @@
                     </fa:ImageAwesome.Effect>
                 </fa:ImageAwesome>
             </Button>
-            
+
             <Button Margin="10" Height="90" ToolTip="Oceny" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Grades"
-                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"
+                    IsEnabled="{Binding GradesViewEnabled}">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
@@ -153,7 +156,8 @@
 
             <Button Margin="10" Height="90" ToolTip="Obecności" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Frequency"
-                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
+                    Visibility="{Binding LoggedAsAdministrator, Converter={StaticResource NegativeBoolToVisibilityConverter}}"
+                    IsEnabled="{Binding IsOfflineMode, Converter={StaticResource NegativeBoolConverter}}">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
@@ -165,7 +169,8 @@
             </Button>
 
             <Button Margin="10" Height="90" ToolTip="Wiadomości" Background="{Binding ContentBackground}"
-                    Command="{Binding ChangeViewCommand}" CommandParameter="Messages">
+                    Command="{Binding ChangeViewCommand}" CommandParameter="Messages"
+                    IsEnabled="{Binding IsOfflineMode, Converter={StaticResource NegativeBoolConverter}}">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
@@ -183,7 +188,8 @@
                    HorizontalContentAlignment="Right" DockPanel.Dock="Top" Foreground="{Binding ContentBackground}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
                 <Button Margin="10" Height="30" Width="30" Background="Transparent" BorderThickness="0" ToolTip="Ustawienia"
-                        Command="{Binding ChangeViewCommand}" CommandParameter="Settings">
+                        Command="{Binding ChangeViewCommand}" CommandParameter="Settings"
+                        Visibility="{Binding IsOfflineMode, Converter={StaticResource NegativeBoolToVisibilityConverter}}">
                     <fa:ImageAwesome Icon="Wrench" Foreground="{Binding ContentBackground}">
                         <fa:ImageAwesome.Effect>
                             <DropShadowEffect/>

@@ -83,7 +83,7 @@ namespace UI.ViewModels
             });
 
             bool loggedIn = (user != null);
-            if (loggedIn)
+            if (loggedIn && ParentViewModel.UserType != "Administrator")
             {
                 _appSettingsService.SaveLoggedUserDataInRegistry(ParentViewModel.UserType, user);
             }

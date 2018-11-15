@@ -12,13 +12,19 @@ namespace UI.ViewModels
     {
         private readonly ITimeTableService _timeTableService;
         private readonly IUsersRepository _usersRepository;
+        private readonly IApplicationSettingsService _applicationSettingsService;
 
-        public TimeTableViewModel(ITimeTableService timeTableService, IUsersRepository usersRepository)
+        public TimeTableViewModel(
+            ITimeTableService timeTableService,
+            IUsersRepository usersRepository,
+            IApplicationSettingsService applicationSettingsService)
         {
             _timeTableService = timeTableService;
             _usersRepository = usersRepository;
+            _applicationSettingsService = applicationSettingsService;
         }
 
+        public bool IsOfflineMode { get; set; }
         public string UserType { get; set; }
         public User User { get; set; }
         public List<List<WrappedLesson>> Lessons { get; set; }
@@ -40,18 +46,42 @@ namespace UI.ViewModels
             List<Lesson> lessons = null;
             if (UserType == "Student")
             {
-                var student = User as Student;
-                lessons = await _timeTableService.GetLessonsForGivenClassAsync(student.ClassId);
+                if (!IsOfflineMode)
+                {
+                    var student = User as Student;
+                    lessons = await _timeTableService.GetLessonsForGivenClassAsync(student.ClassId);
+                    _applicationSettingsService.SaveTimeTableForUserInRegistry(nameof(Student), lessons);
+                }
+                else
+                {
+                    lessons = _applicationSettingsService.GetTimeTableForUserFromRegistry(nameof(Student));
+                }
             }
             else if (UserType == "Parent")
             {
-                var parent = User as Parent;
-                lessons = await _timeTableService.GetLessonsForGivenClassAsync(parent.ChildClassId);
+                if (!IsOfflineMode)
+                {
+                    var parent = User as Parent;
+                    lessons = await _timeTableService.GetLessonsForGivenClassAsync(parent.ChildClassId);
+                    _applicationSettingsService.SaveTimeTableForUserInRegistry(nameof(Student), lessons);
+                }
+                else
+                {
+                    lessons = _applicationSettingsService.GetTimeTableForUserFromRegistry(nameof(Student));
+                }
             }
             else if (UserType == "Teacher")
             {
-                var teacher = User as Teacher;
-                lessons = await _timeTableService.GetLessonsForGivenTeacherAsync(teacher.Id);
+                if (!IsOfflineMode)
+                {
+                    var teacher = User as Teacher;
+                    lessons = await _timeTableService.GetLessonsForGivenTeacherAsync(teacher.Id);
+                    _applicationSettingsService.SaveTimeTableForUserInRegistry(nameof(Teacher), lessons);
+                }
+                else
+                {
+                    lessons = _applicationSettingsService.GetTimeTableForUserFromRegistry(nameof(Teacher));
+                }
             }
 
             CreateTimeTable(lessons);
@@ -91,9 +121,12 @@ namespace UI.ViewModels
 
                 if (UserType == "Student" || UserType == "Parent")
                 {
-                    var user = await _usersRepository.GetAsync(nameof(Teacher), wrappedLesson.TeacherId.ToString());
-                    var teacher = user as Teacher;
-                    viewModel.TeacherFullName = teacher.FullName;
+                    if (!IsOfflineMode)
+                    {
+                        var user = await _usersRepository.GetAsync(nameof(Teacher), wrappedLesson.TeacherId.ToString());
+                        var teacher = user as Teacher;
+                        viewModel.TeacherFullName = teacher.FullName;
+                    }
                 }
                 else
                 {

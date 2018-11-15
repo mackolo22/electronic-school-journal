@@ -17,6 +17,7 @@ namespace UI.ViewModels
         public User User { get; set; }
         public string MenuBackground { get; set; }
         public string ContentBackground { get; set; }
+        public bool GradesViewEnabled { get; set; } = true;
 
         public BaseViewModel CurrentViewModel
         {
@@ -96,7 +97,17 @@ namespace UI.ViewModels
             {
                 if (viewName == "Home")
                 {
-                    CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+                    var vm = new HomeViewModel();
+                    if (IsOfflineMode)
+                    {
+                        vm.LoginMode = "offline";
+                    }
+                    else
+                    {
+                        vm.LoginMode = "online";
+                    }
+
+                    CurrentViewModel = vm;
                 }
                 else if (viewName == "Settings")
                 {
@@ -126,6 +137,7 @@ namespace UI.ViewModels
                     var viewModel = UnityConfiguration.Resolve<TimeTableViewModel>();
                     viewModel.UserType = UserType;
                     viewModel.User = User;
+                    viewModel.IsOfflineMode = IsOfflineMode;
                     CurrentViewModel = viewModel;
                 }
                 else if (viewName == "Grades")
@@ -134,6 +146,7 @@ namespace UI.ViewModels
                     {
                         var viewModel = UnityConfiguration.Resolve<StudentGradesViewModel>();
                         long? studentId = User.Id;
+                        viewModel.IsOfflineMode = IsOfflineMode;
                         viewModel.StudentId = studentId;
                         CurrentViewModel = viewModel;
                     }
@@ -142,6 +155,7 @@ namespace UI.ViewModels
                         var viewModel = UnityConfiguration.Resolve<StudentGradesViewModel>();
                         Parent parent = User as Parent;
                         long? studentId = parent.ChildId;
+                        viewModel.IsOfflineMode = IsOfflineMode;
                         viewModel.StudentId = studentId;
                         CurrentViewModel = viewModel;
                     }
@@ -189,7 +203,7 @@ namespace UI.ViewModels
         private void ExecuteLogout(object parameter)
         {
             ClearDataAboutLoggedUser();
-            CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+            CurrentViewModel = new HomeViewModel();
             ProcessLoginOperation();
         }
 
@@ -211,11 +225,13 @@ namespace UI.ViewModels
             if (viewModel.LoggedIn)
             {
                 IsOfflineMode = viewModel.IsOfflineMode;
+                OnPropertyChanged(nameof(IsOfflineMode));
                 User = viewModel.User;
                 UserLoggedIn = true;
 
                 UserType = viewModel.UserType;
                 User = viewModel.User;
+                GradesViewEnabled = true;
                 switch (UserType)
                 {
                     case "Administrator":
@@ -237,6 +253,12 @@ namespace UI.ViewModels
                         OnPropertyChanged(nameof(LoggedAsTeacher));
                         MenuBackground = "#FF3B2B10";
                         ContentBackground = "#FFDACA99";
+
+                        if (IsOfflineMode)
+                        {
+                            GradesViewEnabled = false;
+                        }
+
                         break;
 
                     case "Parent":
@@ -247,7 +269,19 @@ namespace UI.ViewModels
                         break;
                 }
 
-                CurrentViewModel = UnityConfiguration.Resolve<HomeViewModel>();
+                OnPropertyChanged(nameof(GradesViewEnabled));
+                var vm = new HomeViewModel();
+                if (IsOfflineMode)
+                {
+                    vm.LoginMode = "offline";
+                }
+                else
+                {
+                    vm.LoginMode = "online";
+                }
+
+                CurrentViewModel = vm;
+                OnPropertyChanged(nameof(CurrentViewModel));
                 OnPropertyChanged(nameof(MenuBackground));
                 OnPropertyChanged(nameof(ContentBackground));
                 OnPropertyChanged(nameof(LoggedAs));

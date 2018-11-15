@@ -13,21 +13,37 @@ namespace UI.ViewModels
     public class StudentGradesViewModel : BaseViewModel
     {
         private readonly IUsersRepository _usersRepository;
+        private readonly IApplicationSettingsService _applicationSettingsService;
 
-        public StudentGradesViewModel(IUsersRepository usersRepository)
+        public StudentGradesViewModel(IUsersRepository usersRepository, IApplicationSettingsService applicationSettingsService)
         {
             _usersRepository = usersRepository;
+            _applicationSettingsService = applicationSettingsService;
         }
 
+        public bool IsOfflineMode { get; set; }
         public long? StudentId { get; set; }
-
         public ObservableCollection<WrappedSubject> Subjects { get; set; }
         public string SelectedSubject { get; set; }
 
         public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
         private async Task ExecuteLoadedAsync(object parameter)
         {
-            var user = await _usersRepository.GetAsync(nameof(Student), StudentId.ToString());
+            User user = null;
+            if (!IsOfflineMode)
+            {
+                user = await _usersRepository.GetAsync(nameof(Student), StudentId.ToString());
+                _applicationSettingsService.SaveLoggedUserDataInRegistry(nameof(Student), user as Student);
+            }
+            else
+            {
+                user = _applicationSettingsService.GetLoggedUserDataFromRegistry(nameof(Student));
+                if (user == null)
+                {
+                    return;
+                }
+            }
+
             Student student = user as Student;
             if (!String.IsNullOrWhiteSpace(student.SerializedGrades))
             {

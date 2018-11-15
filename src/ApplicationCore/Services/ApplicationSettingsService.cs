@@ -3,6 +3,7 @@ using ApplicationCore.Models;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 
 namespace ApplicationCore.Services
 {
@@ -51,6 +52,34 @@ namespace ApplicationCore.Services
             }
 
             return user;
+        }
+
+        public void SaveTimeTableForUserInRegistry(string userType, List<Lesson> lessons)
+        {
+            var registryKey = Registry.CurrentUser.CreateSubKey(ApplicationSettingsRegistry);
+            string nameOfKey = userType + "TimeTable";
+            string serializedLessons = JsonConvert.SerializeObject(lessons);
+            registryKey.SetValue(nameOfKey, serializedLessons);
+            registryKey.Close();
+        }
+
+        public List<Lesson> GetTimeTableForUserFromRegistry(string userType)
+        {
+            List<Lesson> lessons = new List<Lesson>();
+
+            var registryKey = Registry.CurrentUser.OpenSubKey(ApplicationSettingsRegistry);
+            if (registryKey != null)
+            {
+                string nameOfKey = userType + "TimeTable";
+                var value = registryKey.GetValue(nameOfKey);
+                if (value != null)
+                {
+                    string serializedLessons = value.ToString();
+                    lessons = JsonConvert.DeserializeObject<List<Lesson>>(serializedLessons);
+                }
+            }
+
+            return lessons;
         }
     }
 }

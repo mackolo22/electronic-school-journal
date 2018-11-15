@@ -1,28 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace UI.ViewModels
+﻿namespace UI.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
-        public HomeViewModel()
+        private string _loginMode;
+        public string LoginMode
         {
-            List<List<int>> Lessons = new List<List<int>>();
-
-            for (int i = 0; i < 5; i++)
+            get => _loginMode;
+            set
             {
-                Lessons.Add(new List<int>());
-
-                for (int j = 0; j < 5; j++)
-                {
-                    Lessons[i].Add(i * 10 + j);
-                }
+                _loginMode = $"Jesteś zalogowany\nw trybie {value}";
+                OnPropertyChanged(nameof(LoginMode));
             }
-
-            OnPropertyChanged(nameof(Lessons));
         }
     }
 }
