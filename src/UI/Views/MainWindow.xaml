@@ -74,12 +74,12 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Column="0" Grid.Row="1" Background="{Binding MenuBackground}">
-            <Button Margin="10 0 10 10" Height="90" ToolTip="Aktualności" Background="{Binding ContentBackground}"
+            <Button Margin="10 0 10 10" Height="90" ToolTip="Strona głównna" Background="{Binding ContentBackground}"
                     Command="{Binding ChangeViewCommand}" CommandParameter="Home">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>
-                <fa:ImageAwesome Icon="NewspaperOutline" Margin="5" Foreground="{Binding MenuBackground}">
+                <fa:ImageAwesome Icon="Home" Margin="5" Foreground="{Binding MenuBackground}">
                     <fa:ImageAwesome.Effect>
                         <DropShadowEffect/>
                     </fa:ImageAwesome.Effect>

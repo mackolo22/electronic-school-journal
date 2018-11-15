@@ -40,7 +40,6 @@ namespace UI
             _unityContainer.RegisterType<TeachersViewModel>();
             _unityContainer.RegisterType<ManageTimeTablesViewModel>();
             _unityContainer.RegisterType<TimeTableViewModel>();
-            _unityContainer.RegisterType<ShowLessonViewModel>();
             _unityContainer.RegisterType<ClassGradesViewModel>();
             _unityContainer.RegisterType<AddGradeViewModel>();
             _unityContainer.RegisterType<StudentGradesViewModel>();

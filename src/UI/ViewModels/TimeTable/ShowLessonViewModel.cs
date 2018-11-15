@@ -1,37 +1,50 @@
-﻿using ApplicationCore.Interfaces;
-using ApplicationCore.Models;
-using System.Threading.Tasks;
-
-namespace UI.ViewModels
+﻿namespace UI.ViewModels
 {
     public class ShowLessonViewModel : BaseViewModel
     {
-        private readonly IUsersRepository _usersRepository;
+        private string _subject;
+        private string _classroom;
+        private string _teacherFullName;
+        private string _className;
 
-        public ShowLessonViewModel(IUsersRepository usersRepository)
+        public string Subject
         {
-            _usersRepository = usersRepository;
-        }
-
-        public string Subject { get; set; }
-        public string Term { get; set; }
-        public long? TeacherId { get; set; }
-        public string TeacherFullName { get; set; }
-        public string Classroom { get; set; }
-        public string ClassName { get; set; }
-
-        public RelayCommand LoadedCommand => new RelayCommand(async (parameter) => await ExecuteLoadedAsync(parameter), () => true);
-        private async Task ExecuteLoadedAsync(object parameter)
-        {
-            if (TeacherId != null)
+            get => _subject;
+            set
             {
-                var teacher = await _usersRepository.GetAsync(nameof(Teacher), TeacherId.ToString());
-                if (teacher != null)
-                {
-                    TeacherFullName = teacher.FullName;
-                    OnPropertyChanged(nameof(TeacherFullName));
-                }
+                _subject = $"Przedmiot: {value}";
+                OnPropertyChanged(nameof(Subject));
             }
         }
+
+        public string TeacherFullName
+        {
+            get => _teacherFullName;
+            set
+            {
+                _teacherFullName = $"Nauczyciel: {value}";
+                OnPropertyChanged(nameof(TeacherFullName));
+            }
+        }
+
+        public string Classroom
+        {
+            get => _classroom;
+            set
+            {
+                _classroom = $"Sala: {value}";
+                OnPropertyChanged(nameof(Subject));
+            }
+        }
+
+        public string ClassName
+        {
+            get => _className;
+            set
+            {
+                _className = $"Klasa: {value}";
+                OnPropertyChanged(nameof(ClassName));
+            }
+        }   
     }
 }

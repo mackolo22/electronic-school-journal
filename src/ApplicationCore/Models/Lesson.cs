@@ -12,7 +12,7 @@ namespace ApplicationCore.Models
         public Teacher Teacher { get; set; }
         public long? TeacherId { get; set; }
         public string Classroom { get; set; }
-        public List<LessonTerm> Terms { get; set; }
+        //public List<LessonTerm> Terms { get; set; }
         public LessonTerm Term { get; set; }
         //[JsonIgnore]
         //public string TermsToString

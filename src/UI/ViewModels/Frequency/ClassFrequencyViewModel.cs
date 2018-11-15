@@ -1,4 +1,5 @@
 ﻿using ApplicationCore.Enums;
+using ApplicationCore.Extensions;
 using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Newtonsoft.Json;
@@ -21,6 +22,7 @@ namespace UI.ViewModels
 
         public ClassFrequencyViewModel(IUsersRepository usersRepository) : base(usersRepository) { }
 
+        public List<WrappedLesson> AllLessons { get; set; }
         public override string SelectedClass
         {
             get => _selectedClass;
@@ -34,6 +36,33 @@ namespace UI.ViewModels
                 OnPropertyChanged(nameof(SelectedClass));
                 ClassSelected = true;
             }
+        }
+
+        private void UpdateListOfSubjectsForGivenClass()
+        {
+            Lessons = new List<WrappedLesson>();
+            AllLessons = new List<WrappedLesson>();
+            foreach (var lesson in Teacher.Lessons)
+            {
+                if (lesson.ClassName == _selectedClass)
+                {
+                    var wrappedLesson = new WrappedLesson
+                    {
+                        Subject = lesson.Subject,
+                        Term = lesson.Term
+                    };
+
+                    var lessons = Lessons.Where(x => x.Subject == lesson.Subject).ToList();
+                    if (lessons.Count == 0)
+                    {
+                        Lessons.Add(wrappedLesson);
+                    }
+
+                    AllLessons.Add(wrappedLesson);
+                }
+            }
+
+            OnPropertyChanged(nameof(Lessons));
         }
 
         public override WrappedLesson SelectedLesson
@@ -76,7 +105,16 @@ namespace UI.ViewModels
 
                 DayOfWeek dayOfWeek = value.Value.DayOfWeek;
                 int dayValue = (int)dayOfWeek;
-                var terms = SelectedLesson.Terms.Where(x => (int)x.Day == dayValue);
+                var terms = new List<LessonTerm>();
+                var lessons = AllLessons.Where(x => x.Subject == SelectedLesson.Subject);
+                foreach (var lesson in lessons)
+                {
+                    if ((int)lesson.Term.Day == dayValue)
+                    {
+                        terms.Add(lesson.Term);
+                    }
+                }
+
                 if (terms.Count() == 0)
                 {
                     SelectedTerm = null;
@@ -178,7 +216,7 @@ namespace UI.ViewModels
                 else
                 {
                     var attendance = wrappedStudent.Attendances
-                        .Where(x => x.Subject == SelectedLesson.Subject
+                        .Where(x => x.Subject == SelectedLesson.Subject.GetDisplayName()
                                && x.LessonTerm.Day == SelectedTerm.Day
                                && x.LessonTerm.Time == SelectedTerm.Time
                                && x.Date == SelectedDate).FirstOrDefault();
@@ -203,7 +241,7 @@ namespace UI.ViewModels
         private async Task ExecuteChangeAttendanceForGivenStudentAsync(object parameter)
         {
             var wrappedStudent = parameter as WrappedStudent;
-            Attendance attendance;
+            Attendance attendance = null;
             string studentId = wrappedStudent.Id.ToString();
             var user = await _usersRepository.GetAsync(nameof(Student), studentId);
             Student student = user as Student;
@@ -211,7 +249,7 @@ namespace UI.ViewModels
             {
                 var givenStudentAttendances = JsonConvert.DeserializeObject<List<Attendance>>(student.SerializedAttendances);
                 attendance = givenStudentAttendances
-                    .Where(x => x.Subject == SelectedLesson.Subject
+                    .Where(x => x.Subject == SelectedLesson.Subject.GetDisplayName()
                            && x.LessonTerm.Day == SelectedTerm.Day
                            && x.LessonTerm.Time == SelectedTerm.Time
                            && x.Date == SelectedDate).FirstOrDefault();
@@ -221,7 +259,7 @@ namespace UI.ViewModels
                     attendance.Type = wrappedStudent.AttendanceTypeInSelectedDay;
 
                     var att = wrappedStudent.Attendances
-                        .Where(x => x.Subject == SelectedLesson.Subject
+                        .Where(x => x.Subject == SelectedLesson.Subject.GetDisplayName()
                                && x.LessonTerm.Day == SelectedTerm.Day
                                && x.LessonTerm.Time == SelectedTerm.Time
                                && x.Date == SelectedDate).FirstOrDefault();
@@ -235,7 +273,7 @@ namespace UI.ViewModels
                     {
                         Date = SelectedDate.Value,
                         LessonTerm = SelectedTerm,
-                        Subject = SelectedLesson.Subject,
+                        Subject = SelectedLesson.Subject.GetDisplayName(),
                         Type = wrappedStudent.AttendanceTypeInSelectedDay,
                         TeacherFullName = Teacher.FullName
                     };
@@ -249,7 +287,7 @@ namespace UI.ViewModels
                 {
                     Date = SelectedDate.Value,
                     LessonTerm = SelectedTerm,
-                    Subject = SelectedLesson.Subject,
+                    Subject = SelectedLesson.Subject.GetDisplayName(),
                     Type = wrappedStudent.AttendanceTypeInSelectedDay,
                     TeacherFullName = Teacher.FullName
                 };

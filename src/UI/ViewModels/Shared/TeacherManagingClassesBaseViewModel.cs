@@ -1,5 +1,4 @@
-﻿using ApplicationCore.Extensions;
-using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Newtonsoft.Json;
 using System;
@@ -29,28 +28,7 @@ namespace UI.ViewModels
         public List<string> TeacherClasses { get; set; }
         public List<WrappedLesson> Lessons { get; set; }
         public ObservableCollection<WrappedStudent> Students { get; set; }
-
         public abstract string SelectedClass { get; set; }
-
-        protected void UpdateListOfSubjectsForGivenClass()
-        {
-            Lessons = new List<WrappedLesson>();
-            foreach (var lesson in Teacher.Lessons)
-            {
-                if (lesson.ClassName == _selectedClass)
-                {
-                    var wrappedLesson = new WrappedLesson
-                    {
-                        Subject = lesson.Subject.GetDisplayName(),
-                        Terms = lesson.Terms
-                    };
-
-                    Lessons.Add(wrappedLesson);
-                }
-            }
-
-            OnPropertyChanged(nameof(Lessons));
-        }
 
         public bool ClassSelected
         {

@@ -9,6 +9,7 @@ namespace UI.ViewModels
         private Window _window;
         private bool _closeApplicationOnWindowClosed = true;
 
+        public bool IsOfflineMode { get; set; }
         public string UserType { get; set; }
         public User User { get; set; }
         public bool LoggedIn { get; set; }

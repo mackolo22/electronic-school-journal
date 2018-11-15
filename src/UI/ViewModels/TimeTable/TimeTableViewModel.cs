@@ -3,6 +3,7 @@ using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using UI.ViewModels.WrappedModels;
 using UI.Views;
 
 namespace UI.ViewModels
@@ -10,10 +11,12 @@ namespace UI.ViewModels
     public class TimeTableViewModel : BaseViewModel
     {
         private readonly ITimeTableService _timeTableService;
+        private readonly IUsersRepository _usersRepository;
 
-        public TimeTableViewModel(ITimeTableService timeTableService)
+        public TimeTableViewModel(ITimeTableService timeTableService, IUsersRepository usersRepository)
         {
             _timeTableService = timeTableService;
+            _usersRepository = usersRepository;
         }
 
         public string UserType { get; set; }
@@ -34,101 +37,72 @@ namespace UI.ViewModels
                 }
             }
 
+            List<Lesson> lessons = null;
             if (UserType == "Student")
             {
                 var student = User as Student;
-                await CreateTimeTableForStudentAsync(student.ClassId);
+                lessons = await _timeTableService.GetLessonsForGivenClassAsync(student.ClassId);
             }
             else if (UserType == "Parent")
             {
                 var parent = User as Parent;
-                await CreateTimeTableForStudentAsync(parent.ChildClassId);
+                lessons = await _timeTableService.GetLessonsForGivenClassAsync(parent.ChildClassId);
             }
             else if (UserType == "Teacher")
             {
                 var teacher = User as Teacher;
-                await CreateTimeTableForTeacherAsync(teacher.Id);
+                lessons = await _timeTableService.GetLessonsForGivenTeacherAsync(teacher.Id);
             }
 
+            CreateTimeTable(lessons);
             TimeTableLoaded = true;
             OnPropertyChanged(nameof(TimeTableLoaded));
         }
 
-        private async Task CreateTimeTableForStudentAsync(string classId)
+        private void CreateTimeTable(List<Lesson> lessons)
         {
-            var lessons = await _timeTableService.GetLessonsForGivenClassAsync(classId);
             foreach (var lesson in lessons)
             {
-                string subject = lesson.Subject.GetDisplayName();
-                foreach (var term in lesson.Terms)
+                var wrappedLesson = new WrappedLesson
                 {
-                    var wrappedLesson = new WrappedLesson
-                    {
-                        Subject = subject,
-                        Term = $"{term.Day.GetDisplayName()}, g. {term.Time}",
-                        ClassName = lesson.ClassName,
-                        Classroom = lesson.Classroom,
-                        TeacherId = lesson.TeacherId
-                    };
+                    Subject = lesson.Subject,
+                    ClassName = lesson.ClassName,
+                    Classroom = lesson.Classroom,
+                    TeacherId = lesson.TeacherId,
+                    Term = lesson.Term
+                };
 
-                    Lessons[term.LessonNumber][(int)term.Day - 1] = wrappedLesson;
-                }
+                Lessons[lesson.Term.LessonNumber][(int)lesson.Term.Day - 1] = wrappedLesson;
             }
 
             OnPropertyChanged(nameof(Lessons));
         }
 
-        private async Task CreateTimeTableForTeacherAsync(long teacherId)
+        public RelayCommand ShowLessonCommand => new RelayCommand(async (parameter) => await ExecuteShowLessonAsync(parameter), () => true);
+        private async Task ExecuteShowLessonAsync(object parameter)
         {
-            var lessons = await _timeTableService.GetLessonsForGivenTeacherAsync(teacherId);
-            foreach (var lesson in lessons)
+            if (parameter is WrappedLesson wrappedLesson)
             {
-                string subject = lesson.Subject.GetDisplayName();
-                foreach (var term in lesson.Terms)
+                var viewModel = new ShowLessonViewModel()
                 {
-                    var wrappedLesson = new WrappedLesson
-                    {
-                        Subject = subject,
-                        Term = $"{term.Day.GetDisplayName()}, g. {term.Time}",
-                        Classroom = lesson.Classroom,
-                        ClassName = lesson.ClassName
-                    };
+                    Classroom = wrappedLesson.Classroom,
+                    Subject = wrappedLesson.Subject.GetDisplayName()
+                };
 
-                    Lessons[term.LessonNumber][(int)term.Day - 1] = wrappedLesson;
+                if (UserType == "Student" || UserType == "Parent")
+                {
+                    var user = await _usersRepository.GetAsync(nameof(Teacher), wrappedLesson.TeacherId.ToString());
+                    var teacher = user as Teacher;
+                    viewModel.TeacherFullName = teacher.FullName;
                 }
+                else
+                {
+                    viewModel.ClassName = wrappedLesson.ClassName;
+                }
+
+                var dialog = new ShowLessonDialog(viewModel);
+                dialog.ShowDialog();
             }
-
-            OnPropertyChanged(nameof(Lessons));
-        }
-
-        public RelayCommand ShowLessonCommand => new RelayCommand(ExecuteShowLesson, () => true);
-        private void ExecuteShowLesson(object parameter)
-        {
-            if (parameter == null)
-            {
-                return;
-            }
-
-            var wrappedLesson = parameter as WrappedLesson;
-
-            var viewModel = UnityConfiguration.Resolve<ShowLessonViewModel>();
-            viewModel.ClassName = wrappedLesson.ClassName;
-            viewModel.Classroom = wrappedLesson.Classroom;
-            viewModel.Subject = wrappedLesson.Subject;
-            viewModel.TeacherId = wrappedLesson.TeacherId;
-            viewModel.Term = wrappedLesson.Term;
-
-            var dialog = new ShowLessonDialog(viewModel);
-            dialog.ShowDialog();
-        }
-
-        public class WrappedLesson
-        {
-            public string Subject { get; set; }
-            public string Term { get; set; }
-            public long? TeacherId { get; set; }
-            public string Classroom { get; set; }
-            public string ClassName { get; set; }
         }
     }
 }

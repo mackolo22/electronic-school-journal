@@ -30,7 +30,6 @@ namespace ApplicationCore.Models
 
     public class Grade
     {
-        public int Id { get; set; }
         public double Value { get; set; }
         public string Comment { get; set; }
         public DateTime LastModificationDate { get; set; }

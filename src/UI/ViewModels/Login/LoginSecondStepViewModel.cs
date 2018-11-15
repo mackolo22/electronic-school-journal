@@ -130,6 +130,7 @@ namespace UI.ViewModels
             if (user != null)
             {
                 bool loggedIn = _loginService.LoginUserInOfflineMode(user, Login, passwordBox.Password);
+                ParentViewModel.IsOfflineMode = true;
                 ParentViewModel.LoggedIn = loggedIn;
                 ParentViewModel.User = user;
                 if (loggedIn)

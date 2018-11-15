@@ -1,4 +1,5 @@
-﻿using ApplicationCore.Interfaces;
+﻿using ApplicationCore.Extensions;
+using ApplicationCore.Interfaces;
 using ApplicationCore.Models;
 using Newtonsoft.Json;
 using System;
@@ -69,6 +70,32 @@ namespace UI.ViewModels
             }
         }
 
+        private void UpdateListOfSubjectsForGivenClass()
+        {
+            Lessons = new List<WrappedLesson>();
+            foreach (var lesson in Teacher.Lessons)
+            {
+                if (lesson.ClassName == _selectedClass)
+                {
+                    var lessons = Lessons.Where(x => x.Subject == lesson.Subject).ToList();
+                    if (lessons.Count > 0)
+                    {
+                        continue;
+                    }
+
+                    var wrappedLesson = new WrappedLesson
+                    {
+                        Subject = lesson.Subject,
+                        Term = lesson.Term
+                    };
+
+                    Lessons.Add(wrappedLesson);
+                }
+            }
+
+            OnPropertyChanged(nameof(Lessons));
+        }
+
         public override WrappedLesson SelectedLesson
         {
             get => _selectedLesson;
@@ -96,9 +123,9 @@ namespace UI.ViewModels
             Students = _studentsFromAllClasses[_selectedClass];
             foreach (var wrappedStudent in Students)
             {
-                if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_selectedLesson.Subject))
+                if (wrappedStudent.AllGrades != null && wrappedStudent.AllGrades.ContainsKey(_selectedLesson.Subject.GetDisplayName()))
                 {
-                    var grades = wrappedStudent.AllGrades[_selectedLesson.Subject];
+                    var grades = wrappedStudent.AllGrades[_selectedLesson.Subject.GetDisplayName()];
                     wrappedStudent.Grades = grades;
                     if (wrappedStudent.Grades.Count == 0)
                     {
@@ -148,18 +175,18 @@ namespace UI.ViewModels
                 {
                     wrappedStudent.AllGrades = new Dictionary<string, ObservableCollection<WrappedGrade>>
                     {
-                        { SelectedLesson.Subject, wrappedStudent.Grades }
+                        { SelectedLesson.Subject.GetDisplayName(), wrappedStudent.Grades }
                     };
                 }
                 else
                 {
-                    if (wrappedStudent.AllGrades.ContainsKey(SelectedLesson.Subject))
+                    if (wrappedStudent.AllGrades.ContainsKey(SelectedLesson.Subject.GetDisplayName()))
                     {
-                        wrappedStudent.AllGrades[SelectedLesson.Subject] = wrappedStudent.Grades;
+                        wrappedStudent.AllGrades[SelectedLesson.Subject.GetDisplayName()] = wrappedStudent.Grades;
                     }
                     else
                     {
-                        wrappedStudent.AllGrades.Add(SelectedLesson.Subject, wrappedStudent.Grades);
+                        wrappedStudent.AllGrades.Add(SelectedLesson.Subject.GetDisplayName(), wrappedStudent.Grades);
                     }
                 }
 
@@ -188,7 +215,7 @@ namespace UI.ViewModels
                 wrappedGrade.Value = addGradeViewModel.Grade;
                 wrappedGrade.Comment = addGradeViewModel.Comment;
                 wrappedGrade.LastModificationDate = DateTime.Now;
-                wrappedStudent.AllGrades[SelectedLesson.Subject] = wrappedStudent.Grades;
+                wrappedStudent.AllGrades[SelectedLesson.Subject.GetDisplayName()] = wrappedStudent.Grades;
                 CountAverageForSelectedLessonForGivenStudent(wrappedStudent);
                 await UpdateGradesForGivenStudentAsync(wrappedStudent);
             }
@@ -233,15 +260,15 @@ namespace UI.ViewModels
                     });
                 }
 
-                bool gradesContainSelectedLesson = givenStudentGrades.ContainsKey(SelectedLesson.Subject);
+                bool gradesContainSelectedLesson = givenStudentGrades.ContainsKey(SelectedLesson.Subject.GetDisplayName());
                 if (gradesContainSelectedLesson)
                 {
-                    givenStudentGrades[SelectedLesson.Subject] = grades;
+                    givenStudentGrades[SelectedLesson.Subject.GetDisplayName()] = grades;
                     student.SerializedGrades = JsonConvert.SerializeObject(givenStudentGrades);
                 }
                 else
                 {
-                    givenStudentGrades.Add(SelectedLesson.Subject, grades);
+                    givenStudentGrades.Add(SelectedLesson.Subject.GetDisplayName(), grades);
                     student.SerializedGrades = JsonConvert.SerializeObject(givenStudentGrades);
                 }
             }

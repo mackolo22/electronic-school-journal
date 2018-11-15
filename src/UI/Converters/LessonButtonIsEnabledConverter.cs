@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using static UI.ViewModels.TimeTableViewModel;
+using UI.ViewModels.WrappedModels;
 
 namespace UI.Converters
 {

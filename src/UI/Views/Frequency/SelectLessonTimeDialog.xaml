@@ -7,7 +7,7 @@
         x:Name="Window"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
-        Title="Wybierz godzinę" Height="200" Width="400">
+        Title="Wybierz godzinę" Height="250.174" Width="400">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>

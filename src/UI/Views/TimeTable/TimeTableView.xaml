@@ -13,7 +13,7 @@
         <converters:LessonButtonIsEnabledConverter x:Key="LessonButtonIsEnabledConverter"/>
 
         <DataTemplate x:Key="DataTemplate_SubjectCell">
-            <Button Height="50" Width="150" HorizontalAlignment="Center" Background="Transparent" Cursor="Hand"
+            <Button Height="50" Width="150" HorizontalAlignment="Center" Cursor="Hand"
                     VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                     IsEnabled="{Binding Converter={StaticResource LessonButtonIsEnabledConverter}}"
                     Command="{Binding Path=DataContext.ShowLessonCommand, RelativeSource={RelativeSource AncestorType={x:Type UserControl}}}" 

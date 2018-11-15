@@ -3,18 +3,23 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         mc:Ignorable="d"
-        Title="Lekcja" Height="450" Width="800"
-        WindowStartupLocation="CenterScreen">
-
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding LoadedCommand}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+        Title="Lekcja" Height="220" Width="300"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="ToolWindow">
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
+        <Label Grid.Row="1" Margin="5" Content="{Binding Subject}" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
+        <Label Grid.Row="2" Margin="5" Content="{Binding TeacherFullName}" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
+        <Label Grid.Row="2" Margin="5" Content="{Binding ClassName}" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
+        <Label Grid.Row="3" Margin="5" Content="{Binding Classroom}" Grid.ColumnSpan="2" HorizontalAlignment="Center"/>
     </Grid>
 </Window>

@@ -74,9 +74,12 @@ namespace UI.ViewModels
                     Day day = Days[j];
                     var wrappedLesson = new WrappedLesson
                     {
-                        Day = day,
-                        LessonNumber = i,
-                        Time = Times[i]
+                        Term = new LessonTerm
+                        {
+                            Day = day,
+                            LessonNumber = i,
+                            Time = Times[i]
+                        }
                     };
 
                     Lessons[i].Add(wrappedLesson);
@@ -96,9 +99,7 @@ namespace UI.ViewModels
                     ClassName = lesson.ClassName,
                     Classroom = lesson.Classroom,
                     TeacherId = lesson.TeacherId,
-                    Day = lesson.Term.Day,
-                    LessonNumber = lesson.Term.LessonNumber,
-                    Time = lesson.Term.Time
+                    Term = lesson.Term
                 };
 
                 Lessons[lesson.Term.LessonNumber][(int)lesson.Term.Day - 1] = wrappedLesson;
@@ -150,9 +151,9 @@ namespace UI.ViewModels
 
                     LessonTerm term = new LessonTerm
                     {
-                        Day = newLesson.Day,
-                        Time = newLesson.Time,
-                        LessonNumber = newLesson.LessonNumber
+                        Day = newLesson.Term.Day,
+                        Time = newLesson.Term.Time,
+                        LessonNumber = newLesson.Term.LessonNumber
                     };
 
                     await UpdateLessonForClassAsync(newLesson, term);
@@ -256,29 +257,6 @@ namespace UI.ViewModels
 
             newLesson.Teacher.SerializedLessons = JsonConvert.SerializeObject(newLesson.Teacher.Lessons);
             await _usersRepository.InsertOrReplaceAsync(newLesson.Teacher);
-        }
-
-        public class WrappedLesson : BindableObject
-        {
-            private Subject _subject;
-
-            public Subject Subject
-            {
-                get => _subject;
-                set
-                {
-                    _subject = value;
-                    OnPropertyChanged(nameof(Subject));
-                }
-            }
-
-            public long? TeacherId { get; set; }
-            public Teacher Teacher { get; set; }
-            public string Classroom { get; set; }
-            public string ClassName { get; set; }
-            public Day Day { get; set; }
-            public string Time { get; set; }
-            public int LessonNumber { get; set; }
         }
     }
 }

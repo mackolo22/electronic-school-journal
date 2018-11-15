@@ -13,6 +13,7 @@ namespace UI.ViewModels
         private bool _loggedAsAdministrator;
 
         public string UserType { get; set; }
+        public bool IsOfflineMode { get; private set; }
         public User User { get; set; }
         public string MenuBackground { get; set; }
         public string ContentBackground { get; set; }
@@ -209,6 +210,7 @@ namespace UI.ViewModels
 
             if (viewModel.LoggedIn)
             {
+                IsOfflineMode = viewModel.IsOfflineMode;
                 User = viewModel.User;
                 UserLoggedIn = true;
 
